@@ -1,0 +1,29 @@
+turn_off_three_season_porch_heater:
+  alias: Turn off three season porch heater
+  sequence:
+  - condition: state
+    entity_id: switch.heater
+    state: 'on'
+  - type: turn_off
+    device_id: abb69e5e7dbe7a1605d4331549c70ed9
+    entity_id: switch.heater
+    domain: switch
+  mode: single
+  icon: mdi:fireplace
+
+play_music_three_season_porch:
+  alias: Play music on the three season porch
+  sequence:
+    - alias: Set shuffle
+      service: media_player.shuffle_set
+      data:
+        shuffle: true
+      target:
+        entity_id: media_player.spotify_jessie_puls
+    - alias: Play Daily Mix 1
+      service: media_player.play_media
+      target:
+        entity_id: media_player.three_season_porch
+      data:
+        media_content_type: "SPOTIFY"
+        media_content_id: "Daily Mix 1"
