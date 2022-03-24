@@ -11,3 +11,4 @@ home-assistant*db*
 secrets.yaml
 tts/*
 www/*
+.vscode-upload.json
