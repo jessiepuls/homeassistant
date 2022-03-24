@@ -1,0 +1,13 @@
+.DS_Store
+.HA_VERSION
+.cloud/*
+.storage/*
+blueprints/*
+custom_components/*
+*.log
+*.log.*
+home-assistant*db*
+*.pem
+secrets.yaml
+tts/*
+www/*
