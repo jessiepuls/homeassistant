@@ -1,0 +1,110 @@
+- id: '1646609164542'
+  alias: Turn on indoor lights in the evening
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunset
+    offset: -00:30:00
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 3dfe43c736d7de5ca73345ff4601890b
+    entity_id: light.living_room_sconces
+    domain: light
+    brightness_pct: 80
+  - type: turn_on
+    device_id: 253efb31b1f2b0c67313571577004b52
+    entity_id: light.entryway_lights
+    domain: light
+    brightness_pct: 80
+  - type: turn_on
+    device_id: 3acd7d2803023ac309a4470a3947b5ea
+    entity_id: light.above_cabinets_fridge
+    domain: light
+  - type: turn_on
+    device_id: d990d220867a95f796cc8944e1fc59ff
+    entity_id: light.above_cabinets_door
+    domain: light
+  - type: turn_on
+    device_id: ca117580761ec657c760e0dd4bb56f32
+    entity_id: light.above_cabinets_stove
+    domain: light
+  mode: single
+- id: '1646610339547'
+  alias: Turn on Outdoor Lights in the Evening
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunset
+    offset: '0'
+  condition: []
+  action:
+  - service: light.turn_on
+    data: {}
+    target:
+      area_id: outdoors
+  - service: switch.turn_on
+    data: {}
+    target:
+      area_id: outdoors
+  mode: single
+- id: '1646616822825'
+  alias: Turn off Outdoor Lights At Night
+  description: ''
+  trigger:
+  - platform: time
+    at: '23:00:00'
+  condition: []
+  action:
+  - service: light.turn_off
+    data: {}
+    target:
+      area_id: outdoors
+  - service: switch.turn_off
+    data: {}
+    target:
+      area_id: outdoors
+  mode: single
+- id: '1646634523203'
+  alias: Bedtime
+  description: ''
+  trigger:
+  - platform: event
+    event_type: ''
+  condition: []
+  action:
+  - service: media_player.turn_off
+    data: {}
+    target:
+      entity_id: media_player.upstairs_tv
+  - type: turn_on
+    device_id: ed25db0eec179417785a7a4ef51664bc
+    entity_id: light.hallway_main_lights
+    domain: light
+    brightness_pct: 30
+  - service: light.turn_off
+    data: {}
+    target:
+      area_id:
+      - kitchen
+      - living_room
+      - outdoors
+      - three_season_porch
+  - service: switch.turn_off
+    data: {}
+    target:
+      area_id:
+      - outdoors
+      - living_room
+  - type: turn_on
+    device_id: 051f60ffe0f916c25e4cab76bc331240
+    entity_id: light.light
+    domain: light
+    brightness_pct: 40
+  - service: script.turn_off_three_season_porch_heater
+    data: {}
+  - device_id: 601d37ab0803601772ade2b1e5cc9907
+    domain: lock
+    entity_id: lock.schlage_door_lock
+    type: lock
+  mode: single
