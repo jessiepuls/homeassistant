@@ -1,0 +1,17 @@
+  livingroom:
+    name: Livingroom
+    entities:
+      - light.entryway_lights
+      - light.living_room_sconces
+  outdoor:
+    name: Outdoor
+    entities:
+      - switch.front_yard_lamp_post
+      - switch.back_yard_lights
+  kitchen_cabinets:
+    name: Outdoor
+    entities:
+      - light.above_cabinets_fridge
+      - light.above_cabinets_door
+      - light.above_cabinets_stove
+      
