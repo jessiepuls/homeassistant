@@ -1,0 +1,265 @@
+# Original reference:
+# https://lazyadmin.nl/home-network/home-assistant-dashboard/
+# https://github.com/ruudmens/LazyAdmin/tree/master/Home%20Assistant
+# https://github.com/custom-cards/button-card
+
+homeassistant:
+  packages: !include_dir_named include
+
+# background: rgb(248,250,251)
+
+button_card_templates:
+  base:
+    styles:
+      card:
+        - height: 100%          
+        - padding: 15px
+      name:
+        - color: rgb(24, 24, 24);
+        - justify-self: start;
+        - font-weight: 400
+        - font-family: "LatoWeb"
+      state:
+        - color: rgb(117,124,136);
+        - justify-self: start
+        - font-weight: 400
+        - font-family: "LatoWeb"
+        - font-size: 14px
+        - margin-top: -10px
+    style: |
+      ha-card {
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        border-radius: 3px;
+        box-shadow: none !important;
+        transition: width ease-in-out 0.5s,height ease-in-out 0.5s,border ease-in-out 0.2s,transform ease-in-out 0.2s !important;
+      }
+      #icon {
+        width: 35px !important;
+        margin-right: 8px;
+        margin-top: -20px;
+      }
+      #container{
+        margin: -10px 0;
+      }
+      .button-card-main{
+          height:148px !important;
+          border: 1px solid rgba(0, 0, 0, 0.05);
+      }
+  quick-action:
+    styles:
+        card:
+        - paddding: 15px;
+        grid:
+        - grid-template-areas: '"i" "n" "s"'
+        - grid-template-columns: 1fr
+        - grid-template-rows: 2fr 1fr 1fr
+        img_cell:
+        - align-self: start
+        - text-align: start
+        - justify-content: start
+        name:
+        - font-size: 17px
+        - justify-self: start
+        - color: #213953;
+        - margin-top: 10px;
+        state:
+        - font-size: 13px
+        - align-self: left
+        - justify-self: start
+        - color: rgb(170,171,175)
+  automations:
+    styles:
+      icon:
+      - color: rgb(0,255,54)
+
+  graph:
+    styles:
+        card:
+        - paddding: 0px;
+#
+# Kiosk mode settings to hide menu and sidebar on tablet
+#
+kiosk_mode:
+  mobile_settings:
+    hide_header: false
+    ignore_entity_settings: true
+    custom_width: 1320
+
+views:
+  - title: Home
+    id: home
+    type: 'custom:grid-layout'
+    layout:
+        max_cols: 9
+        grid-template-columns: 160px 160px 160px 160px 280px
+    cards: 
+        #
+        # Weather card
+        #
+        - type: custom:weather-card
+          entity: weather.home
+          icons: "/local/community/weather-card/icons/"
+          current: true
+          details: false
+          forecast: true
+          hourly_forecast: false
+          number_of_forecasts: 5
+          view_layout:
+            grid-column: 1 / 5
+            grid-row: 1
+          style: |
+            div.precipitation,
+            div.precipitation_probability {
+                display: none;
+            }
+
+        # Media controls
+        - type: 'custom:mini-media-player'
+          noPadding: true
+          entity: media_player.living_room
+          artwork: cover
+          icon: mdi:play
+          view_layout:
+            grid-column: 5/9
+            grid-row: 1
+          hide:
+            power: true
+            progress: true
+            source: false
+            shuffle: false
+            name: true
+          shortcuts:
+            columns: 4
+            buttons:
+              - name: Play Spotify
+                type: music
+                id: https://open.spotify.com/playlist/37i9dQZF1E38UCXQgkr7fR?si=8622fcf83c334487
+          style: |
+            ha-card{
+                height: 100%;
+                transition: width ease-in-out 0.5s,height ease-in-out 0.5s,border ease-in-out 0.2s,transform ease-in-out 0.2s !important;
+            }
+        
+        # Kitchen Lights
+        - type: custom:state-switch
+          entity: group.kitchen_cabinets
+          default: off
+          view_layout:
+            grid-column: 1
+            grid-row: 2
+          states:
+            "on":       
+                type: 'custom:button-card'
+                template:
+                - base
+                - quick-action
+                entity: group.kitchen_cabinets
+                name: Kitchen Cabinets
+                icon:  mdi:lightbulb-on
+                show_state: true
+                show_header_toggle: false
+                state_display: "Turn off"
+            "off":       
+                type: 'custom:button-card'
+                template:
+                - base
+                - quick-action
+                entity: group.kitchen_cabinets
+                name: Kitchen Cabinets
+                icon:  mdi:lightbulb-outline
+                show_state: true  
+                show_header_toggle: false
+                state_display: "Turn on"
+
+        # Livingroom Lights
+        - type: vertical-stack
+          view_layout:
+            grid-column: 2
+            grid-row: 2
+          cards:
+            - type: custom:state-switch
+              entity: group.livingroom
+              default: off
+              states: 
+                "on":
+                  type: 'custom:button-card'
+                  template:
+                  - base
+                  - quick-action
+                  entity: group.livingroom
+                  name: Livingroom Lights
+                  icon:  mdi:lightbulb-on
+                  show_state: true  
+                  show_header_toggle: false
+                  state_display: "Turn off"
+                "off":
+                  type: 'custom:button-card'
+                  template:
+                  - base
+                  - quick-action
+                  entity: group.livingroom
+                  name: Livingroom Lights
+                  icon:  mdi:lightbulb-outline
+                  show_state: true  
+                  show_header_toggle: false
+                  state_display: "Turn on"
+                  custom-fields:
+                    buttons:
+                      card:
+                        type: horizontal-stack
+                        cards:
+                          - type: 'custom:button-card'
+                            icon: 'mdi:wall-sconce-flat'
+                            name: Fireplace Lights
+
+        # Outdoor Lights
+        - type: vertical-stack
+          view_layout:
+            grid-column: 3
+            grid-row: 2
+          cards:
+            - type: custom:state-switch
+              entity: group.outdoor
+              default: off
+              states: 
+                "on":
+                  type: 'custom:button-card'
+                  template:
+                  - base
+                  - quick-action
+                  entity: group.outdoor
+                  name: Outdoor Lights
+                  icon:  mdi:lightbulb-on
+                  show_state: true  
+                  show_header_toggle: false
+                  state_display: "Turn off"
+                "off":
+                  type: 'custom:button-card'
+                  template:
+                  - base
+                  - quick-action
+                  entity: group.outdoor
+                  name: Outdoor Lights
+                  icon:  mdi:lightbulb-outline
+                  show_state: true  
+                  show_header_toggle: false
+                  state_display: "Turn on"
+        
+        # Bedtime automation
+        - type: 'custom:button-card'
+          template:
+          - base
+          - quick-action
+          - automations
+          name: Bedtime
+          tap_action:
+            action: call-service
+            service: automation.trigger
+            service_data:
+              entity_id: automation.bedtime
+          icon:  mdi:sleep
+          show_state: false  
+          show_header_toggle: false
+          view_layout:
+            grid-column: 8
+            grid-row: 2

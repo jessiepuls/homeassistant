@@ -1,0 +1,79 @@
+views:
+  - title: Home
+    panel: true
+    badges: []
+    cards: 
+      - type: vertical-stack
+        cards:
+          # Media controls
+          - type: 'custom:mini-media-player'
+            noPadding: true
+            entity: media_player.spotify_jessie_puls
+            artwork: cover
+            icon: mdi:play
+            view_layout:
+              grid-column: 5/9
+              grid-row: 1
+            hide:
+              power: true
+              progress: true
+              source: true
+              shuffle: false
+              name: true
+            shortcuts:
+              columns: 4
+              buttons:
+                - name: Play Spotify
+                  type: script
+                  id: script.play_music_three_season_porch
+            style: |
+              ha-card{
+                  height: 100%;
+                  transition: width ease-in-out 0.5s,height ease-in-out 0.5s,border ease-in-out 0.2s,transform ease-in-out 0.2s !important;
+              }
+          - type: grid
+            columns: 1
+            square: false
+            cards: 
+              # - type: glance
+              #   entities: 
+              #     - entity: sensor.porch_temperature
+              #       name: Temperature
+              #     - entity: sensor.porch_light_level
+              #       name: Light Level
+              #     - entity: binary_sensor.porch_motion
+              #       name: Motion Activated
+              #     - entity: sensor.porch_power
+              #       name: Battery
+              #   columns: 4
+              #   state_color: true
+              - type: horizontal-stack
+                cards:
+                  - type: button
+                    icon: mdi:fireplace
+                    tap_action: 
+                      action: toggle
+                    entity: switch.heater
+                    show_state: true
+                    name: Heater
+                  - type: button
+                    tap_action:
+                      action: toggle
+                    entity: light.three_season_porch_lamp
+                    show_state: true
+                    name: Lamp
+                    icon: mdi:floor-lamp
+                  - type: button
+                    tap_action:
+                      action: toggle
+                    entity: switch.three_season_porch_ceiling_fan_light
+                    show_state: true
+                    icon: mdi:ceiling-light
+                    name: Light
+                  - type: button
+                    tap_action:
+                      action: toggle
+                    entity: fan.three_season_porch_ceiling_fan
+                    show_state: true
+                    icon: mdi:ceiling-fan
+                    name: Fan
