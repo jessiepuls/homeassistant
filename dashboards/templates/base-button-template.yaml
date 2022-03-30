@@ -1,0 +1,36 @@
+
+styles:
+  card:
+    - height: 100%          
+    - padding: 15px
+  name:
+    - color: rgb(24, 24, 24);
+    - justify-self: start;
+    - font-weight: 400
+    - font-family: "LatoWeb"
+  state:
+    - color: rgb(117,124,136);
+    - justify-self: start
+    - font-weight: 400
+    - font-family: "LatoWeb"
+    - font-size: 14px
+    - margin-top: -10px
+style: |
+  ha-card {
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 3px;
+    box-shadow: none !important;
+    transition: width ease-in-out 0.5s,height ease-in-out 0.5s,border ease-in-out 0.2s,transform ease-in-out 0.2s !important;
+  }
+  #icon {
+    width: 35px !important;
+    margin-right: 8px;
+    margin-top: -20px;
+  }
+  #container{
+    margin: -10px 0;
+  }
+  .button-card-main{
+      height:148px !important;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+  }

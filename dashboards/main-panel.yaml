@@ -3,87 +3,13 @@
 # https://github.com/ruudmens/LazyAdmin/tree/master/Home%20Assistant
 # https://github.com/custom-cards/button-card
 
-homeassistant:
-  packages: !include_dir_named include
-
-# background: rgb(248,250,251)
-
 button_card_templates:
-  base:
-    styles:
-      card:
-        - height: 100%          
-        - padding: 15px
-      name:
-        - color: rgb(24, 24, 24);
-        - justify-self: start;
-        - font-weight: 400
-        - font-family: "LatoWeb"
-      state:
-        - color: rgb(117,124,136);
-        - justify-self: start
-        - font-weight: 400
-        - font-family: "LatoWeb"
-        - font-size: 14px
-        - margin-top: -10px
-    style: |
-      ha-card {
-        border: 1px solid rgba(0, 0, 0, 0.05);
-        border-radius: 3px;
-        box-shadow: none !important;
-        transition: width ease-in-out 0.5s,height ease-in-out 0.5s,border ease-in-out 0.2s,transform ease-in-out 0.2s !important;
-      }
-      #icon {
-        width: 35px !important;
-        margin-right: 8px;
-        margin-top: -20px;
-      }
-      #container{
-        margin: -10px 0;
-      }
-      .button-card-main{
-          height:148px !important;
-          border: 1px solid rgba(0, 0, 0, 0.05);
-      }
-  quick-action:
-    styles:
-        card:
-        - paddding: 15px;
-        grid:
-        - grid-template-areas: '"i" "n" "s"'
-        - grid-template-columns: 1fr
-        - grid-template-rows: 2fr 1fr 1fr
-        img_cell:
-        - align-self: start
-        - text-align: start
-        - justify-content: start
-        name:
-        - font-size: 17px
-        - justify-self: start
-        - color: #213953;
-        - margin-top: 10px;
-        state:
-        - font-size: 13px
-        - align-self: left
-        - justify-self: start
-        - color: rgb(170,171,175)
-  automations:
-    styles:
-      icon:
-      - color: rgb(0,255,54)
+  base: !include templates/base-button-template.yaml
+  quick-action: !include templates/quick-action-button-template.yaml
+  automations: !include templates/automations-button-template.yaml
+  graph: !include templates/graph-template.yaml
 
-  graph:
-    styles:
-        card:
-        - paddding: 0px;
-#
-# Kiosk mode settings to hide menu and sidebar on tablet
-#
-kiosk_mode:
-  mobile_settings:
-    hide_header: false
-    ignore_entity_settings: true
-    custom_width: 1320
+kiosk_mode: !include templates/kiosk-mode-template.yaml
 
 views:
   - title: Home
@@ -118,7 +44,7 @@ views:
           noPadding: true
           entity: media_player.living_room
           artwork: cover
-          icon: mdi:play
+          icon: none
           view_layout:
             grid-column: 5/9
             grid-row: 1

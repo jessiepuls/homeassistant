@@ -1,0 +1,4 @@
+mobile_settings:
+  hide_header: false
+  ignore_entity_settings: true
+  custom_width: 1320

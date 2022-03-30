@@ -1,0 +1,21 @@
+styles:
+    card:
+    - paddding: 15px;
+    grid:
+    - grid-template-areas: '"i" "n" "s"'
+    - grid-template-columns: 1fr
+    - grid-template-rows: 2fr 1fr 1fr
+    img_cell:
+    - align-self: start
+    - text-align: start
+    - justify-content: start
+    name:
+    - font-size: 17px
+    - justify-self: start
+    - color: #213953;
+    - margin-top: 10px;
+    state:
+    - font-size: 13px
+    - align-self: left
+    - justify-self: start
+    - color: rgb(170,171,175)
