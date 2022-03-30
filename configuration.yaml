@@ -71,6 +71,13 @@ lovelace:
     - type: css
       url: /local/latofonts.css
   dashboards:
+    lovelace-basement:
+      mode: yaml
+      icon: mdi:home-floor-b
+      title: Basement
+      filename: dashboards/basement.yaml
+      show_in_sidebar: true
+      require_admin: false
     lovelace-three-season-porch:
       mode: yaml
       icon: mdi:fireplace

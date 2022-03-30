@@ -1,0 +1,101 @@
+button_card_templates:
+  base: !include templates/base-button-template.yaml
+  quick-action: !include templates/quick-action-button-template.yaml
+
+views:
+  - title: Home
+    panel: true
+    badges: []
+    cards: 
+      - type: vertical-stack
+        cards:
+          # Media controls
+          - type: 'custom:mini-media-player'
+            noPadding: true
+            entity: media_player.basement
+            artwork: cover
+            icon: none
+            view_layout:
+              grid-column: 5/9
+              grid-row: 1
+            hide:
+              power: true
+              progress: true
+              source: false
+              shuffle: false
+              name: true
+            shortcuts:
+              columns: 4
+              buttons:
+                - name: Play Spotify
+                  type: music
+                  id: https://open.spotify.com/playlist/37i9dQZF1E38UCXQgkr7fR?si=8622fcf83c334487
+            style: |
+              ha-card{
+                  height: 100%;
+                  transition: width ease-in-out 0.5s,height ease-in-out 0.5s,border ease-in-out 0.2s,transform ease-in-out 0.2s !important;
+              }
+          - type: grid
+            columns: 1
+            square: false
+            cards: 
+              - type: horizontal-stack
+                cards:
+                  # Heater
+                  - type: custom:state-switch
+                    entity: group.kitchen_cabinets
+                    default: off
+                    view_layout:
+                      grid-column: 1
+                      grid-row: 2
+                    states:
+                      "on":       
+                          type: 'custom:button-card'
+                          template:
+                          - base
+                          - quick-action
+                          entity: switch.basement_desk_plug
+                          name: Heater
+                          icon:  mdi:radiator
+                          show_state: true
+                          show_header_toggle: false
+                          state_display: "Turn off"
+                      "off":       
+                          type: 'custom:button-card'
+                          template:
+                          - base
+                          - quick-action
+                          entity: switch.basement_desk_plug
+                          name: Heater
+                          icon:  mdi:radiator
+                          show_state: true  
+                          show_header_toggle: false
+                          state_display: "Turn on"
+              #     - type: button
+              #       icon: mdi:radiator
+              #       tap_action: 
+              #         action: toggle
+              #       entity: switch.basement_desk_plug
+              #       show_state: true
+              #       name: Heater
+                  # - type: button
+                  #   tap_action:
+                  #     action: toggle
+                  #   entity: light.three_season_porch_lamp
+                  #   show_state: true
+                  #   name: Lamp
+                  #   icon: mdi:floor-lamp
+                  # - type: button
+                  #   tap_action:
+                  #     action: toggle
+                  #   entity: switch.three_season_porch_ceiling_fan_light
+                  #   show_state: true
+                  #   icon: mdi:ceiling-light
+                  #   name: Light
+                  # - type: button
+                  #   tap_action:
+                  #     action: toggle
+                  #   entity: fan.three_season_porch_ceiling_fan
+                  #   show_state: true
+                  #   icon: mdi:ceiling-fan
+                  #   name: Fan
