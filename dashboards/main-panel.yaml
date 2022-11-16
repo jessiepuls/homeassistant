@@ -16,8 +16,8 @@ views:
     id: home
     type: 'custom:grid-layout'
     layout:
-        max_cols: 9
-        grid-template-columns: 160px 160px 160px 160px 280px
+        # max_cols: 9
+        # grid-template-columns: 160px 160px 160px 160px 280px
     cards: 
         #
         # Weather card
@@ -31,13 +31,19 @@ views:
           hourly_forecast: false
           number_of_forecasts: 5
           view_layout:
-            grid-column: 1 / 5
+            grid-column: 1 / 4
             grid-row: 1
           style: |
             div.precipitation,
             div.precipitation_probability {
                 display: none;
             }
+        - type: thermostat
+          entity: climate.hallway
+          view_layout:
+            grid-column: 4 / 6
+            grid-row: 1
+
 
         # Media controls
         - type: 'custom:mini-media-player'
@@ -46,7 +52,7 @@ views:
           artwork: cover
           icon: none
           view_layout:
-            grid-column: 5/9
+            grid-column: 6/8
             grid-row: 1
           hide:
             power: true
@@ -187,5 +193,5 @@ views:
           show_state: false  
           show_header_toggle: false
           view_layout:
-            grid-column: 8
+            grid-column: 7
             grid-row: 2
