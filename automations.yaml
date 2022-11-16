@@ -4,7 +4,7 @@
   trigger:
   - platform: sun
     event: sunset
-    offset: -00:30:00
+    offset: -00:90:00
   condition: []
   action:
   - type: turn_on
@@ -103,8 +103,32 @@
     brightness_pct: 40
   - service: script.turn_off_three_season_porch_heater
     data: {}
+  - service: script.turn_off_three_season_porch_fan
+    data: {}
+  - service: script.turn_off_livingroom_fan
+    data: {}
   - device_id: 601d37ab0803601772ade2b1e5cc9907
     domain: lock
     entity_id: lock.schlage_door_lock
     type: lock
+  mode: single
+- id: '1649696863362'
+  alias: Washing Machine Finished Notification
+  description: ''
+  trigger:
+  - type: not_moving
+    platform: device
+    device_id: 6d23eb1945367b560b9b481d10877beb
+    entity_id: binary_sensor.multipurpose_sensor_acceleration
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 3
+      seconds: 0
+  condition: []
+  action:
+  - service: notify.mobile_app_iphone
+    data:
+      message: Washing machine is finished
+      title: Washing Machine
   mode: single
