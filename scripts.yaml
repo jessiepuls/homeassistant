@@ -11,6 +11,30 @@ turn_off_three_season_porch_heater:
   mode: single
   icon: mdi:fireplace
 
+# turn_off_three_season_porch_fan:
+#   alias: Turn off three season porch fan
+#   sequence:
+#   - condition: state
+#     entity_id: fan.three_season_porch_ceiling_fan
+#     state: 'on'
+#   - type: turn_off  
+#     entity_id: fan.three_season_porch_ceiling_fan
+#     domain: fan
+#   mode: single
+#   icon: mdi:fan
+
+# turn_off_livingroom_fan:
+#   alias: Turn off livingroom fan
+#   sequence:
+#   - condition: state
+#     entity_id: fan.ceiling_fan
+#     state: 'on'
+#   - type: turn_off
+#     entity_id: fan.ceiling_fan
+#     domain: fan
+#   mode: single
+#   icon: mdi:fan
+
 play_music_three_season_porch:
   alias: Play music on the three season porch
   sequence:
@@ -20,3 +44,10 @@ play_music_three_season_porch:
       data:
         media_content_type: "SPOTIFY"
         media_content_id: "shuffle playlist Daily Mix 1"
+    # - service: media_player.shuffle_set
+    #   data:
+    #     shuffle: true
+    #     entity_id: media_player.spotify_jessie_puls
+    # - service: media_player.media_next_track
+    #   data:
+    #     entity_id: media_player.spotify_jessie_puls
