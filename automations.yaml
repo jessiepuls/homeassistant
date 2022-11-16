@@ -103,10 +103,6 @@
     brightness_pct: 40
   - service: script.turn_off_three_season_porch_heater
     data: {}
-  - service: script.turn_off_three_season_porch_fan
-    data: {}
-  - service: script.turn_off_livingroom_fan
-    data: {}
   - device_id: 601d37ab0803601772ade2b1e5cc9907
     domain: lock
     entity_id: lock.schlage_door_lock
