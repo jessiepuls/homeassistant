@@ -1,197 +1,99 @@
-# Original reference:
-# https://lazyadmin.nl/home-network/home-assistant-dashboard/
-# https://github.com/ruudmens/LazyAdmin/tree/master/Home%20Assistant
-# https://github.com/custom-cards/button-card
-
-button_card_templates:
-  base: !include templates/base-button-template.yaml
-  quick-action: !include templates/quick-action-button-template.yaml
-  automations: !include templates/automations-button-template.yaml
-  graph: !include templates/graph-template.yaml
-
-kiosk_mode: !include templates/kiosk-mode-template.yaml
-
 views:
   - title: Home
-    id: home
-    type: 'custom:grid-layout'
-    layout:
-        # max_cols: 9
-        # grid-template-columns: 160px 160px 160px 160px 280px
+    panel: true
+    badges: []
     cards: 
-        #
-        # Weather card
-        #
-        - type: custom:weather-card
-          entity: weather.home
-          icons: "/local/community/weather-card/icons/"
-          current: true
-          details: false
-          forecast: true
-          hourly_forecast: false
-          number_of_forecasts: 5
-          view_layout:
-            grid-column: 1 / 4
-            grid-row: 1
-          style: |
-            div.precipitation,
-            div.precipitation_probability {
-                display: none;
-            }
-        - type: thermostat
-          entity: climate.hallway
-          view_layout:
-            grid-column: 4 / 6
-            grid-row: 1
-
-
-        # Media controls
-        - type: 'custom:mini-media-player'
-          noPadding: true
-          entity: media_player.living_room
-          artwork: cover
-          icon: none
-          view_layout:
-            grid-column: 6/8
-            grid-row: 1
-          hide:
-            power: true
-            progress: true
-            source: false
-            shuffle: false
-            name: true
-          shortcuts:
-            columns: 4
-            buttons:
-              - name: Play Spotify
-                type: music
-                id: https://open.spotify.com/playlist/37i9dQZF1E38UCXQgkr7fR?si=8622fcf83c334487
-          style: |
-            ha-card{
-                height: 100%;
-                transition: width ease-in-out 0.5s,height ease-in-out 0.5s,border ease-in-out 0.2s,transform ease-in-out 0.2s !important;
-            }
-        
-        # Kitchen Lights
-        - type: custom:state-switch
-          entity: group.kitchen_cabinets
-          default: off
-          view_layout:
-            grid-column: 1
-            grid-row: 2
-          states:
-            "on":       
-                type: 'custom:button-card'
-                template:
-                - base
-                - quick-action
-                entity: group.kitchen_cabinets
-                name: Kitchen Cabinets
-                icon:  mdi:lightbulb-on
-                show_state: true
-                show_header_toggle: false
-                state_display: "Turn off"
-            "off":       
-                type: 'custom:button-card'
-                template:
-                - base
-                - quick-action
-                entity: group.kitchen_cabinets
-                name: Kitchen Cabinets
-                icon:  mdi:lightbulb-outline
-                show_state: true  
-                show_header_toggle: false
-                state_display: "Turn on"
-
-        # Livingroom Lights
-        - type: vertical-stack
-          view_layout:
-            grid-column: 2
-            grid-row: 2
-          cards:
-            - type: custom:state-switch
-              entity: group.livingroom
-              default: off
-              states: 
-                "on":
-                  type: 'custom:button-card'
-                  template:
-                  - base
-                  - quick-action
-                  entity: group.livingroom
-                  name: Livingroom Lights
-                  icon:  mdi:lightbulb-on
-                  show_state: true  
-                  show_header_toggle: false
-                  state_display: "Turn off"
-                "off":
-                  type: 'custom:button-card'
-                  template:
-                  - base
-                  - quick-action
-                  entity: group.livingroom
-                  name: Livingroom Lights
-                  icon:  mdi:lightbulb-outline
-                  show_state: true  
-                  show_header_toggle: false
-                  state_display: "Turn on"
-                  custom-fields:
-                    buttons:
-                      card:
-                        type: horizontal-stack
-                        cards:
-                          - type: 'custom:button-card'
-                            icon: 'mdi:wall-sconce-flat'
-                            name: Fireplace Lights
-
-        # Outdoor Lights
-        - type: vertical-stack
-          view_layout:
-            grid-column: 3
-            grid-row: 2
-          cards:
-            - type: custom:state-switch
-              entity: group.outdoor
-              default: off
-              states: 
-                "on":
-                  type: 'custom:button-card'
-                  template:
-                  - base
-                  - quick-action
-                  entity: group.outdoor
-                  name: Outdoor Lights
-                  icon:  mdi:lightbulb-on
-                  show_state: true  
-                  show_header_toggle: false
-                  state_display: "Turn off"
-                "off":
-                  type: 'custom:button-card'
-                  template:
-                  - base
-                  - quick-action
-                  entity: group.outdoor
-                  name: Outdoor Lights
-                  icon:  mdi:lightbulb-outline
-                  show_state: true  
-                  show_header_toggle: false
-                  state_display: "Turn on"
-        
-        # Bedtime automation
-        - type: 'custom:button-card'
-          template:
-          - base
-          - quick-action
-          - automations
-          name: Bedtime
-          tap_action:
-            action: call-service
-            service: automation.trigger
-            service_data:
-              entity_id: automation.bedtime
-          icon:  mdi:sleep
-          show_state: false  
-          show_header_toggle: false
-          view_layout:
-            grid-column: 7
-            grid-row: 2
+      - type: vertical-stack
+        cards:
+          - type: horizontal-stack
+            cards:
+              - type: custom:weather-card
+                entity: weather.home
+                icons: "/local/community/weather-card/icons/"
+                current: true
+                details: false
+                forecast: true
+                hourly_forecast: false
+                number_of_forecasts: 5
+                style: |
+                  div.precipitation,
+                  div.precipitation_probability {
+                      display: none;
+                  }
+                  ha-card{
+                      height: 100%;
+                      transition: width ease-in-out 0.5s,height ease-in-out 0.5s,border ease-in-out 0.2s,transform ease-in-out 0.2s !important;
+                  }
+              - type: thermostat
+                entity: climate.hallway
+              - type: 'custom:mini-media-player'
+                noPadding: true
+                entity: media_player.living_room
+                artwork: cover
+                icon: none
+                hide:
+                  power: true
+                  progress: true
+                  source: false
+                  shuffle: false
+                  name: true
+                shortcuts:
+                  buttons:
+                    - name: Play Spotify
+                      type: music
+                      id: https://open.spotify.com/playlist/37i9dQZF1E38UCXQgkr7fR?si=8622fcf83c334487
+                style: |
+                  ha-card{
+                      height: 100%;
+                      transition: width ease-in-out 0.5s,height ease-in-out 0.5s,border ease-in-out 0.2s,transform ease-in-out 0.2s !important;
+                  }
+          - type: grid
+            columns: 1
+            square: false
+            cards: 
+              - type: horizontal-stack
+                cards:
+                  - type: button
+                    icon: mdi:lightbulb-outline
+                    tap_action: 
+                      action: toggle
+                    entity: group.livingroom
+                    show_state: true
+                    name: Livingroom
+                  - type: button
+                    tap_action:
+                      action: toggle
+                    entity: group.kitchen_cabinets
+                    show_state: true
+                    name: Kitchen Cabinets
+                    icon: mdi:led-strip-variant
+                  - type: button
+                    tap_action:
+                      action: toggle
+                    entity: light.kitchen_main_lights
+                    show_state: true
+                    name: Kitchen Overhead
+                    icon: mdi:wall-sconce-flat
+                  - type: button
+                    tap_action:
+                      action: toggle
+                    entity: light.hallway_main_lights
+                    show_state: true
+                    name: Hallway
+                    icon: mdi:wall-sconce-flat
+                  - type: button
+                    tap_action:
+                      action: toggle
+                    entity: group.outdoor
+                    show_state: true
+                    icon: mdi:string-lights
+                    name: Outdoor
+                  - type: button
+                    name: Bedtime
+                    tap_action:
+                      action: call-service
+                      service: automation.trigger
+                      service_data:
+                        entity_id: automation.bedtime
+                    show_state: false
+                    icon: mdi:sleep
