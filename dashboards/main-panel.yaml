@@ -25,7 +25,7 @@ views:
                       transition: width ease-in-out 0.5s,height ease-in-out 0.5s,border ease-in-out 0.2s,transform ease-in-out 0.2s !important;
                   }
               - type: thermostat
-                entity: climate.hallway
+                entity: climate.hallway_thermostat
               - type: 'custom:mini-media-player'
                 noPadding: true
                 entity: media_player.living_room
@@ -47,53 +47,92 @@ views:
                       height: 100%;
                       transition: width ease-in-out 0.5s,height ease-in-out 0.5s,border ease-in-out 0.2s,transform ease-in-out 0.2s !important;
                   }
-          - type: grid
-            columns: 1
-            square: false
-            cards: 
-              - type: horizontal-stack
-                cards:
-                  - type: button
-                    icon: mdi:lightbulb-outline
-                    tap_action: 
-                      action: toggle
-                    entity: group.livingroom
-                    show_state: true
-                    name: Livingroom
-                  - type: button
-                    tap_action:
-                      action: toggle
-                    entity: group.kitchen_cabinets
-                    show_state: true
-                    name: Kitchen Cabinets
-                    icon: mdi:led-strip-variant
-                  - type: button
-                    tap_action:
-                      action: toggle
-                    entity: light.kitchen_main_lights
-                    show_state: true
-                    name: Kitchen Overhead
-                    icon: mdi:wall-sconce-flat
-                  - type: button
-                    tap_action:
-                      action: toggle
-                    entity: light.hallway_main_lights
-                    show_state: true
-                    name: Hallway
-                    icon: mdi:wall-sconce-flat
-                  - type: button
-                    tap_action:
-                      action: toggle
-                    entity: group.outdoor
-                    show_state: true
-                    icon: mdi:string-lights
-                    name: Outdoor
-                  - type: button
-                    name: Bedtime
-                    tap_action:
-                      action: call-service
-                      service: automation.trigger
-                      service_data:
-                        entity_id: automation.bedtime
-                    show_state: false
-                    icon: mdi:sleep
+          - type: horizontal-stack
+            cards:
+              - type: button
+                icon: mdi:lightbulb-outline
+                tap_action: 
+                  action: toggle
+                entity: group.livingroom
+                show_state: true
+                name: Livingroom
+              - type: button
+                tap_action:
+                  action: toggle
+                entity: group.kitchen_cabinets
+                show_state: true
+                name: Kitchen Cabinets
+                icon: mdi:led-strip-variant
+              - type: button
+                tap_action:
+                  action: toggle
+                entity: light.kitchen_main_lights
+                show_state: true
+                name: Kitchen Overhead
+                icon: mdi:wall-sconce-flat
+              - type: button
+                tap_action:
+                  action: toggle
+                entity: light.hallway_main_lights
+                show_state: true
+                name: Hallway
+                icon: mdi:wall-sconce-flat
+              - type: button
+                tap_action:
+                  action: toggle
+                entity: group.outdoor
+                show_state: true
+                icon: mdi:string-lights
+                name: Outdoor
+              - type: button
+                name: Bedtime
+                tap_action:
+                  action: call-service
+                  service: automation.trigger
+                  service_data:
+                    entity_id: automation.bedtime
+                show_state: false
+                icon: mdi:sleep
+          - type: horizontal-stack
+            cards:
+              - type: gauge
+                name: Internet Download
+                unit: Mbit/s
+                severity:
+                  green: 350
+                  yellow: 150
+                  red: 0
+                min: 0
+                max: 900
+                needle: true
+                entity: sensor.speedtest_download
+              - type: gauge
+                name: Internet Upload
+                unit: Mbit/s
+                severity:
+                  green: 20
+                  yellow: 10
+                  red: 0
+                min: 0
+                max: 50
+                needle: true
+                entity: sensor.speedtest_upload
+
+              # - type: custom:mini-graph-card
+              #   name: Internet Speed
+              #   align_state: center
+              #   icon: mdi:speedometer
+              #   show:
+              #     extrema: true
+              #     labels: true
+              #     points: true
+              #   entities:
+              #     - entity: sensor.speedtest_download
+              #       name: Download
+              #       color: green
+              #     - entity: sensor.speedtest_upload
+              #       name: Upload
+              #       color: red
+              #     - entity: sensor.speedtest_ping
+              #       name: Ping
+              #       color: yellow

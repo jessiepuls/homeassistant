@@ -5,48 +5,46 @@ views:
     cards: 
       - type: vertical-stack
         cards:
-          # Media controls
-          - type: 'custom:mini-media-player'
-            noPadding: true
-            entity: media_player.spotify_jessie_puls
-            artwork: cover
-            icon: mdi:play
-            view_layout:
-              grid-column: 5/9
-              grid-row: 1
-            hide:
-              power: true
-              progress: true
-              source: true
-              shuffle: false
-              name: true
-            shortcuts:
-              columns: 4
-              buttons:
-                - name: Play Spotify
-                  type: script
-                  id: script.play_music_three_season_porch
-            style: |
-              ha-card{
-                  height: 100%;
-                  transition: width ease-in-out 0.5s,height ease-in-out 0.5s,border ease-in-out 0.2s,transform ease-in-out 0.2s !important;
-              }
-          - type: grid
-            columns: 1
-            square: false
+          - type: horizontal-stack
+            cards:
+              # Media controls
+              - type: 'custom:mini-media-player'
+                noPadding: true
+                entity: media_player.three_season_porch_sonos
+                artwork: cover
+                icon: none
+                hide:
+                  power: true
+                  progress: true
+                  source: false
+                  shuffle: false
+                  name: true
+                shortcuts:
+                  buttons:
+                    - name: Play Spotify
+                      type: music
+                      id: https://open.spotify.com/playlist/37i9dQZF1E38UCXQgkr7fR?si=8622fcf83c334487
+                style: |
+                  ha-card{
+                      height: 100%;
+                      transition: width ease-in-out 0.5s,height ease-in-out 0.5s,border ease-in-out 0.2s,transform ease-in-out 0.2s !important;
+                  }
+
+          - type: vertical-stack
             cards: 
-              # - type: glance
-              #   entities: 
-              #     - entity: sensor.porch_temperature
-              #       name: Temperature
-              #     - entity: sensor.porch_light_level
-              #       name: Light Level
-              #     - entity: binary_sensor.porch_motion
-              #       name: Motion Activated
-              #     - entity: sensor.porch_power
-              #       name: Battery
-              #   columns: 4
-              #   state_color: true
+              - type: horizontal-stack
+                cards:
+                  - entity: sensor.openweathermap_condition
+                    name: Current Weather
+                    type: tile
+                    icon: mdi:clouds
+                  - entity: sensor.openweathermap_temperature
+                    name: Outside Temperature
+                    type: tile
+                  - entity: sensor.three_season_porch_temperature
+                    name: Room Temperature
+                    type: tile
+
               - type: horizontal-stack
                 cards:
                   - type: button
