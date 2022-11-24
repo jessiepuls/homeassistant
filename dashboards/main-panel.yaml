@@ -25,7 +25,7 @@ views:
                       transition: width ease-in-out 0.5s,height ease-in-out 0.5s,border ease-in-out 0.2s,transform ease-in-out 0.2s !important;
                   }
               - type: thermostat
-                entity: climate.hallway_thermostat
+                entity: climate.hallway_thermostat_2
               - type: 'custom:mini-media-player'
                 noPadding: true
                 entity: media_player.living_room
@@ -56,6 +56,13 @@ views:
                 entity: group.livingroom
                 show_state: true
                 name: Livingroom
+              - type: button
+                icon: mdi:ceiling-fan
+                tap_action: 
+                  action: toggle
+                entity: fan.ceiling_fan
+                show_state: true
+                name: Livingroom Fan
               - type: button
                 tap_action:
                   action: toggle

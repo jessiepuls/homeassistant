@@ -41,7 +41,7 @@ views:
                   - entity: sensor.openweathermap_temperature
                     name: Outside Temperature
                     type: tile
-                  - entity: sensor.three_season_porch_temperature
+                  - entity: sensor.three_season_porch_temperature_2
                     name: Room Temperature
                     type: tile
 
