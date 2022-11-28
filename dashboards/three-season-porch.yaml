@@ -34,26 +34,33 @@ views:
             cards: 
               - type: horizontal-stack
                 cards:
-                  - entity: sensor.openweathermap_condition
-                    name: Current Weather
-                    type: tile
-                    icon: mdi:clouds
-                  - entity: sensor.openweathermap_temperature
-                    name: Outside Temperature
-                    type: tile
-                  - entity: sensor.three_season_porch_temperature_2
-                    name: Room Temperature
-                    type: tile
-
-              - type: horizontal-stack
-                cards:
-                  - type: button
+                  - type: custom:button-card
                     icon: mdi:fireplace
                     tap_action: 
                       action: toggle
                     entity: switch.heater
                     show_state: true
                     name: Heater
+                    styles:
+                      card:
+                        - height: 100%
+                      custom_fields:
+                        temp:
+                          - position: absolute
+                          - text-align: left
+                          - left: 75%
+                          - top: 75%
+                    custom_fields:
+                      temp: >
+                        [[[
+                          return `
+                            <ha-icon icon="mdi:home-thermometer" style="width: 20px; height: 20px; color: yellow;"></ha-icon>
+                            <span>${Math.floor(states["sensor.three_season_porch_temperature_2"].state)}°F</span><br/>
+                            <ha-icon icon="mdi:sun-thermometer" style="width: 20px; height: 20px; color: yellow;"></ha-icon>
+                            <span>${Math.floor(states["sensor.openweathermap_temperature"].state)}°F</span>
+                            </span>
+                            `
+                        ]]]
                   - type: button
                     tap_action:
                       action: toggle
