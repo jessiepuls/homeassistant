@@ -91,6 +91,25 @@ views:
                 show_state: true
                 icon: mdi:string-lights
                 name: Outdoor
+              - type: custom:button-card
+                tap_action:
+                  action: toggle
+                entity: lock.schlage_door_lock
+                show_state: true
+                styles:
+                  card:
+                    - height: 100%
+                  icon:
+                    - color: '[[[ if (entity.state == "locked") return "green"; else return "orange" ]]]'
+
+                icon: >
+                  [[[
+                    if (entity.state == "locked")
+                      return "mdi:lock";
+                    else
+                      return "mdi:lock-open";
+                  ]]]
+                name: Front Door
               - type: button
                 name: Bedtime
                 tap_action:
@@ -124,22 +143,3 @@ views:
                 max: 50
                 needle: true
                 entity: sensor.speedtest_upload
-
-              # - type: custom:mini-graph-card
-              #   name: Internet Speed
-              #   align_state: center
-              #   icon: mdi:speedometer
-              #   show:
-              #     extrema: true
-              #     labels: true
-              #     points: true
-              #   entities:
-              #     - entity: sensor.speedtest_download
-              #       name: Download
-              #       color: green
-              #     - entity: sensor.speedtest_upload
-              #       name: Upload
-              #       color: red
-              #     - entity: sensor.speedtest_ping
-              #       name: Ping
-              #       color: yellow
