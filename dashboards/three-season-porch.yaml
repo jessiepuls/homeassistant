@@ -48,8 +48,8 @@ views:
                         temp:
                           - position: absolute
                           - text-align: left
-                          - left: 75%
-                          - top: 75%
+                          - right: 4px
+                          - bottom: 4px
                     custom_fields:
                       temp: >
                         [[[
