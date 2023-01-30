@@ -100,7 +100,7 @@
     device_id: 051f60ffe0f916c25e4cab76bc331240
     entity_id: light.light
     domain: light
-    brightness_pct: 40
+    brightness_pct: 15
   - service: script.turn_off_three_season_porch_heater
     data: {}
   - device_id: 601d37ab0803601772ade2b1e5cc9907
