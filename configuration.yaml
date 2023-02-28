@@ -26,23 +26,6 @@ sonos:
       - !secret sonos_basement_ip
       - !secret sonos_portable_ip
 
-# alexa_media:
-#   accounts:
-#     - email: !secret amazon_user
-#       password: !secret amazon_password
-#       url: amazon.com
-#       include_devices:
-#         - "Three Season Porch"
-
-# spotify:
-#   client_id: !secret spotify_client_id
-#   client_secret: !secret spotify_client_secret
-
-# nest:
-#   client_id: !secret nest_client_id
-#   client_secret: !secret nest_client_secret
-#   project_id: !secret nest_project_id
-
 lovelace:
   mode: yaml
   resources:

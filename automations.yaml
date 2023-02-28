@@ -18,17 +18,10 @@
     domain: light
     brightness_pct: 80
   - type: turn_on
-    device_id: 3acd7d2803023ac309a4470a3947b5ea
-    entity_id: light.above_cabinets_fridge
+    device_id: 63f45b27b8ec7f0cc89f1a967260b641
+    entity_id: light.kitchen_cabinets
     domain: light
-  - type: turn_on
-    device_id: d990d220867a95f796cc8944e1fc59ff
-    entity_id: light.above_cabinets_door
-    domain: light
-  - type: turn_on
-    device_id: ca117580761ec657c760e0dd4bb56f32
-    entity_id: light.above_cabinets_stove
-    domain: light
+    brightness_pct: 30
   mode: single
 - id: '1646610339547'
   alias: Turn on Outdoor Lights in the Evening
@@ -97,16 +90,29 @@
       - outdoors
       - living_room
   - type: turn_on
-    device_id: 051f60ffe0f916c25e4cab76bc331240
-    entity_id: light.light
+    device_id: 2c806900e44be866e66233c9bdfb0fee
+    entity_id: light.extended_color_light_3
     domain: light
-    brightness_pct: 15
+    brightness_pct: 20
   - service: script.turn_off_three_season_porch_heater
     data: {}
   - device_id: 601d37ab0803601772ade2b1e5cc9907
     domain: lock
     entity_id: lock.schlage_door_lock
     type: lock
+  - if:
+    - condition: device
+      device_id: 5d4ae132e7af371b4c99098a6fe42fea
+      domain: climate
+      entity_id: climate.hallway_thermostat_2
+      type: is_hvac_mode
+      hvac_mode: heat
+    then:
+    - service: climate.set_temperature
+      data:
+        temperature: 65
+      target:
+        device_id: 5d4ae132e7af371b4c99098a6fe42fea
   mode: single
 - id: '1649696863362'
   alias: Washing Machine Finished Notification

@@ -12,3 +12,4 @@ secrets.yaml
 tts/*
 www/*
 .vscode-upload.json
+.swp

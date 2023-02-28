@@ -43,7 +43,7 @@ views:
                 cards:
                   # Heater
                   - type: custom:state-switch
-                    entity: group.kitchen_cabinets
+                    entity: light.kitchen_cabinets
                     default: off
                     view_layout:
                       grid-column: 1

@@ -66,7 +66,7 @@ views:
               - type: button
                 tap_action:
                   action: toggle
-                entity: group.kitchen_cabinets
+                entity: light.kitchen_cabinets
                 show_state: true
                 name: Kitchen Cabinets
                 icon: mdi:led-strip-variant
@@ -119,27 +119,27 @@ views:
                     entity_id: automation.bedtime
                 show_state: false
                 icon: mdi:sleep
-          - type: horizontal-stack
-            cards:
-              - type: gauge
-                name: Internet Download
-                unit: Mbit/s
-                severity:
-                  green: 350
-                  yellow: 150
-                  red: 0
-                min: 0
-                max: 900
-                needle: true
-                entity: sensor.speedtest_download
-              - type: gauge
-                name: Internet Upload
-                unit: Mbit/s
-                severity:
-                  green: 20
-                  yellow: 10
-                  red: 0
-                min: 0
-                max: 50
-                needle: true
-                entity: sensor.speedtest_upload
+          # - type: horizontal-stack
+          #   cards:
+          #     - type: gauge
+          #       name: Internet Download
+          #       unit: Mbit/s
+          #       severity:
+          #         green: 350
+          #         yellow: 150
+          #         red: 0
+          #       min: 0
+          #       max: 900
+          #       needle: true
+          #       entity: sensor.speedtest_download
+          #     - type: gauge
+          #       name: Internet Upload
+          #       unit: Mbit/s
+          #       severity:
+          #         green: 20
+          #         yellow: 10
+          #         red: 0
+          #       min: 0
+          #       max: 50
+          #       needle: true
+          #       entity: sensor.speedtest_upload

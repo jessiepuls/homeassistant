@@ -41,6 +41,9 @@ views:
                     entity: switch.heater
                     show_state: true
                     name: Heater
+                    state:
+                      - color: orange
+                        value: "on"
                     styles:
                       card:
                         - height: 100%
@@ -71,7 +74,7 @@ views:
                   - type: button
                     tap_action:
                       action: toggle
-                    entity: switch.three_season_porch_ceiling_fan_light
+                    entity: light.three_season_porch_ceiling_fan
                     show_state: true
                     icon: mdi:ceiling-light
                     name: Light
