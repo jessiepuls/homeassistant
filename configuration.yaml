@@ -64,7 +64,7 @@ lovelace:
       require_admin: false
     lovelace-chicken-coop:
       mode: yaml
-      icon: mdi:door-closed
+      icon: mdi:egg
       title: Chicken Coop
       filename: dashboards/chicken-coop.yaml
       show_in_sidebar: true
