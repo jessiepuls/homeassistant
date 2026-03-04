@@ -200,15 +200,6 @@
     entity_id: 37429b3d46890887caf19f8ce4a0f3d6
     type: close
   mode: single
-- id: '1748275298968'
-  alias: Turn on Chicken Coop Light
-  description: ''
-  triggers:
-  - trigger: sun
-    event: sunset
-    offset: '-45:00:00'
-  conditions: []
-  actions:
   - type: turn_on
     device_id: 28f263e6d022818ac183308b530f7b35
     entity_id: cf7302fad5784a8fd74e8ab2bc8d44a9
