@@ -1,15 +1,22 @@
 extends: default
 
+ignore: |
+  custom_components/
+  blueprints/
+
 rules:
+  # HA files don't use document start markers
+  document-start: disable
+
   # HA configs commonly have long lines (entity IDs, templates, etc.)
   line-length:
     max: 250
     level: warning
 
-  # HA uses indentation of 2 spaces
+  # HA uses both sequence indentation styles (HA auto-generates unindented sequences)
   indentation:
     spaces: 2
-    indent-sequences: true
+    indent-sequences: whatever
 
   # Allow multiple blank lines (used for readability between card sections)
   empty-lines:
@@ -23,3 +30,5 @@ rules:
   # Comments are heavily used in dashboards
   comments:
     min-spaces-from-content: 1
+
+  comments-indentation: disable
