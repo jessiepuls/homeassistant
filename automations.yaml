@@ -1,136 +1,305 @@
 - id: '1646609164542'
-  alias: Turn on indoor lights in the evening
+  alias: Turn on lights in the evening
   description: ''
-  trigger:
-  - platform: sun
-    event: sunset
-    offset: -00:90:00
-  condition: []
-  action:
-  - type: turn_on
-    device_id: 3dfe43c736d7de5ca73345ff4601890b
-    entity_id: light.living_room_sconces
-    domain: light
-    brightness_pct: 80
-  - type: turn_on
-    device_id: 253efb31b1f2b0c67313571577004b52
-    entity_id: light.entryway_lights
-    domain: light
-    brightness_pct: 80
-  - type: turn_on
-    device_id: 63f45b27b8ec7f0cc89f1a967260b641
-    entity_id: light.kitchen_cabinets
-    domain: light
-    brightness_pct: 30
+  triggers:
+  - event: sunset
+    offset: -00:60:00
+    trigger: sun
+  conditions:
+  - condition: zone
+    entity_id: person.jessie_puls
+    zone: zone.home
+  actions:
+  - action: light.turn_on
+    metadata: {}
+    data: {}
+    target:
+      device_id: df4fa28466834af8b35ecaa3590c58ad
+  - action: light.turn_on
+    metadata: {}
+    data: {}
+    target:
+      device_id: f0f1f52e88e8ec0ebc40600ce5594100
   mode: single
 - id: '1646610339547'
   alias: Turn on Outdoor Lights in the Evening
   description: ''
-  trigger:
-  - platform: sun
-    event: sunset
+  triggers:
+  - event: sunset
     offset: '0'
-  condition: []
-  action:
-  - service: light.turn_on
-    data: {}
+    trigger: sun
+  conditions: []
+  actions:
+  - data: {}
     target:
       area_id: outdoors
-  - service: switch.turn_on
-    data: {}
+    action: light.turn_on
+  - data: {}
     target:
       area_id: outdoors
+    action: switch.turn_on
   mode: single
 - id: '1646616822825'
   alias: Turn off Outdoor Lights At Night
   description: ''
-  trigger:
-  - platform: time
-    at: '23:00:00'
-  condition: []
-  action:
-  - service: light.turn_off
-    data: {}
+  triggers:
+  - at: '23:59:00'
+    trigger: time
+  conditions: []
+  actions:
+  - data: {}
     target:
       area_id: outdoors
-  - service: switch.turn_off
-    data: {}
+    action: light.turn_off
+  - data: {}
     target:
       area_id: outdoors
+    action: switch.turn_off
   mode: single
 - id: '1646634523203'
   alias: Bedtime
   description: ''
-  trigger:
-  - platform: event
-    event_type: ''
-  condition: []
-  action:
-  - service: media_player.turn_off
-    data: {}
+  triggers:
+  - event_type: ''
+    trigger: event
+  conditions: []
+  actions:
+  - data: {}
     target:
       entity_id: media_player.upstairs_tv
+    action: media_player.turn_off
   - type: turn_on
     device_id: ed25db0eec179417785a7a4ef51664bc
     entity_id: light.hallway_main_lights
     domain: light
     brightness_pct: 30
-  - service: light.turn_off
-    data: {}
+  - data: {}
     target:
       area_id:
       - kitchen
       - living_room
       - outdoors
-      - three_season_porch
-  - service: switch.turn_off
-    data: {}
+      - dining_room
+    action: light.turn_off
+  - data: {}
     target:
       area_id:
       - outdoors
       - living_room
-  - type: turn_on
-    device_id: 2c806900e44be866e66233c9bdfb0fee
-    entity_id: light.extended_color_light_3
-    domain: light
-    brightness_pct: 20
-  - service: script.turn_off_three_season_porch_heater
-    data: {}
-  - device_id: 601d37ab0803601772ade2b1e5cc9907
-    domain: lock
-    entity_id: lock.schlage_door_lock
-    type: lock
-  - if:
-    - condition: device
-      device_id: 5d4ae132e7af371b4c99098a6fe42fea
-      domain: climate
-      entity_id: climate.hallway_thermostat_2
-      type: is_hvac_mode
-      hvac_mode: heat
-    then:
-    - service: climate.set_temperature
-      data:
-        temperature: 65
-      target:
-        device_id: 5d4ae132e7af371b4c99098a6fe42fea
+    action: switch.turn_off
+  - data: {}
+    action: script.turn_off_three_season_porch_heater
   mode: single
-- id: '1649696863362'
-  alias: Washing Machine Finished Notification
+- id: '1698817689655'
+  alias: Back Yard Lights
   description: ''
-  trigger:
-  - type: not_moving
-    platform: device
-    device_id: 6d23eb1945367b560b9b481d10877beb
-    entity_id: binary_sensor.multipurpose_sensor_acceleration
-    domain: binary_sensor
-    for:
-      hours: 0
-      minutes: 3
-      seconds: 0
-  condition: []
-  action:
-  - service: notify.mobile_app_iphone
-    data:
-      message: Washing machine is finished
-      title: Washing Machine
+  use_blueprint:
+    path: chrissalter/state-bonding-simplified-and-easier.yaml
+    input:
+      entity_list:
+      - switch.exterior_string_lights
+      - light.exterior_deck_lights
+- id: '1704689880782'
+  alias: Turn off indoor lights at night
+  description: ''
+  triggers:
+  - at: 02:00:00
+    trigger: time
+  conditions: []
+  actions:
+  - type: turn_off
+    device_id: 3dfe43c736d7de5ca73345ff4601890b
+    entity_id: d27b1c7bba033a9ad231e1dcd6715d0f
+    domain: light
+  - type: turn_off
+    device_id: 253efb31b1f2b0c67313571577004b52
+    entity_id: 88fb2a2e11645baf189605b8ff1fea5e
+    domain: light
+  - type: turn_off
+    device_id: e6f2916caa899a05821b4f79976ddca8
+    entity_id: 1d5da9fb4629653b7e9d10bab973b1a7
+    domain: light
+  - type: turn_off
+    device_id: 35450f7564a111b96830dcaf0fee042e
+    entity_id: 281bcbe36515e2752c3d9f0741f1f9b9
+    domain: light
+  - action: light.turn_off
+    metadata: {}
+    data: {}
+    target:
+      device_id: f0f1f52e88e8ec0ebc40600ce5594100
+  - action: light.turn_off
+    metadata: {}
+    data: {}
+    target:
+      device_id: df4fa28466834af8b35ecaa3590c58ad
+  mode: single
+- id: '1707782077065'
+  alias: Dining Room Lights Sync
+  description: ''
+  use_blueprint:
+    path: chrissalter/state-bonding-simplified-and-easier.yaml
+    input:
+      entity_list:
+      - light.dining_room_ceiling_fan_light
+      - light.hue_smart_plug_1
+      - light.hue_smart_plug_1_2
+- id: '1748154090198'
+  alias: Chicken Coop Door Open
+  description: ''
+  triggers:
+  - trigger: sun
+    event: sunrise
+    offset: 00:60:00
+  - trigger: time
+    at: 07:00:00
+  conditions:
+  - condition: or
+    conditions:
+    - condition: device
+      device_id: e26628038ef92e9846da78982743feea
+      domain: cover
+      entity_id: 37429b3d46890887caf19f8ce4a0f3d6
+      type: is_closing
+    - condition: device
+      device_id: e26628038ef92e9846da78982743feea
+      domain: cover
+      entity_id: 37429b3d46890887caf19f8ce4a0f3d6
+      type: is_closed
+  actions:
+  - device_id: e26628038ef92e9846da78982743feea
+    domain: cover
+    entity_id: 37429b3d46890887caf19f8ce4a0f3d6
+    type: open
+  mode: single
+- id: '1748275171272'
+  alias: Chicken Coop Door Close
+  description: ''
+  triggers:
+  - trigger: sun
+    event: sunset
+    offset: 00:30:00
+  - trigger: time
+    at: '21:00:00'
+  conditions:
+  - condition: or
+    conditions:
+    - condition: device
+      device_id: e26628038ef92e9846da78982743feea
+      domain: cover
+      entity_id: 37429b3d46890887caf19f8ce4a0f3d6
+      type: is_open
+    - condition: device
+      device_id: e26628038ef92e9846da78982743feea
+      domain: cover
+      entity_id: 37429b3d46890887caf19f8ce4a0f3d6
+      type: is_opening
+  actions:
+  - device_id: e26628038ef92e9846da78982743feea
+    domain: cover
+    entity_id: 37429b3d46890887caf19f8ce4a0f3d6
+    type: close
+  mode: single
+- id: '1748275298968'
+  alias: Turn on Chicken Coop Light
+  description: ''
+  triggers:
+  - trigger: sun
+    event: sunset
+    offset: '-45:00:00'
+  conditions: []
+  actions:
+  - type: turn_on
+    device_id: 28f263e6d022818ac183308b530f7b35
+    entity_id: cf7302fad5784a8fd74e8ab2bc8d44a9
+    domain: light
+  mode: single
+- id: '1755720058681'
+  alias: When I arrive home
+  description: ''
+  triggers:
+  - trigger: zone
+    entity_id: person.jessie_puls
+    zone: zone.home
+    event: enter
+  conditions:
+  - condition: sun
+    after: sunset
+    after_offset: -00:30:00
+  actions:
+  - action: light.turn_on
+    metadata: {}
+    data: {}
+    target:
+      device_id: df4fa28466834af8b35ecaa3590c58ad
+  - action: light.turn_on
+    metadata: {}
+    data: {}
+    target:
+      device_id: f0f1f52e88e8ec0ebc40600ce5594100
+  mode: single
+- id: '1768495878924'
+  alias: When I leave home
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - person.jessie_puls
+    from:
+    - home
+    to:
+    - not_home
+  conditions: []
+  actions:
+  - action: light.turn_off
+    metadata: {}
+    target:
+      area_id:
+      - living_room
+      - kitchen
+      - dining
+      - stairs
+      - hallway
+      entity_id:
+      - light.bedroom_lamp
+      - light.three_season_porch
+    data: {}
+  mode: single
+- id: '1771822848950'
+  alias: Chicken Feeder Close at Sunset
+  description: ''
+  triggers:
+  - trigger: sun
+    event: sunset
+    offset: 0
+  conditions:
+  - condition: state
+    entity_id: cover.jessica_s_feeder_feeder
+    state:
+    - open
+    - opening
+  actions:
+  - device_id: 5dca65a0ebb141eded4673411b355aab
+    domain: cover
+    entity_id: 5d96f91d0db6542a7b2dc5632c4dc71e
+    type: close
+  mode: single
+- id: '1771822978368'
+  alias: Chicken Feeder Open at Sunrise
+  description: ''
+  triggers:
+  - trigger: sun
+    event: sunrise
+    offset: 0
+  conditions:
+  - condition: state
+    entity_id: cover.jessica_s_feeder_feeder
+    state:
+    - closed
+    - closing
+  actions:
+  - device_id: 5dca65a0ebb141eded4673411b355aab
+    domain: cover
+    entity_id: 5d96f91d0db6542a7b2dc5632c4dc71e
+    type: open
   mode: single

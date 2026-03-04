@@ -1,0 +1,11 @@
+- name: livingroom
+  platform: group
+  entities:
+    - light.entryway_lights
+    - light.living_room_sconces
+- name: kitchen_cabinets
+  platform: group
+  entities:
+    - light.hue_lightstrip_1
+    - light.hue_lightstrip_2
+    - light.hue_lightstrip_3
