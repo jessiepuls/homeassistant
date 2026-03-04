@@ -91,9 +91,9 @@ views:
               - type: button
                 name: Bedtime
                 tap_action:
-                  action: call-service
-                  service: automation.trigger
-                  service_data:
+                  action: perform-action
+                  perform_action: automation.trigger
+                  target:
                     entity_id: automation.bedtime
                 show_state: false
                 icon: mdi:sleep
