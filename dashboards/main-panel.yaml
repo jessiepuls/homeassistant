@@ -76,6 +76,13 @@ views:
               - type: button
                 tap_action:
                   action: toggle
+                entity: light.dining_room_ceiling_fan_light
+                show_state: true
+                name: Dining Room
+                icon: mdi:ceiling-light
+              - type: button
+                tap_action:
+                  action: toggle
                 entity: group.outdoor
                 show_state: true
                 icon: mdi:string-lights
