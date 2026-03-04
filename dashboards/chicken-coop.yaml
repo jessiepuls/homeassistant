@@ -90,6 +90,20 @@ views:
               yellow: 25
               red: 0
 
+      # Feed level history
+      - type: custom:mini-graph-card
+        entities:
+          - entity: sensor.jessica_s_feeder_feed_level
+            name: Feed Level
+        name: Feed Level History
+        hours_to_show: 240
+        points_per_hour: 1
+        line_width: 2
+        show:
+          fill: true
+          points: false
+          legend: false
+
       # Row 3: Last activity
       - type: entities
         title: Last Activity
@@ -104,33 +118,20 @@ views:
             name: Feeder Last Closed
 
       # Row 4: Schedule automations
-      - type: horizontal-stack
-        cards:
-          - type: button
-            entity: automation.open_chicken_coop_door
-            name: Auto Open Door
-            icon: mdi:door-open
-            tap_action:
-              action: toggle
-            show_state: true
-          - type: button
-            entity: automation.close_coop_door
-            name: Auto Close Door
-            icon: mdi:door-closed
-            tap_action:
-              action: toggle
-            show_state: true
-          - type: button
-            entity: automation.chicken_feeder_open_at_sunrise
-            name: Auto Open Feeder
-            icon: mdi:weather-sunny
-            tap_action:
-              action: toggle
-            show_state: true
-          - type: button
-            entity: automation.chicken_feeder_close_at_sunset
-            name: Auto Close Feeder
-            icon: mdi:weather-sunset
-            tap_action:
-              action: toggle
-            show_state: true
+      - type: entities
+        title: Scheduled Automations
+        entities:
+          - type: buttons
+            entities:
+              - entity: automation.open_chicken_coop_door
+                name: Auto Open Door
+                icon: mdi:door-open
+              - entity: automation.close_coop_door
+                name: Auto Close Door
+                icon: mdi:door-closed
+              - entity: automation.chicken_feeder_open_at_sunrise
+                name: Auto Open Feeder
+                icon: mdi:weather-sunny
+              - entity: automation.chicken_feeder_close_at_sunset
+                name: Auto Close Feeder
+                icon: mdi:weather-sunset
