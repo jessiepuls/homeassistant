@@ -6,7 +6,7 @@ views:
   - title: Home
     panel: true
     badges: []
-    cards: 
+    cards:
       - type: vertical-stack
         cards:
           # Media controls
@@ -38,7 +38,7 @@ views:
           - type: grid
             columns: 1
             square: false
-            cards: 
+            cards:
               - type: horizontal-stack
                 cards:
                   # Heater
@@ -49,31 +49,31 @@ views:
                       grid-column: 1
                       grid-row: 2
                     states:
-                      "on":       
-                          type: 'custom:button-card'
-                          template:
-                          - base
-                          - quick-action
-                          entity: switch.basement_desk_plug
-                          name: Heater
-                          icon:  mdi:radiator
-                          show_state: true
-                          show_header_toggle: false
-                          state_display: "Turn off"
-                      "off":       
-                          type: 'custom:button-card'
-                          template:
-                          - base
-                          - quick-action
-                          entity: switch.basement_desk_plug
-                          name: Heater
-                          icon:  mdi:radiator
-                          show_state: true  
-                          show_header_toggle: false
-                          state_display: "Turn on"
+                      "on":
+                        type: 'custom:button-card'
+                        template:
+                        - base
+                        - quick-action
+                        entity: switch.basement_desk_plug
+                        name: Heater
+                        icon: mdi:radiator
+                        show_state: true
+                        show_header_toggle: false
+                        state_display: "Turn off"
+                      "off":
+                        type: 'custom:button-card'
+                        template:
+                        - base
+                        - quick-action
+                        entity: switch.basement_desk_plug
+                        name: Heater
+                        icon: mdi:radiator
+                        show_state: true
+                        show_header_toggle: false
+                        state_display: "Turn on"
               #     - type: button
               #       icon: mdi:radiator
-              #       tap_action: 
+              #       tap_action:
               #         action: toggle
               #       entity: switch.basement_desk_plug
               #       show_state: true

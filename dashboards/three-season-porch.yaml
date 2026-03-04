@@ -2,13 +2,13 @@ views:
   - title: Home
     panel: true
     badges: []
-    cards: 
+    cards:
       - type: vertical-stack
         cards:
           - type: horizontal-stack
             cards:
               # Media controls
-              - type: 'custom:mini-media-player'
+              - type: "custom:mini-media-player"
                 noPadding: true
                 entity: media_player.three_season_porch_sonos
                 artwork: cover
@@ -31,12 +31,12 @@ views:
                   }
 
           - type: vertical-stack
-            cards: 
+            cards:
               - type: horizontal-stack
                 cards:
                   - type: custom:button-card
                     icon: mdi:fireplace
-                    tap_action: 
+                    tap_action:
                       action: toggle
                     entity: switch.heater
                     show_state: true
@@ -47,27 +47,27 @@ views:
                     styles:
                       card:
                         - height: 100%
-                      custom_fields:
-                        temp:
-                          - position: absolute
-                          - text-align: left
-                          - right: 4px
-                          - bottom: 4px
-                    custom_fields:
-                      temp: >
-                        [[[
-                          return `
-                            <ha-icon icon="mdi:home-thermometer" style="width: 20px; height: 20px; color: yellow;"></ha-icon>
-                            <span>${Math.floor(states["sensor.three_season_porch_temperature_2"].state)}°F</span><br/>
-                            <ha-icon icon="mdi:sun-thermometer" style="width: 20px; height: 20px; color: yellow;"></ha-icon>
-                            <span>${Math.floor(states["sensor.openweathermap_temperature"].state)}°F</span>
-                            </span>
-                            `
-                        ]]]
+                      # custom_fields:
+                      #   temp:
+                      #     - position: absolute
+                      #     - text-align: left
+                      #     - right: 4px
+                      #     - bottom: 4px
+                    # custom_fields:
+                    #   temp: >
+                    #     [[[
+                    #       return `
+                    #         <ha-icon icon="mdi:home-thermometer" style="width: 20px; height: 20px; color: yellow;"></ha-icon>
+                    #         <span>${Math.floor(states["sensor.three_season_porch_temperature_2"].state)}°F</span><br/>
+                    #         <ha-icon icon="mdi:sun-thermometer" style="width: 20px; height: 20px; color: yellow;"></ha-icon>
+                    #         <span>${Math.floor(states["sensor.openweathermap_temperature"].state)}°F</span>
+                    #         </span>
+                    #         `
+                    #     ]]]
                   - type: button
                     tap_action:
                       action: toggle
-                    entity: light.three_season_porch_lamp
+                    entity: light.three_season_porch_lamp2
                     show_state: true
                     name: Lamp
                     icon: mdi:floor-lamp

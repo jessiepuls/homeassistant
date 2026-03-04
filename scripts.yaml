@@ -17,7 +17,7 @@ turn_off_three_season_porch_heater:
 #   - condition: state
 #     entity_id: fan.three_season_porch_ceiling_fan
 #     state: 'on'
-#   - type: turn_off  
+#   - type: turn_off
 #     entity_id: fan.three_season_porch_ceiling_fan
 #     domain: fan
 #   mode: single

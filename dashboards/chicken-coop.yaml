@@ -1,0 +1,157 @@
+views:
+  - title: Chicken Coop
+    path: chicken-coop
+    icon: mdi:egg
+    panel: true
+    badges: []
+    cards:
+      - type: custom:layout-card
+        layout_type: grid
+        layout:
+          grid-template-columns: 1fr 1fr
+          mediaquery:
+            "(max-width: 768px)":
+              grid-template-columns: 1fr
+        cards:
+
+          # Left column: Main controls
+          - type: horizontal-stack
+            view_layout:
+              column: 1
+            cards:
+              - type: custom:button-card
+                entity: cover.coop_door
+                name: Coop Door
+                show_state: true
+                tap_action:
+                  action: more-info
+                state:
+                  - value: open
+                    icon: mdi:door-open
+                    color: green
+                  - value: closed
+                    icon: mdi:door-closed
+                  - value: opening
+                    icon: mdi:door-open
+                    color: orange
+                  - value: closing
+                    icon: mdi:door-closed
+                    color: orange
+                styles:
+                  card:
+                    - height: 150px
+
+              - type: custom:button-card
+                entity: cover.jessica_s_feeder_feeder
+                name: Feeder
+                icon: mdi:food
+                show_state: true
+                tap_action:
+                  action: more-info
+                state:
+                  - value: open
+                    color: green
+                  - value: closed
+                    color: var(--primary-text-color)
+                  - value: opening
+                    color: orange
+                  - value: closing
+                    color: orange
+                styles:
+                  card:
+                    - height: 150px
+
+              - type: button
+                entity: light.coop_door_light
+                icon: mdi:lightbulb
+                name: Coop Light
+                tap_action:
+                  action: toggle
+                show_state: true
+
+          # Left column: Status gauges
+          - type: horizontal-stack
+            view_layout:
+              column: 1
+            cards:
+              - type: gauge
+                entity: sensor.jessica_s_feeder_feed_level
+                name: Feed Level
+                min: 0
+                max: 100
+                severity:
+                  red: 0
+                  yellow: 30
+                  green: 50
+
+              - type: gauge
+                entity: sensor.coop_door_battery_level_2
+                name: Door Battery
+                min: 0
+                max: 100
+                severity:
+                  red: 0
+                  yellow: 20
+                  green: 50
+
+              - type: gauge
+                entity: sensor.jessica_s_feeder_battery_level
+                name: Feeder Battery
+                min: 0
+                max: 100
+                severity:
+                  red: 0
+                  yellow: 20
+                  green: 50
+
+          # Right column: Feed level history
+          - type: custom:mini-graph-card
+            view_layout:
+              column: 2
+            entities:
+              - entity: sensor.jessica_s_feeder_feed_level
+                name: Feed Level
+            name: Feed Level History
+            hours_to_show: 240
+            points_per_hour: 1
+            line_width: 2
+            show:
+              fill: true
+              points: false
+              legend: false
+
+          # Right column: Last activity
+          - type: entities
+            title: Last Activity
+            view_layout:
+              column: 2
+            entities:
+              - entity: sensor.coop_door_last_open_time
+                name: Door Last Opened
+              - entity: sensor.coop_door_last_close_time
+                name: Door Last Closed
+              - entity: sensor.jessica_s_feeder_feeder_last_open_time
+                name: Feeder Last Opened
+              - entity: sensor.jessica_s_feeder_feeder_last_close_time
+                name: Feeder Last Closed
+
+          # Bottom: Scheduled automations
+          - type: entities
+            title: Scheduled Automations
+            view_layout:
+              grid-column: 1 / -1
+            entities:
+              - type: buttons
+                entities:
+                  - entity: automation.open_chicken_coop_door
+                    name: Auto Open Door
+                    icon: mdi:door-open
+                  - entity: automation.close_coop_door
+                    name: Auto Close Door
+                    icon: mdi:door-closed
+                  - entity: automation.chicken_feeder_open_at_sunrise
+                    name: Auto Open Feeder
+                    icon: mdi:weather-sunny
+                  - entity: automation.chicken_feeder_close_at_sunset
+                    name: Auto Close Feeder
+                    icon: mdi:weather-sunset

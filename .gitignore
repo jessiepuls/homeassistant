@@ -11,5 +11,6 @@ home-assistant*db*
 secrets.yaml
 tts/*
 www/*
-.vscode-upload.json
-.swp
+.ha_run.lock
+*~*
+aarlo*

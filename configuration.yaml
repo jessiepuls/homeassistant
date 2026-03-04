@@ -1,4 +1,3 @@
-
 # Configure a default setup of Home Assistant (frontend, api, etc)
 default_config:
 
@@ -9,25 +8,29 @@ tts:
 sensor:
   - platform: time_date
     display_options:
-      - 'time'
-      - 'date'
-      - 'date_time'
-      - 'date_time_utc'
-      - 'date_time_iso'
-      - 'time_date'
-      - 'time_utc'
-      - 'beat'
+      - "time"
+      - "date"
+      - "date_time"
+      - "date_time_utc"
+      - "date_time_iso"
+      - "time_date"
+      - "time_utc"
 
-# Need this because sonos speakers are on a differnt subnet from home assistant
+# Static hosts needed because Sonos speakers are on a different subnet from Home Assistant
 sonos:
   media_player:
     hosts:
       - !secret sonos_livingroom_ip
       - !secret sonos_basement_ip
       - !secret sonos_portable_ip
+      - !secret sonos_bedroom_ip
+      - !secret sonos_office_ip
+      - !secret sonos_three_season_porch_ip
+      - !secret sonos_record_player_ip
+      - !secret sonos_dining_ip
 
 lovelace:
-  mode: yaml
+  resource_mode: yaml
   resources:
     - type: module
       url: /hacsfiles/lovelace-card-mod/card-mod.js
@@ -53,14 +56,11 @@ lovelace:
       url: /local/style.css
     - type: css
       url: /local/latofonts.css
+    - url: /hacsfiles/custom-sonos-card/custom-sonos-card.js
+      type: module
+    - url: /hacsfiles/clock-weather-card/clock-weather-card.js
+      type: module
   dashboards:
-    lovelace-basement:
-      mode: yaml
-      icon: mdi:home-floor-b
-      title: Basement
-      filename: dashboards/basement.yaml
-      show_in_sidebar: true
-      require_admin: false
     lovelace-three-season-porch:
       mode: yaml
       icon: mdi:fireplace
@@ -75,10 +75,16 @@ lovelace:
       filename: dashboards/main-panel.yaml
       show_in_sidebar: true
       require_admin: false
+    lovelace-chicken-coop:
+      mode: yaml
+      icon: mdi:egg
+      title: Chicken Coop
+      filename: dashboards/chicken-coop.yaml
+      show_in_sidebar: true
+      require_admin: false
 
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
 light: !include lights.yaml
 group: !include groups.yaml
-
