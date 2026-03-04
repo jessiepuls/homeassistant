@@ -78,6 +78,18 @@ views:
                   - entity: group.outdoor
                     name: All Outdoor
                     icon: mdi:string-lights
+                  - entity: light.exterior_deck_lights
+                    name: Back Yard
+                    icon: mdi:outdoor-lamp
+                  - entity: light.exterior_driveway_light
+                    name: Driveway
+                    icon: mdi:car
+                  - entity: switch.front_door
+                    name: Front Door
+                    icon: mdi:door
+                  - entity: switch.front_yard_lamp_post
+                    name: Lamp Post
+                    icon: mdi:lamp
 
           - type: entities
             title: Hallway & Stairs
@@ -95,6 +107,21 @@ views:
                     icon: mdi:thermostat
                     tap_action:
                       action: more-info
+
+          - type: entities
+            title: Bedroom
+            entities:
+              - type: buttons
+                entities:
+                  - entity: light.bedroom_lamp
+                    name: Lamp
+                    icon: mdi:lamp
+                  - entity: light.master_bedroom_ceiling_fan
+                    name: Fan Light
+                    icon: mdi:ceiling-fan-light
+                  - entity: fan.master_bedroom_ceiling_fan
+                    name: Fan
+                    icon: mdi:ceiling-fan
 
           - type: entities
             title: Actions
