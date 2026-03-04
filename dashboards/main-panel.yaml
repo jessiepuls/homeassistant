@@ -5,6 +5,7 @@ views:
     cards:
       - type: vertical-stack
         cards:
+          # Row 1: Info & media
           - type: horizontal-stack
             cards:
               - type: custom:clock-weather-card
@@ -12,88 +13,88 @@ views:
               - type: thermostat
                 entity: climate.hallway
               - type: custom:sonos-card
+
+          # Row 2: Area controls
           - type: horizontal-stack
             cards:
-              - type: button
-                icon: mdi:lightbulb-outline
-                tap_action:
-                  action: toggle
-                entity: light.living_room_lamps
-                show_state: true
-                name: Livingroom Lamps
-              - type: button
-                icon: mdi:lightbulb-outline
-                tap_action:
-                  action: toggle
-                entity: light.livingroom
-                show_state: true
-                name: Livingroom Lights
-              - type: button
-                icon: mdi:ceiling-fan
-                tap_action:
-                  action: toggle
-                entity: fan.ceiling_fan
-                show_state: true
-                name: Livingroom Fan
-              - type: conditional
-                conditions:
-                  - condition: state
-                    entity: light.christmas_tree
-                    state_not: unavailable
-                card:
-                  type: custom:button-card
-                  icon: mdi:pine-tree
-                  tap_action:
-                    action: toggle
-                  entity: light.christmas_tree
-                  show_state: true
-                  name: Christmas Tree
-                  styles:
-                    card:
-                      - height: 100%
-                    icon:
-                      - color: '[[[ if (entity.state == "on") return "green"; else return "red" ]]]'
-              - type: button
-                tap_action:
-                  action: toggle
-                entity: light.kitchen_cabinets
-                show_state: true
-                name: Kitchen Cabinets
-                icon: mdi:led-strip-variant
-              - type: button
-                tap_action:
-                  action: toggle
-                entity: light.kitchen_main_lights
-                show_state: true
-                name: Kitchen Overhead
-                icon: mdi:wall-sconce-flat
-              - type: button
-                tap_action:
-                  action: toggle
-                entity: light.hallway_main_lights
-                show_state: true
-                name: Hallway
-                icon: mdi:wall-sconce-flat
-              - type: button
-                tap_action:
-                  action: toggle
-                entity: light.dining_room_ceiling_fan_light
-                show_state: true
-                name: Dining Room
-                icon: mdi:ceiling-light
-              - type: button
-                tap_action:
-                  action: toggle
-                entity: group.outdoor
-                show_state: true
-                icon: mdi:string-lights
-                name: Outdoor
-              - type: button
-                name: Bedtime
-                tap_action:
-                  action: perform-action
-                  perform_action: automation.trigger
-                  target:
-                    entity_id: automation.bedtime
-                show_state: false
-                icon: mdi:sleep
+              - type: entities
+                title: Living Room
+                entities:
+                  - type: buttons
+                    entities:
+                      - entity: light.living_room_lamps
+                        name: Lamps
+                        icon: mdi:lightbulb-outline
+                      - entity: light.livingroom
+                        name: Lights
+                        icon: mdi:lightbulb-outline
+                      - entity: fan.ceiling_fan
+                        name: Fan
+                        icon: mdi:ceiling-fan
+                  - type: conditional
+                    conditions:
+                      - condition: state
+                        entity: light.christmas_tree
+                        state_not: unavailable
+                    row:
+                      type: buttons
+                      entities:
+                        - entity: light.christmas_tree
+                          name: Christmas Tree
+                          icon: mdi:pine-tree
+
+              - type: entities
+                title: Kitchen
+                entities:
+                  - type: buttons
+                    entities:
+                      - entity: light.kitchen_cabinets
+                        name: Cabinets
+                        icon: mdi:led-strip-variant
+                      - entity: light.kitchen_main_lights
+                        name: Overhead
+                        icon: mdi:wall-sconce-flat
+
+              - type: entities
+                title: Dining Room
+                entities:
+                  - type: buttons
+                    entities:
+                      - entity: light.dining_room_ceiling_fan_light
+                        name: Lights
+                        icon: mdi:ceiling-light
+
+              - type: entities
+                title: Outdoors
+                entities:
+                  - type: buttons
+                    entities:
+                      - entity: group.outdoor
+                        name: All Outdoor
+                        icon: mdi:string-lights
+
+              - type: entities
+                title: Actions
+                entities:
+                  - type: buttons
+                    entities:
+                      - entity: automation.bedtime
+                        name: Bedtime
+                        icon: mdi:sleep
+                        tap_action:
+                          action: perform-action
+                          perform_action: automation.trigger
+                          target:
+                            entity_id: automation.bedtime
+
+              - type: entities
+                title: Hallway & Stairs
+                entities:
+                  - type: buttons
+                    entities:
+                      - entity: light.hallway_main_lights
+                        name: Hallway
+                        icon: mdi:wall-sconce-flat
+                      - entity: light.stairs_main_lights
+                        name: Stairs
+                        icon: mdi:stairs
