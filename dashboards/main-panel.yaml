@@ -11,6 +11,7 @@ views:
                 entity: weather.openweathermap
               - type: thermostat
                 entity: climate.hallway
+              - type: custom:sonos-card
           - type: horizontal-stack
             cards:
               - type: button

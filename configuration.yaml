@@ -16,6 +16,19 @@ sensor:
       - "time_date"
       - "time_utc"
 
+# Static hosts needed because Sonos speakers are on a different subnet from Home Assistant
+sonos:
+  media_player:
+    hosts:
+      - !secret sonos_livingroom_ip
+      - !secret sonos_basement_ip
+      - !secret sonos_portable_ip
+      - !secret sonos_bedroom_ip
+      - !secret sonos_office_ip
+      - !secret sonos_three_season_porch_ip
+      - !secret sonos_record_player_ip
+      - !secret sonos_dining_ip
+
 lovelace:
   resource_mode: yaml
   resources:
