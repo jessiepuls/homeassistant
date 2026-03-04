@@ -9,46 +9,8 @@ views:
             cards:
               - type: custom:clock-weather-card
                 entity: weather.openweathermap
-              # - type: custom:weather-card
-              #   entity: weather.openweathermap
-              #   icons: "/local/community/weather-card/icons/"
-              #   current: true
-              #   details: false
-              #   forecast: true
-              #   hourly_forecast: false
-              #   number_of_forecasts: 5
-              # style: |
-              #   div.precipitation,
-              #   div.precipitation_probability {
-              #       display: none;
-              #   }
-              #   ha-card{
-              #       height: 100%;
-              #       transition: width ease-in-out 0.5s,height ease-in-out 0.5s,border ease-in-out 0.2s,transform ease-in-out 0.2s !important;
-              #   }
               - type: thermostat
                 entity: climate.hallway
-              # - type: custom:yet-another-media-player
-              #   entities:
-              #     - media_player.living_room
-              # - media_player.dining_room
-
-              # - type: "custom:mini-media-player"
-              #   noPadding: true
-              #   entity: media_player.living_room
-              #   artwork: cover
-              #   icon: none
-              #   hide:
-              #     power: true
-              #     progress: true
-              #     source: false
-              #     shuffle: false
-              #   name: true
-              #   style: |
-              #     ha-card{
-              #         height: 100%;
-              #         transition: width ease-in-out 0.5s,height ease-in-out 0.5s,border ease-in-out 0.2s,transform ease-in-out 0.2s !important;
-              #     }
           - type: horizontal-stack
             cards:
               - type: button
@@ -72,18 +34,24 @@ views:
                 entity: fan.ceiling_fan
                 show_state: true
                 name: Livingroom Fan
-              # - type: custom:button-card
-              #   icon: mdi:pine-tree
-              #   tap_action:
-              #     action: toggle
-              #   entity: light.christmas_tree
-              #   show_state: true
-              #   name: Christmas Tree
-              #   styles:
-              #     card:
-              #       - height: 100%
-              #     icon:
-              #       - color: '[[[ if (entity.state == "on") return "green"; else return "red" ]]]'
+              - type: conditional
+                conditions:
+                  - condition: state
+                    entity: light.christmas_tree
+                    state_not: unavailable
+                card:
+                  type: custom:button-card
+                  icon: mdi:pine-tree
+                  tap_action:
+                    action: toggle
+                  entity: light.christmas_tree
+                  show_state: true
+                  name: Christmas Tree
+                  styles:
+                    card:
+                      - height: 100%
+                    icon:
+                      - color: '[[[ if (entity.state == "on") return "green"; else return "red" ]]]'
               - type: button
                 tap_action:
                   action: toggle
@@ -112,25 +80,6 @@ views:
                 show_state: true
                 icon: mdi:string-lights
                 name: Outdoor
-              # - type: custom:button-card
-              #   tap_action:
-              #     action: toggle
-              #   entity: lock.schlage_door_lock
-              #   show_state: true
-              #   styles:
-              #     card:
-              #       - height: 100%
-              #     icon:
-              #       - color: '[[[ if (entity.state == "locked") return "green"; else return "orange" ]]]'
-
-              #   icon: >
-              #     [[[
-              #       if (entity.state == "locked")
-              #         return "mdi:lock";
-              #       else
-              #         return "mdi:lock-open";
-              #     ]]]
-              #   name: Front Door
               - type: button
                 name: Bedtime
                 tap_action:
@@ -140,27 +89,3 @@ views:
                     entity_id: automation.bedtime
                 show_state: false
                 icon: mdi:sleep
-          # - type: horizontal-stack
-          #   cards:
-          #     - type: gauge
-          #       name: Internet Download
-          #       unit: Mbit/s
-          #       severity:
-          #         green: 350
-          #         yellow: 150
-          #         red: 0
-          #       min: 0
-          #       max: 900
-          #       needle: true
-          #       entity: sensor.speedtest_download
-          #     - type: gauge
-          #       name: Internet Upload
-          #       unit: Mbit/s
-          #       severity:
-          #         green: 20
-          #         yellow: 10
-          #         red: 0
-          #       min: 0
-          #       max: 50
-          #       needle: true
-          #       entity: sensor.speedtest_upload
