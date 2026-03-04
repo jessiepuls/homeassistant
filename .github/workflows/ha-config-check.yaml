@@ -1,0 +1,31 @@
+name: HA Config Check
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create fake secrets.yaml
+        run: |
+          cat > secrets.yaml << 'EOF'
+          sonos_livingroom_ip: "192.168.1.10"
+          sonos_basement_ip: "192.168.1.11"
+          sonos_portable_ip: "192.168.1.12"
+          sonos_bedroom_ip: "192.168.1.13"
+          sonos_office_ip: "192.168.1.14"
+          sonos_three_season_porch_ip: "192.168.1.15"
+          sonos_record_player_ip: "192.168.1.16"
+          sonos_dining_ip: "192.168.1.17"
+          EOF
+
+      - name: Run HA config check
+        run: |
+          docker run --rm \
+            -v "${{ github.workspace }}:/config" \
+            homeassistant/home-assistant:stable \
+            python -m homeassistant --script check_config --config /config

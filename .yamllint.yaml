@@ -1,0 +1,25 @@
+extends: default
+
+rules:
+  # HA configs commonly have long lines (entity IDs, templates, etc.)
+  line-length:
+    max: 250
+    level: warning
+
+  # HA uses indentation of 2 spaces
+  indentation:
+    spaces: 2
+    indent-sequences: true
+
+  # Allow multiple blank lines (used for readability between card sections)
+  empty-lines:
+    max: 2
+
+  # HA automation/script IDs are often quoted numbers — allow both
+  truthy:
+    allowed-values: ['true', 'false', 'yes', 'no', 'on', 'off']
+    check-keys: false
+
+  # Comments are heavily used in dashboards
+  comments:
+    min-spaces-from-content: 1
