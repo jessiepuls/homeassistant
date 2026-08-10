@@ -20,6 +20,11 @@
     data: {}
     target:
       device_id: f0f1f52e88e8ec0ebc40600ce5594100
+  - action: light.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: light.three_season_porch_string_lights
   mode: single
 - id: '1646610339547'
   alias: Turn on Outdoor Lights in the Evening
@@ -87,6 +92,13 @@
       - outdoors
       - living_room
     action: switch.turn_off
+  - action: light.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - light.three_season_porch_string_lights
+      - light.three_season_porch_lamp2
   - data: {}
     action: script.turn_off_three_season_porch_heater
   mode: single
@@ -133,6 +145,13 @@
     data: {}
     target:
       device_id: df4fa28466834af8b35ecaa3590c58ad
+  - action: light.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - light.three_season_porch_string_lights
+      - light.three_season_porch_lamp2
   mode: single
 - id: '1707782077065'
   alias: Dining Room Lights Sync
@@ -223,6 +242,11 @@
     data: {}
     target:
       device_id: f0f1f52e88e8ec0ebc40600ce5594100
+  - action: light.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: light.three_season_porch_string_lights
   mode: single
 - id: '1768495878924'
   alias: When I leave home
@@ -249,6 +273,8 @@
       entity_id:
       - light.bedroom_lamp
       - light.three_season_porch
+      - light.three_season_porch_string_lights
+      - light.three_season_porch_lamp2
     data: {}
   mode: single
 - id: '1771822848950'
