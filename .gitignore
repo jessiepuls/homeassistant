@@ -1,5 +1,4 @@
 .DS_Store
-.HA_VERSION
 .cloud/*
 .storage/*
 blueprints/*
