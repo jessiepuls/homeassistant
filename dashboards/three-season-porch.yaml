@@ -1,55 +1,90 @@
+button_card_templates:
+  porch_tile:
+    show_state: true
+    tap_action:
+      action: toggle
+    styles:
+      card:
+        - height: 100%
+        - margin: 0
+
 views:
   - title: Home
     panel: true
     badges: []
     cards:
-      - type: vertical-stack
+      - type: custom:layout-card
+        layout_type: grid
+        layout:
+          card_margin: 0px
+          height: calc(100vh - var(--header-height, 0px) - 4px)
+          box-sizing: border-box
+          padding: 8px
+          grid-gap: 8px
+          grid-template-columns: 3fr 1fr 1fr
+          grid-template-rows: auto 1fr 1fr 1fr
+          grid-template-areas: |
+            "media weather weather"
+            "media heater lamp"
+            "media string ceiling"
+            "media fan fan"
+          mediaquery:
+            "(max-width: 768px)":
+              height: auto
+              grid-template-columns: 1fr 1fr
+              grid-template-rows: auto
+              grid-template-areas: |
+                "media media"
+                "weather weather"
+                "heater lamp"
+                "string ceiling"
+                "fan fan"
         cards:
           - type: custom:sonos-card
             entityId: media_player.three_season_porch_sonos
-
-          - type: vertical-stack
-            cards:
-              - type: horizontal-stack
-                cards:
-                  - type: custom:button-card
-                    icon: mdi:fireplace
-                    tap_action:
-                      action: toggle
-                    entity: switch.heater
-                    show_state: true
-                    name: Heater
-                    state:
-                      - color: orange
-                        value: "on"
-                    styles:
-                      card:
-                        - height: 100%
-                  - type: button
-                    tap_action:
-                      action: toggle
-                    entity: light.three_season_porch_lamp2
-                    show_state: true
-                    name: Lamp
-                    icon: mdi:floor-lamp
-                  - type: button
-                    tap_action:
-                      action: toggle
-                    entity: light.three_season_porch_string_lights
-                    show_state: true
-                    icon: mdi:string-lights
-                    name: String Lights
-                  - type: button
-                    tap_action:
-                      action: toggle
-                    entity: light.three_season_porch_ceiling_fan
-                    show_state: true
-                    icon: mdi:ceiling-light
-                    name: Ceiling Light
-                  - type: button
-                    tap_action:
-                      action: toggle
-                    entity: fan.three_season_porch_ceiling_fan
-                    show_state: true
-                    icon: mdi:ceiling-fan
-                    name: Fan
+            heightPercentage: 94
+            view_layout:
+              grid-area: media
+          - type: weather-forecast
+            entity: weather.openweathermap
+            forecast_type: hourly
+            view_layout:
+              grid-area: weather
+          - type: custom:button-card
+            template: porch_tile
+            entity: switch.heater
+            name: Heater
+            icon: mdi:fireplace
+            state:
+              - color: orange
+                value: "on"
+            view_layout:
+              grid-area: heater
+          - type: custom:button-card
+            template: porch_tile
+            entity: light.three_season_porch_lamp2
+            name: Lamp
+            icon: mdi:floor-lamp
+            view_layout:
+              grid-area: lamp
+          - type: custom:button-card
+            template: porch_tile
+            entity: light.three_season_porch_string_lights
+            name: String Lights
+            icon: mdi:string-lights
+            view_layout:
+              grid-area: string
+          - type: custom:button-card
+            template: porch_tile
+            entity: light.three_season_porch_ceiling_fan
+            name: Ceiling Light
+            icon: mdi:ceiling-light
+            view_layout:
+              grid-area: ceiling
+          - type: custom:button-card
+            template: porch_tile
+            entity: fan.three_season_porch_ceiling_fan
+            name: Fan
+            icon: mdi:ceiling-fan
+            view_layout:
+              grid-area: fan

@@ -4,50 +4,48 @@ turn_off_three_season_porch_heater:
   - condition: state
     entity_id: switch.heater
     state: 'on'
-  - type: turn_off
-    device_id: abb69e5e7dbe7a1605d4331549c70ed9
-    entity_id: switch.heater
-    domain: switch
+  - action: switch.turn_off
+    target:
+      entity_id: switch.heater
   mode: single
   icon: mdi:fireplace
 
-# turn_off_three_season_porch_fan:
-#   alias: Turn off three season porch fan
-#   sequence:
-#   - condition: state
-#     entity_id: fan.three_season_porch_ceiling_fan
-#     state: 'on'
-#   - type: turn_off
-#     entity_id: fan.three_season_porch_ceiling_fan
-#     domain: fan
-#   mode: single
-#   icon: mdi:fan
-
-# turn_off_livingroom_fan:
-#   alias: Turn off livingroom fan
-#   sequence:
-#   - condition: state
-#     entity_id: fan.ceiling_fan
-#     state: 'on'
-#   - type: turn_off
-#     entity_id: fan.ceiling_fan
-#     domain: fan
-#   mode: single
-#   icon: mdi:fan
+bedtime:
+  alias: Bedtime
+  icon: mdi:sleep
+  mode: single
+  sequence:
+  - action: media_player.turn_off
+    target:
+      entity_id: media_player.upstairs_tv
+  - action: light.turn_on
+    data:
+      brightness_pct: 30
+    target:
+      entity_id: light.hallway_main_lights
+  - action: light.turn_off
+    target:
+      area_id:
+      - kitchen
+      - living_room
+      - outdoors
+      - dining_room
+  - action: switch.turn_off
+    target:
+      area_id:
+      - outdoors
+      - living_room
+  - action: light.turn_off
+    target:
+      entity_id: light.three_season_porch_lamps
+  - action: script.turn_off_three_season_porch_heater
 
 play_music_three_season_porch:
   alias: Play music on the three season porch
   sequence:
-    - service: media_player.play_media
-      target:
-        entity_id: media_player.three_season_porch
-      data:
-        media_content_type: "SPOTIFY"
-        media_content_id: "shuffle playlist Daily Mix 1"
-    # - service: media_player.shuffle_set
-    #   data:
-    #     shuffle: true
-    #     entity_id: media_player.spotify_jessie_puls
-    # - service: media_player.media_next_track
-    #   data:
-    #     entity_id: media_player.spotify_jessie_puls
+  - action: media_player.play_media
+    target:
+      entity_id: media_player.three_season_porch_sonos
+    data:
+      media_content_type: "SPOTIFY"
+      media_content_id: "shuffle playlist Daily Mix 1"
