@@ -177,7 +177,7 @@ views:
                     percentage: 33
                 state:
                   - operator: template
-                    value: "[[[ return entity.state === 'on' && Math.round(entity.attributes.percentage) === 33 ]]]"
+                    value: "[[[ return entity.state === 'on' && Math.round(entity.attributes.percentage) <= 33 ]]]"
                     color: var(--state-fan-active-color, var(--state-active-color, var(--paper-item-icon-active-color)))
                 styles:
                   card:
@@ -207,7 +207,7 @@ views:
                     percentage: 66
                 state:
                   - operator: template
-                    value: "[[[ return entity.state === 'on' && Math.round(entity.attributes.percentage) === 67 ]]]"
+                    value: "[[[ return entity.state === 'on' && Math.round(entity.attributes.percentage) > 33 && Math.round(entity.attributes.percentage) < 100 ]]]"
                     color: var(--state-fan-active-color, var(--state-active-color, var(--paper-item-icon-active-color)))
                 styles:
                   card:
@@ -237,7 +237,7 @@ views:
                     percentage: 100
                 state:
                   - operator: template
-                    value: "[[[ return entity.state === 'on' && entity.attributes.percentage === 100 ]]]"
+                    value: "[[[ return entity.state === 'on' && Math.round(entity.attributes.percentage) >= 100 ]]]"
                     color: var(--state-fan-active-color, var(--state-active-color, var(--paper-item-icon-active-color)))
                 styles:
                   card:
@@ -563,7 +563,7 @@ views:
                     percentage: 33
                 state:
                   - operator: template
-                    value: "[[[ return entity.state === 'on' && Math.round(entity.attributes.percentage) === 33 ]]]"
+                    value: "[[[ return entity.state === 'on' && Math.round(entity.attributes.percentage) <= 33 ]]]"
                     color: var(--state-fan-active-color, var(--state-active-color, var(--paper-item-icon-active-color)))
                 styles:
                   card:
@@ -593,7 +593,7 @@ views:
                     percentage: 66
                 state:
                   - operator: template
-                    value: "[[[ return entity.state === 'on' && Math.round(entity.attributes.percentage) === 67 ]]]"
+                    value: "[[[ return entity.state === 'on' && Math.round(entity.attributes.percentage) > 33 && Math.round(entity.attributes.percentage) < 100 ]]]"
                     color: var(--state-fan-active-color, var(--state-active-color, var(--paper-item-icon-active-color)))
                 styles:
                   card:
@@ -623,7 +623,7 @@ views:
                     percentage: 100
                 state:
                   - operator: template
-                    value: "[[[ return entity.state === 'on' && entity.attributes.percentage === 100 ]]]"
+                    value: "[[[ return entity.state === 'on' && Math.round(entity.attributes.percentage) >= 100 ]]]"
                     color: var(--state-fan-active-color, var(--state-active-color, var(--paper-item-icon-active-color)))
                 styles:
                   card:
