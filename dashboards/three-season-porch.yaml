@@ -5,30 +5,8 @@ views:
     cards:
       - type: vertical-stack
         cards:
-          - type: horizontal-stack
-            cards:
-              # Media controls
-              - type: "custom:mini-media-player"
-                noPadding: true
-                entity: media_player.three_season_porch_sonos
-                artwork: cover
-                icon: none
-                hide:
-                  power: true
-                  progress: true
-                  source: false
-                  shuffle: false
-                  name: true
-                shortcuts:
-                  buttons:
-                    - name: Play Spotify
-                      type: music
-                      id: https://open.spotify.com/playlist/37i9dQZF1E38UCXQgkr7fR?si=8622fcf83c334487
-                style: |
-                  ha-card{
-                      height: 100%;
-                      transition: width ease-in-out 0.5s,height ease-in-out 0.5s,border ease-in-out 0.2s,transform ease-in-out 0.2s !important;
-                  }
+          - type: custom:sonos-card
+            entityId: media_player.three_season_porch_sonos
 
           - type: vertical-stack
             cards:
@@ -47,23 +25,6 @@ views:
                     styles:
                       card:
                         - height: 100%
-                      # custom_fields:
-                      #   temp:
-                      #     - position: absolute
-                      #     - text-align: left
-                      #     - right: 4px
-                      #     - bottom: 4px
-                    # custom_fields:
-                    #   temp: >
-                    #     [[[
-                    #       return `
-                    #         <ha-icon icon="mdi:home-thermometer" style="width: 20px; height: 20px; color: yellow;"></ha-icon>
-                    #         <span>${Math.floor(states["sensor.three_season_porch_temperature_2"].state)}°F</span><br/>
-                    #         <ha-icon icon="mdi:sun-thermometer" style="width: 20px; height: 20px; color: yellow;"></ha-icon>
-                    #         <span>${Math.floor(states["sensor.openweathermap_temperature"].state)}°F</span>
-                    #         </span>
-                    #         `
-                    #     ]]]
                   - type: button
                     tap_action:
                       action: toggle

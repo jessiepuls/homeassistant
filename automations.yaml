@@ -14,17 +14,7 @@
     metadata: {}
     data: {}
     target:
-      device_id: df4fa28466834af8b35ecaa3590c58ad
-  - action: light.turn_on
-    metadata: {}
-    data: {}
-    target:
-      device_id: f0f1f52e88e8ec0ebc40600ce5594100
-  - action: light.turn_on
-    metadata: {}
-    data: {}
-    target:
-      entity_id: light.three_season_porch_string_lights
+      entity_id: light.evening_lights
   mode: single
 - id: '1646610339547'
   alias: Turn on Outdoor Lights in the Evening
@@ -61,47 +51,6 @@
       area_id: outdoors
     action: switch.turn_off
   mode: single
-- id: '1646634523203'
-  alias: Bedtime
-  description: ''
-  triggers:
-  - event_type: ''
-    trigger: event
-  conditions: []
-  actions:
-  - data: {}
-    target:
-      entity_id: media_player.upstairs_tv
-    action: media_player.turn_off
-  - type: turn_on
-    device_id: ed25db0eec179417785a7a4ef51664bc
-    entity_id: light.hallway_main_lights
-    domain: light
-    brightness_pct: 30
-  - data: {}
-    target:
-      area_id:
-      - kitchen
-      - living_room
-      - outdoors
-      - dining_room
-    action: light.turn_off
-  - data: {}
-    target:
-      area_id:
-      - outdoors
-      - living_room
-    action: switch.turn_off
-  - action: light.turn_off
-    metadata: {}
-    data: {}
-    target:
-      entity_id:
-      - light.three_season_porch_string_lights
-      - light.three_season_porch_lamp2
-  - data: {}
-    action: script.turn_off_three_season_porch_heater
-  mode: single
 - id: '1698817689655'
   alias: Back Yard Lights
   description: ''
@@ -119,39 +68,18 @@
     trigger: time
   conditions: []
   actions:
-  - type: turn_off
-    device_id: 3dfe43c736d7de5ca73345ff4601890b
-    entity_id: d27b1c7bba033a9ad231e1dcd6715d0f
-    domain: light
-  - type: turn_off
-    device_id: 253efb31b1f2b0c67313571577004b52
-    entity_id: 88fb2a2e11645baf189605b8ff1fea5e
-    domain: light
-  - type: turn_off
-    device_id: e6f2916caa899a05821b4f79976ddca8
-    entity_id: 1d5da9fb4629653b7e9d10bab973b1a7
-    domain: light
-  - type: turn_off
-    device_id: 35450f7564a111b96830dcaf0fee042e
-    entity_id: 281bcbe36515e2752c3d9f0741f1f9b9
-    domain: light
-  - action: light.turn_off
-    metadata: {}
-    data: {}
-    target:
-      device_id: f0f1f52e88e8ec0ebc40600ce5594100
-  - action: light.turn_off
-    metadata: {}
-    data: {}
-    target:
-      device_id: df4fa28466834af8b35ecaa3590c58ad
   - action: light.turn_off
     metadata: {}
     data: {}
     target:
       entity_id:
-      - light.three_season_porch_string_lights
-      - light.three_season_porch_lamp2
+      - light.living_room_sconces
+      - light.entryway_lights
+      - light.kitchen_main_lights
+      - light.dining_room_ceiling_fan_light
+      - light.kitchen
+      - light.living_room_lamps
+      - light.three_season_porch_lamps
   mode: single
 - id: '1707782077065'
   alias: Dining Room Lights Sync
@@ -236,17 +164,7 @@
     metadata: {}
     data: {}
     target:
-      device_id: df4fa28466834af8b35ecaa3590c58ad
-  - action: light.turn_on
-    metadata: {}
-    data: {}
-    target:
-      device_id: f0f1f52e88e8ec0ebc40600ce5594100
-  - action: light.turn_on
-    metadata: {}
-    data: {}
-    target:
-      entity_id: light.three_season_porch_string_lights
+      entity_id: light.evening_lights
   mode: single
 - id: '1768495878924'
   alias: When I leave home
@@ -267,14 +185,13 @@
       area_id:
       - living_room
       - kitchen
-      - dining
+      - dining_room
       - stairs
       - hallway
       entity_id:
       - light.bedroom_lamp
       - light.three_season_porch
-      - light.three_season_porch_string_lights
-      - light.three_season_porch_lamp2
+      - light.three_season_porch_lamps
     data: {}
   mode: single
 - id: '1771822848950'

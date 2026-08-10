@@ -9,3 +9,14 @@
     - light.hue_lightstrip_1
     - light.hue_lightstrip_2
     - light.hue_lightstrip_3
+- name: evening_lights
+  platform: group
+  entities:
+    - light.living_room_lamps
+    - light.kitchen
+    - light.three_season_porch_string_lights
+- name: three_season_porch_lamps
+  platform: group
+  entities:
+    - light.three_season_porch_string_lights
+    - light.three_season_porch_lamp2

@@ -128,11 +128,11 @@ views:
             entities:
               - type: buttons
                 entities:
-                  - entity: automation.bedtime
+                  - entity: script.bedtime
                     name: Bedtime
                     icon: mdi:sleep
                     tap_action:
                       action: perform-action
-                      perform_action: automation.trigger
+                      perform_action: script.turn_on
                       target:
-                        entity_id: automation.bedtime
+                        entity_id: script.bedtime
