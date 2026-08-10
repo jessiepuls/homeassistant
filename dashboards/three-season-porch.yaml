@@ -81,10 +81,10 @@ views:
             icon: mdi:ceiling-light
             view_layout:
               grid-area: ceiling
-          - type: custom:button-card
-            template: porch_tile
+          - type: tile
             entity: fan.three_season_porch_ceiling_fan
             name: Fan
-            icon: mdi:ceiling-fan
+            features:
+              - type: fan-speed
             view_layout:
               grid-area: fan
