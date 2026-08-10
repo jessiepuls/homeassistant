@@ -1,5 +1,7 @@
 .DS_Store
+.cache/*
 .cloud/*
+nest/*
 .storage/*
 blueprints/*
 custom_components/*
