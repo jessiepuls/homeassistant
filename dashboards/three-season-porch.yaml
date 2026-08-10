@@ -74,10 +74,17 @@ views:
                   - type: button
                     tap_action:
                       action: toggle
+                    entity: light.three_season_porch_string_lights
+                    show_state: true
+                    icon: mdi:string-lights
+                    name: String Lights
+                  - type: button
+                    tap_action:
+                      action: toggle
                     entity: light.three_season_porch_ceiling_fan
                     show_state: true
                     icon: mdi:ceiling-light
-                    name: Light
+                    name: Ceiling Light
                   - type: button
                     tap_action:
                       action: toggle
