@@ -8,85 +8,172 @@ views:
       - type: custom:layout-card
         layout_type: grid
         layout:
-          grid-template-columns: 1fr 1fr
+          card_margin: 0px
+          box-sizing: border-box
+          padding: 8px
+          grid-gap: 8px
+          grid-template-columns: 1fr 1fr 1fr
+          align-items: start
+          grid-template-rows: auto auto
+          grid-template-areas: |
+            "controls power activity"
+            "automation automation automation"
           mediaquery:
             "(max-width: 768px)":
+              height: auto
               grid-template-columns: 1fr
+              grid-template-rows: auto
+              grid-template-areas: |
+                "controls"
+                "power"
+                "activity"
+                "automation"
         cards:
-
-          # Left column: Main controls
-          - type: horizontal-stack
+          - type: vertical-stack
+            title: Controls
+            card_mod:
+              style: |
+                :host {
+                  display: flex;
+                  flex-direction: column;
+                  height: clamp(520px, 44vw, 720px);
+                }
+                #root {
+                  justify-content: space-between;
+                  flex: 1;
+                  min-height: 0;
+                }
+                @media (max-width: 768px) {
+                  :host { height: auto; }
+                }
             view_layout:
-              column: 1
+              grid-area: controls
             cards:
-              - type: custom:button-card
-                entity: cover.coop_door
-                name: Coop Door
-                show_state: true
-                tap_action:
-                  action: more-info
-                state:
-                  - value: open
-                    icon: mdi:door-open
-                    color: green
-                  - value: closed
-                    icon: mdi:door-closed
-                  - value: opening
-                    icon: mdi:door-open
-                    color: orange
-                  - value: closing
-                    icon: mdi:door-closed
-                    color: orange
-                styles:
-                  card:
-                    - height: 150px
+              - type: grid
+                columns: 2
+                square: false
+                cards:
+                  - type: tile
+                    entity: cover.coop_door
+                    name: Coop Door
+                    state_content: state
+                    features:
+                      - type: cover-open-close
+                  - type: tile
+                    entity: cover.run_door_door
+                    name: Run Door
+                    state_content: state
+                    features:
+                      - type: cover-open-close
 
-              - type: custom:button-card
-                entity: cover.jessica_s_feeder_feeder
-                name: Feeder
-                icon: mdi:food
-                show_state: true
-                tap_action:
-                  action: more-info
-                state:
-                  - value: open
-                    color: green
-                  - value: closed
-                    color: var(--primary-text-color)
-                  - value: opening
-                    color: orange
-                  - value: closing
-                    color: orange
-                styles:
-                  card:
-                    - height: 150px
+              - type: grid
+                columns: 2
+                square: false
+                cards:
+                  - type: tile
+                    entity: cover.jessica_s_feeder_feeder
+                    name: Feeder 1
+                    state_content: state
+                    tap_action:
+                      action: more-info
+                  - type: tile
+                    entity: cover.feeder2_feeder
+                    name: Feeder 2
+                    state_content: state
+                    tap_action:
+                      action: more-info
 
-              - type: button
-                entity: light.coop_door_light
-                icon: mdi:lightbulb
-                name: Coop Light
-                tap_action:
-                  action: toggle
-                show_state: true
+              - type: grid
+                columns: 3
+                square: false
+                cards:
+                  - type: custom:button-card
+                    name: Run light
+                    label: 'State: pending'
+                    icon: mdi:lightbulb-outline
+                    show_label: true
+                    tap_action:
+                      action: none
+                    styles:
+                      card:
+                        - opacity: 0.55
+                  - type: custom:button-card
+                    name: Waterer 1
+                    label: 'Power: pending'
+                    icon: mdi:water-boiler
+                    show_label: true
+                    tap_action:
+                      action: none
+                    styles:
+                      card:
+                        - opacity: 0.55
+                  - type: custom:button-card
+                    name: Waterer 2
+                    label: 'Power: pending'
+                    icon: mdi:water-boiler
+                    show_label: true
+                    tap_action:
+                      action: none
+                    styles:
+                      card:
+                        - opacity: 0.55
+              - type: entities
+                title: Automations
+                show_header_toggle: false
+                entities:
+                  - entity: automation.open_chicken_coop_door
+                    name: Morning opening
+                  - entity: automation.close_coop_door
+                    name: Nightly closing
 
-          # Left column: Status gauges
-          - type: horizontal-stack
+          - type: grid
+            title: Feed and power levels
+            card_mod:
+              style: |
+                :host {
+                  display: flex;
+                  flex-direction: column;
+                  height: clamp(520px, 44vw, 720px);
+                }
+                #root { flex: 1; min-height: 0; }
+                @media (max-width: 768px) {
+                  :host { height: auto; }
+                }
+            columns: 2
+            square: false
             view_layout:
-              column: 1
+              grid-area: power
             cards:
               - type: gauge
                 entity: sensor.jessica_s_feeder_feed_level
-                name: Feed Level
+                name: Feeder 1 feed
                 min: 0
                 max: 100
                 severity:
                   red: 0
                   yellow: 30
                   green: 50
-
+              - type: gauge
+                entity: sensor.feeder2_feed_level
+                name: Feeder 2 feed
+                min: 0
+                max: 100
+                severity:
+                  red: 0
+                  yellow: 30
+                  green: 50
               - type: gauge
                 entity: sensor.coop_door_battery_level_2
-                name: Door Battery
+                name: Coop battery
+                min: 0
+                max: 100
+                severity:
+                  red: 0
+                  yellow: 20
+                  green: 50
+              - type: gauge
+                entity: sensor.run_door_battery_level
+                name: Run battery
                 min: 0
                 max: 100
                 severity:
@@ -96,7 +183,16 @@ views:
 
               - type: gauge
                 entity: sensor.jessica_s_feeder_battery_level
-                name: Feeder Battery
+                name: Feeder 1 battery
+                min: 0
+                max: 100
+                severity:
+                  red: 0
+                  yellow: 20
+                  green: 50
+              - type: gauge
+                entity: sensor.feeder2_battery_level
+                name: Feeder 2 battery
                 min: 0
                 max: 100
                 severity:
@@ -104,54 +200,57 @@ views:
                   yellow: 20
                   green: 50
 
-          # Right column: Feed level history
-          - type: custom:mini-graph-card
+          - type: vertical-stack
+            title: Activity
+            card_mod:
+              style: |
+                :host {
+                  display: flex;
+                  flex-direction: column;
+                  height: clamp(520px, 44vw, 720px);
+                }
+                #root {
+                  flex: 1;
+                  min-height: 0;
+                }
+                @media (max-width: 768px) {
+                  :host { height: auto; }
+                }
             view_layout:
-              column: 2
-            entities:
-              - entity: sensor.jessica_s_feeder_feed_level
-                name: Feed Level
-            name: Feed Level History
-            hours_to_show: 240
-            points_per_hour: 1
-            line_width: 2
-            show:
-              fill: true
-              points: false
-              legend: false
-
-          # Right column: Last activity
-          - type: entities
-            title: Last Activity
-            view_layout:
-              column: 2
-            entities:
-              - entity: sensor.coop_door_last_open_time
-                name: Door Last Opened
-              - entity: sensor.coop_door_last_close_time
-                name: Door Last Closed
-              - entity: sensor.jessica_s_feeder_feeder_last_open_time
-                name: Feeder Last Opened
-              - entity: sensor.jessica_s_feeder_feeder_last_close_time
-                name: Feeder Last Closed
-
-          # Bottom: Scheduled automations
-          - type: entities
-            title: Scheduled Automations
-            view_layout:
-              grid-column: 1 / -1
-            entities:
-              - type: buttons
+              grid-area: activity
+            cards:
+              - type: logbook
+                hours_to_show: 24
+                card_mod:
+                  style: |
+                    :host { height: 100%; min-height: 0; }
+                    ha-card { height: 100%; overflow-y: auto; }
+                    @media (max-width: 768px) {
+                      :host { height: 480px; }
+                    }
                 entities:
-                  - entity: automation.open_chicken_coop_door
-                    name: Auto Open Door
-                    icon: mdi:door-open
-                  - entity: automation.close_coop_door
-                    name: Auto Close Door
-                    icon: mdi:door-closed
-                  - entity: automation.chicken_feeder_open_at_sunrise
-                    name: Auto Open Feeder
-                    icon: mdi:weather-sunny
-                  - entity: automation.chicken_feeder_close_at_sunset
-                    name: Auto Close Feeder
-                    icon: mdi:weather-sunset
+                  - cover.coop_door
+                  - cover.run_door_door
+                  - cover.jessica_s_feeder_feeder
+                  - cover.feeder2_feeder
+                  # Add the run light entity here once connected.
+
+          - type: vertical-stack
+            view_layout:
+              grid-area: automation
+            cards:
+              - type: entity-filter
+                title: Attention needed
+                show_empty: false
+                entities:
+                  - sensor.coop_door_door_fault
+                  - sensor.run_door_door_fault
+                  - sensor.jessica_s_feeder_feeder_fault
+                  - sensor.feeder2_feeder_fault
+                  - cover.coop_door
+                  - cover.run_door_door
+                  - cover.jessica_s_feeder_feeder
+                  - cover.feeder2_feeder
+                state_filter:
+                  - unavailable
+                  - unknown
