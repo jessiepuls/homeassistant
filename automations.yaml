@@ -128,24 +128,27 @@
     offset: 00:30:00
   - trigger: time
     at: '21:00:00'
-  conditions:
-  - condition: or
-    conditions:
-    - condition: device
-      device_id: e26628038ef92e9846da78982743feea
-      domain: cover
-      entity_id: 37429b3d46890887caf19f8ce4a0f3d6
-      type: is_open
-    - condition: device
-      device_id: e26628038ef92e9846da78982743feea
-      domain: cover
-      entity_id: 37429b3d46890887caf19f8ce4a0f3d6
-      type: is_opening
   actions:
-  - device_id: e26628038ef92e9846da78982743feea
-    domain: cover
-    entity_id: 37429b3d46890887caf19f8ce4a0f3d6
-    type: close
+  - if:
+    - condition: state
+      entity_id: cover.coop_door
+      state:
+      - open
+      - opening
+    then:
+    - action: cover.close_cover
+      target:
+        entity_id: cover.coop_door
+  - if:
+    - condition: state
+      entity_id: cover.run_door_door
+      state:
+      - open
+      - opening
+    then:
+    - action: cover.close_cover
+      target:
+        entity_id: cover.run_door_door
   mode: single
 - id: '1755720058681'
   alias: When I arrive home
