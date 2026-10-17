@@ -166,6 +166,32 @@
     target:
       entity_id: light.evening_lights
   mode: single
+- id: '1792252800001'
+  alias: Late-night arrival lights
+  description: Turn on the driveway and kitchen lights after a late arrival, then turn them off.
+  triggers:
+  - trigger: zone
+    entity_id: person.jessie_puls
+    zone: zone.home
+    event: enter
+  conditions:
+  - condition: time
+    after: '02:00:00'
+  - condition: sun
+    before: sunrise
+  actions:
+  - action: light.turn_on
+    target:
+      entity_id:
+      - light.exterior_driveway_light
+      - light.kitchen
+  - delay: '00:30:00'
+  - action: light.turn_off
+    target:
+      entity_id:
+      - light.exterior_driveway_light
+      - light.kitchen
+  mode: restart
 - id: '1768495878924'
   alias: When I leave home
   description: ''
