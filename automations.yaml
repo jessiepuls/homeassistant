@@ -97,7 +97,7 @@
   triggers:
   - trigger: sun
     event: sunrise
-    offset: 00:60:00
+    offset: '01:00:00'
   - trigger: time
     at: 07:00:00
   conditions:
@@ -139,6 +139,7 @@
     - action: cover.close_cover
       target:
         entity_id: cover.coop_door
+      continue_on_error: true
   - if:
     - condition: state
       entity_id: cover.run_door_door
@@ -149,6 +150,26 @@
     - action: cover.close_cover
       target:
         entity_id: cover.run_door_door
+      continue_on_error: true
+  - wait_template: >-
+      {{ is_state('cover.coop_door', 'closed') and
+         is_state('cover.run_door_door', 'closed') }}
+    timeout: '00:06:00'
+    continue_on_timeout: true
+  - if:
+    - condition: template
+      value_template: >-
+        {{ not (is_state('cover.coop_door', 'closed') and
+                is_state('cover.run_door_door', 'closed')) }}
+    then:
+    - action: notify.send_message
+      target:
+        entity_id: notify.jessies_iphone_17
+      data:
+        title: Chicken door close failed
+        message: >-
+          Coop door: {{ states('cover.coop_door') }}. Run door:
+          {{ states('cover.run_door_door') }}. Check the Omlet doors.
   mode: single
 - id: '1755720058681'
   alias: When I arrive home
