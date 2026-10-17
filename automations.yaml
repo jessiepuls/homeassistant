@@ -3,7 +3,7 @@
   description: ''
   triggers:
   - event: sunset
-    offset: -00:60:00
+    offset: &evening_lights_offset '-01:00:00'
     trigger: sun
   conditions:
   - condition: zone
@@ -158,7 +158,7 @@
   conditions:
   - condition: sun
     after: sunset
-    after_offset: -00:30:00
+    after_offset: *evening_lights_offset
   actions:
   - action: light.turn_on
     metadata: {}
