@@ -15,6 +15,7 @@
     - light.living_room_lamps
     - light.kitchen
     - light.three_season_porch_string_lights
+    - light.three_season_porch_lamp2
 - name: three_season_porch_lamps
   platform: group
   entities:
