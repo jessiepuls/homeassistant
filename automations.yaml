@@ -64,7 +64,7 @@
   alias: Turn off indoor lights at night
   description: ''
   triggers:
-  - at: 02:00:00
+  - at: input_datetime.nightly_light_cutoff
     trigger: time
   conditions: []
   actions:
@@ -176,7 +176,7 @@
     event: enter
   conditions:
   - condition: time
-    after: '02:00:00'
+    after: input_datetime.nightly_light_cutoff
   - condition: sun
     before: sunrise
   actions:

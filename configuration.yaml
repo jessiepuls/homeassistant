@@ -16,6 +16,13 @@ sensor:
       - "time_date"
       - "time_utc"
 
+input_datetime:
+  nightly_light_cutoff:
+    name: Nightly light cutoff
+    has_date: false
+    has_time: true
+    initial: '02:00:00'
+
 # Static hosts needed because Sonos speakers are on a different subnet from Home Assistant
 sonos:
   media_player:
