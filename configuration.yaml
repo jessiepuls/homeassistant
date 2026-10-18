@@ -16,6 +16,11 @@ sensor:
       - "time_date"
       - "time_utc"
 
+input_boolean:
+  chicken_door_close_alert_active:
+    name: Chicken door close alert active
+    icon: mdi:alert-circle-outline
+
 input_datetime:
   nightly_light_cutoff:
     name: Nightly light cutoff

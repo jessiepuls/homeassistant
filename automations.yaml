@@ -162,6 +162,9 @@
         {{ not (is_state('cover.coop_door', 'closed') and
                 is_state('cover.run_door_door', 'closed')) }}
     then:
+    - action: input_boolean.turn_on
+      target:
+        entity_id: input_boolean.chicken_door_close_alert_active
     - action: notify.send_message
       target:
         entity_id: notify.jessies_iphone_17
@@ -170,6 +173,26 @@
         message: >-
           Coop door: {{ states('cover.coop_door') }}. Run door:
           {{ states('cover.run_door_door') }}. Check the Omlet doors.
+  mode: single
+- id: '1792281600001'
+  alias: Chicken doors recovered after close failure
+  description: Notify once both doors close after a nightly close-failure alert.
+  triggers:
+  - trigger: template
+    value_template: >-
+      {{ is_state('input_boolean.chicken_door_close_alert_active', 'on') and
+         is_state('cover.coop_door', 'closed') and
+         is_state('cover.run_door_door', 'closed') }}
+  actions:
+  - action: notify.send_message
+    target:
+      entity_id: notify.jessies_iphone_17
+    data:
+      title: Chicken doors recovered
+      message: Both the coop door and run door are now closed.
+  - action: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.chicken_door_close_alert_active
   mode: single
 - id: '1755720058681'
   alias: When I arrive home
