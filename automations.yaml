@@ -262,7 +262,7 @@
       - stairs
       - hallway
       entity_id:
-      - light.bedroom_lamp
+      - light.three_season_porch_table_lamp
       - light.three_season_porch
       - light.three_season_porch_lamps
     data: {}

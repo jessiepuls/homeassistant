@@ -22,10 +22,11 @@ views:
           padding: 8px
           grid-gap: 8px
           grid-template-columns: 3fr 1fr 1fr
-          grid-template-rows: auto 1fr 1fr 1fr
+          grid-template-rows: auto 1fr 1fr 1fr 1fr
           grid-template-areas: |
             "media weather weather"
-            "media heater lamp"
+            "media lamp table"
+            "media heater heater"
             "media string ceiling"
             "media fan fan"
           mediaquery:
@@ -36,7 +37,8 @@ views:
               grid-template-areas: |
                 "media media"
                 "weather weather"
-                "heater lamp"
+                "lamp table"
+                "heater heater"
                 "string ceiling"
                 "fan fan"
         cards:
@@ -63,10 +65,17 @@ views:
           - type: custom:button-card
             template: porch_tile
             entity: light.three_season_porch_lamp2
-            name: Lamp
+            name: Floor Lamp
             icon: mdi:floor-lamp
             view_layout:
               grid-area: lamp
+          - type: custom:button-card
+            template: porch_tile
+            entity: light.three_season_porch_table_lamp
+            name: Table Lamp
+            icon: mdi:lamp
+            view_layout:
+              grid-area: table
           - type: custom:button-card
             template: porch_tile
             entity: light.three_season_porch_string_lights
