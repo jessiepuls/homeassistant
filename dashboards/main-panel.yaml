@@ -471,6 +471,9 @@ views:
                   perform_action: light.turn_off
                   target:
                     area_id: master_bedroom
+                    entity_id:
+                      - light.bedroom_right_nightstand_lamp
+                      - light.bedroom_left_nightstand_lamp
                 styles:
                   card:
                     - background: rgba(0, 0, 0, 0.5)
@@ -485,7 +488,8 @@ views:
                   right: 5%
                   transform: none
               - type: custom:button-card
-                entity: light.bedroom_lamp
+                entity: light.bedroom_nightstand_lamps
+                name: Nightstand Lamps
                 icon: mdi:lamp
                 show_name: false
                 show_state: false

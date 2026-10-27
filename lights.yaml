@@ -1,3 +1,8 @@
+- name: bedroom_nightstand_lamps
+  platform: group
+  entities:
+    - light.bedroom_right_nightstand_lamp
+    - light.bedroom_left_nightstand_lamp
 - name: livingroom
   platform: group
   entities:
