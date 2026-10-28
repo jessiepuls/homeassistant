@@ -11,8 +11,9 @@ views:
           box-sizing: border-box
           padding: 8px
           grid-gap: 8px
-          grid-template-columns: 1.1fr 1fr 1fr
-          grid-template-rows: 1fr 1fr 1fr
+          # Allow tracks to shrink below the custom cards' intrinsic sizes.
+          grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 1fr)
+          grid-template-rows: repeat(3, minmax(0, 1fr))
           grid-template-areas: |
             "rail living kitchen"
             "rail dining bedroom"
@@ -20,7 +21,7 @@ views:
           mediaquery:
             "(max-width: 768px)":
               height: auto
-              grid-template-columns: 1fr
+              grid-template-columns: minmax(0, 1fr)
               grid-template-rows: auto
               grid-template-areas: |
                 "rail"

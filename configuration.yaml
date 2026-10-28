@@ -47,7 +47,7 @@ lovelace:
     - type: module
       url: /hacsfiles/lovelace-card-mod/card-mod.js
     - type: module
-      url: /hacsfiles/lovelace-layout-card/layout-card.js
+      url: /hacsfiles/lovelace-layout-card/layout-card.js?v=20261028
     - type: module
       url: /hacsfiles/mini-graph-card/mini-graph-card-bundle.js
     - type: module
@@ -57,7 +57,7 @@ lovelace:
     - type: module
       url: /hacsfiles/config-template-card/config-template-card.js
     - type: module
-      url: /hacsfiles/button-card/button-card.js
+      url: /hacsfiles/button-card/button-card.js?v=20261028
     - type: module
       url: /hacsfiles/lovelace-state-switch/state-switch.js
     - type: module
