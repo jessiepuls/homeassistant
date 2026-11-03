@@ -40,16 +40,6 @@ bedtime:
       entity_id: light.three_season_porch_lamps
   - action: script.turn_off_three_season_porch_heater
 
-play_music_three_season_porch:
-  alias: Play music on the three season porch
-  sequence:
-  - action: media_player.play_media
-    target:
-      entity_id: media_player.three_season_porch_sonos
-    data:
-      media_content_type: "SPOTIFY"
-      media_content_id: "shuffle playlist Daily Mix 1"
-
 music_switch_destination:
   alias: Music - switch listening destination
   description: Move the playing queue to the selected destination, replacing the previous speaker group.
