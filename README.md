@@ -44,6 +44,12 @@ search does not depend on Queue Actions. Stale results are hidden while a new
 query is loading. A live search returned results through this path without
 changing playback.
 
+The Main Floor volume slider and Home players use Mini Media Player's group-volume
+synchronization: changing volume applies the same percentage to every configured
+member of the active group. When a Home player is standalone, synchronization is
+disabled so its volume still works. This is separate from the one-time equalization
+performed when selecting Main Floor. No new backend automation is involved.
+
 The rows use the installed layout-card, config-template-card, button-card, and
 card-mod packages. There is no new custom JavaScript module or embedded webpage.
 `templates/music.yaml` supplies three row sensors and one search-results sensor. Each row fetches
@@ -64,7 +70,8 @@ installation does not have cached row data until the first successful request.
 `input_select.music_destination` stores the selected destination for both Music
 tabs. `script.music_switch_destination` moves a playing queue, pauses members left
 behind, and prepares Main Floor (Living Room, Office, Dining Room, Three Season
-Porch), Bedroom, Basement, or Record Player. Roam is excluded. The helper updates
+Porch), Bedroom, Basement, or Record Player. Roam is excluded. Selecting Main Floor sets all four individual speaker volumes to a fixed 20%. Other destinations keep their volumes;
+The helper updates
 only after successful commands. The script resolves the active queue owner from
 Music Assistant player IDs and delegates the handoff to the native transfer action
 before adjusting unwanted members and forming the selected destination group. A partial service failure can leave a partially

@@ -97,6 +97,7 @@ music_switch_destination:
       previous: '{{ destinations.get(states(''input_select.music_destination''), destinations[''Main Floor''])[0] }}'
       playing: '{{ expand(destinations.values() | sum(start=[])) | selectattr(''state'', ''eq'', ''playing'') | map(attribute=''entity_id'') | list }}'
       paused: '{{ expand(destinations.values() | sum(start=[])) | selectattr(''state'', ''eq'', ''paused'') | map(attribute=''entity_id'') | list }}'
+      main_floor_volume: 0.20
   - variables:
       source_candidate: '{{ previous if previous in playing else (playing | first | default(previous if previous in paused else (paused | first | default('''')))) }}'
       target_player: '{{ desired[0] }}'
@@ -143,6 +144,18 @@ music_switch_destination:
         entity_id: '{{ target_player }}'
       data:
         group_members: '{{ desired[1:] }}'
+  - if:
+    - condition: template
+      value_template: '{{ destination == ''Main Floor'' and is_number(main_floor_volume) and 0 <= main_floor_volume | float <= 1 }}'
+    then:
+    - repeat:
+        for_each: '{{ desired }}'
+        sequence:
+        - action: media_player.volume_set
+          target:
+            entity_id: '{{ repeat.item }}'
+          data:
+            volume_level: '{{ main_floor_volume | float }}'
   - action: input_select.select_option
     target:
       entity_id: input_select.music_destination

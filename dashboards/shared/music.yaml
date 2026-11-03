@@ -119,15 +119,37 @@ cards:
       grid-area: playback
     states:
       Main Floor:
-        type: custom:mini-media-player
-        entity: media_player.living_room_2
-        name: Main Floor
-        artwork: default
-        hide:
-          power: true
-          source: true
-          group_button: true
-        info: scroll
+        type: custom:config-template-card
+        entities:
+        - media_player.living_room_2
+        card:
+          type: custom:mini-media-player
+          entity: media_player.living_room_2
+          name: Main Floor
+          artwork: default
+          hide:
+            power: true
+            source: true
+            group_button: true
+          info: scroll
+          speaker_group:
+            platform: media_player
+            sync_volume: ${(states['media_player.living_room_2']?.attributes.group_members || []).length > 1}
+            entities:
+            - entity_id: media_player.living_room_2
+              name: Living Room
+            - entity_id: media_player.office_2
+              name: Office
+            - entity_id: media_player.dining_room_2
+              name: Dining Room
+            - entity_id: media_player.three_season_porch
+              name: Three Season Porch
+            - entity_id: media_player.bedroom_2
+              name: Bedroom
+            - entity_id: media_player.basement_2
+              name: Basement
+            - entity_id: media_player.record_player
+              name: Record Player
       Bedroom:
         type: custom:mini-media-player
         entity: media_player.bedroom_2

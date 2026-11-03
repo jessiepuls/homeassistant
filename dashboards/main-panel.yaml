@@ -52,34 +52,61 @@ views:
               - type: custom:clock-weather-card
                 entity: weather.openweathermap
                 forecast_rows: 3
-              - type: custom:mini-media-player
-                entity: media_player.living_room_2
-                name: Living Room
-                artwork: cover
+              - type: custom:config-template-card
+                entities:
+                - media_player.living_room_2
                 card_mod:
-                  style: |
-                    :host {
-                      height: 100%;
-                    }
-                    ha-card {
-                      height: 100%;
-                      min-height: 140px;
-                      box-sizing: border-box;
-                    }
-                    .mmp-player {
-                      background: linear-gradient(
-                        to top,
-                        rgba(0, 0, 0, 0.85),
-                        rgba(0, 0, 0, 0.25)
-                      );
-                    }
-                hide:
-                  power: true
-                  source: true
-                tap_action:
-                  action: navigate
-                  navigation_path: /lovelace-main-panel/music
-
+                  style: |2
+                     :host { display: block; height: 100%; }
+                    #card { height: 100%; }
+                    #card > mini-media-player { height: 100%; }
+                card:
+                  type: custom:mini-media-player
+                  entity: media_player.living_room_2
+                  name: Living Room
+                  artwork: cover
+                  card_mod:
+                    style: |
+                      :host {
+                        height: 100%;
+                      }
+                      ha-card {
+                        height: 100%;
+                        min-height: 140px;
+                        box-sizing: border-box;
+                      }
+                      .mmp-player {
+                        background: linear-gradient(
+                          to top,
+                          rgba(0, 0, 0, 0.85),
+                          rgba(0, 0, 0, 0.25)
+                        );
+                      }
+                  hide:
+                    power: true
+                    source: true
+                    group_button: true
+                  tap_action:
+                    action: navigate
+                    navigation_path: /lovelace-main-panel/music
+                  speaker_group:
+                    platform: media_player
+                    sync_volume: ${(states['media_player.living_room_2']?.attributes.group_members || []).length > 1}
+                    entities:
+                    - entity_id: media_player.living_room_2
+                      name: Living Room
+                    - entity_id: media_player.office_2
+                      name: Office
+                    - entity_id: media_player.dining_room_2
+                      name: Dining Room
+                    - entity_id: media_player.three_season_porch
+                      name: Three Season Porch
+                    - entity_id: media_player.bedroom_2
+                      name: Bedroom
+                    - entity_id: media_player.basement_2
+                      name: Basement
+                    - entity_id: media_player.record_player
+                      name: Record Player
           - type: picture-elements
             image: /local/photos/living.jpg?v=5
             view_layout:

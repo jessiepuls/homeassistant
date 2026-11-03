@@ -63,16 +63,44 @@ views:
                 "string ceiling"
                 "fan fan"
         cards:
-          - type: custom:mini-media-player
-            entity: media_player.three_season_porch
-            name: Three Season Porch
-            artwork: full-cover
-            hide:
-              power: true
-              source: true
-            tap_action:
-              action: navigate
-              navigation_path: /lovelace-three-season-porch/music
+          - type: custom:config-template-card
+            entities:
+            - media_player.three_season_porch
+            card_mod:
+              style: |2
+                 :host { display: block; height: 100%; }
+                #card { height: 100%; }
+                #card > mini-media-player { height: 100%; }
+            card:
+              type: custom:mini-media-player
+              entity: media_player.three_season_porch
+              name: Three Season Porch
+              artwork: full-cover
+              hide:
+                power: true
+                source: true
+                group_button: true
+              tap_action:
+                action: navigate
+                navigation_path: /lovelace-three-season-porch/music
+              speaker_group:
+                platform: media_player
+                sync_volume: ${(states['media_player.three_season_porch']?.attributes.group_members || []).length > 1}
+                entities:
+                - entity_id: media_player.living_room_2
+                  name: Living Room
+                - entity_id: media_player.office_2
+                  name: Office
+                - entity_id: media_player.dining_room_2
+                  name: Dining Room
+                - entity_id: media_player.three_season_porch
+                  name: Three Season Porch
+                - entity_id: media_player.bedroom_2
+                  name: Bedroom
+                - entity_id: media_player.basement_2
+                  name: Basement
+                - entity_id: media_player.record_player
+                  name: Record Player
             view_layout:
               grid-area: media
           - type: weather-forecast
