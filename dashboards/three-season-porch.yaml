@@ -1,12 +1,33 @@
 button_card_templates:
   porch_tile:
+    show_icon: true
     show_state: true
+    color_type: icon
     tap_action:
       action: toggle
     styles:
       card:
         - height: 100%
         - margin: 0
+        - box-sizing: border-box
+      # Center the icon and text together within the original compact cards.
+      grid:
+        - grid-template-areas: '". i n ." ". i s ."'
+        - grid-template-columns: 1fr 32px max-content 1fr
+        - grid-template-rows: min-content min-content
+        - align-content: center
+        - column-gap: 8px
+      img_cell:
+        - width: 32px
+        - height: 32px
+        - align-self: center
+      icon:
+        - width: 32px
+        - height: 32px
+      name:
+        - justify-self: start
+      state:
+        - justify-self: start
 
 views:
   - title: Home
