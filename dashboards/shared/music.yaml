@@ -1,0 +1,470 @@
+# Shared music destinations, search, playback, and artwork rows.
+title: Music
+path: music
+icon: mdi:music
+panel: true
+badges: []
+cards:
+- type: custom:layout-card
+  layout_type: grid
+  layout:
+    card_margin: 0px
+    padding: 8px
+    grid-gap: 12px
+    grid-template-columns: minmax(0, 1fr)
+    grid-template-areas: '"destination" "playback" "search" "recommendations" "playlists" "albums"'
+  cards:
+  - type: grid
+    columns: 4
+    square: false
+    view_layout:
+      grid-area: destination
+    cards:
+    - type: custom:button-card
+      name: Main Floor
+      icon: mdi:speaker-multiple
+      entity: input_select.music_destination
+      show_state: false
+      tap_action:
+        action: call-service
+        service: script.music_switch_destination
+        service_data:
+          destination: Main Floor
+      state:
+      - value: Main Floor
+        styles:
+          icon:
+          - color: var(--state-media-player-active-color, var(--primary-color))
+      styles:
+        card:
+        - padding: 10px
+        grid:
+        - grid-template-areas: '"i n"'
+        - grid-template-columns: 28px 1fr
+        icon:
+        - width: 24px
+    - type: custom:button-card
+      name: Bedroom
+      icon: mdi:bed
+      entity: input_select.music_destination
+      show_state: false
+      tap_action:
+        action: call-service
+        service: script.music_switch_destination
+        service_data:
+          destination: Bedroom
+      state:
+      - value: Bedroom
+        styles:
+          icon:
+          - color: var(--state-media-player-active-color, var(--primary-color))
+      styles:
+        card:
+        - padding: 10px
+        grid:
+        - grid-template-areas: '"i n"'
+        - grid-template-columns: 28px 1fr
+        icon:
+        - width: 24px
+    - type: custom:button-card
+      name: Basement
+      icon: mdi:sofa
+      entity: input_select.music_destination
+      show_state: false
+      tap_action:
+        action: call-service
+        service: script.music_switch_destination
+        service_data:
+          destination: Basement
+      state:
+      - value: Basement
+        styles:
+          icon:
+          - color: var(--state-media-player-active-color, var(--primary-color))
+      styles:
+        card:
+        - padding: 10px
+        grid:
+        - grid-template-areas: '"i n"'
+        - grid-template-columns: 28px 1fr
+        icon:
+        - width: 24px
+    - type: custom:button-card
+      name: Record Player
+      icon: mdi:record-player
+      entity: input_select.music_destination
+      show_state: false
+      tap_action:
+        action: call-service
+        service: script.music_switch_destination
+        service_data:
+          destination: Record Player
+      state:
+      - value: Record Player
+        styles:
+          icon:
+          - color: var(--state-media-player-active-color, var(--primary-color))
+      styles:
+        card:
+        - padding: 10px
+        grid:
+        - grid-template-areas: '"i n"'
+        - grid-template-columns: 28px 1fr
+        icon:
+        - width: 24px
+  - type: custom:state-switch
+    entity: input_select.music_destination
+    default: Main Floor
+    view_layout:
+      grid-area: playback
+    states:
+      Main Floor:
+        type: custom:mini-media-player
+        entity: media_player.living_room_2
+        name: Main Floor
+        artwork: default
+        hide:
+          power: true
+          source: true
+          group_button: true
+        info: scroll
+      Bedroom:
+        type: custom:mini-media-player
+        entity: media_player.bedroom_2
+        name: Bedroom
+        artwork: default
+        hide:
+          power: true
+          source: true
+          group_button: true
+        info: scroll
+      Basement:
+        type: custom:mini-media-player
+        entity: media_player.basement_2
+        name: Basement
+        artwork: default
+        hide:
+          power: true
+          source: true
+          group_button: true
+        info: scroll
+      Record Player:
+        type: custom:mini-media-player
+        entity: media_player.record_player
+        name: Record Player
+        artwork: default
+        hide:
+          power: true
+          source: true
+          group_button: true
+        info: scroll
+  - type: vertical-stack
+    view_layout:
+      grid-area: search
+    cards:
+    - type: entities
+      show_header_toggle: false
+      entities:
+      - entity: input_text.music_search_query
+        name: Search Apple Music
+    - type: grid
+      columns: 2
+      square: false
+      cards:
+      - type: custom:button-card
+        name: Search
+        icon: mdi:magnify
+        tap_action:
+          action: call-service
+          service: script.music_search
+        styles:
+          card:
+          - height: 40px
+          grid:
+          - grid-template-areas: '"i n"'
+          - grid-template-columns: 28px auto
+          - justify-content: center
+          icon:
+          - width: 20px
+      - type: custom:button-card
+        name: Clear
+        icon: mdi:close
+        tap_action:
+          action: call-service
+          service: input_text.set_value
+          service_data:
+            entity_id: input_text.music_search_query
+            value: ''
+        styles:
+          card:
+          - height: 40px
+          grid:
+          - grid-template-areas: '"i n"'
+          - grid-template-columns: 28px auto
+          - justify-content: center
+          icon:
+          - width: 20px
+    - type: conditional
+      conditions:
+      - condition: state
+        entity: input_text.music_search_query
+        state_not: ''
+      card:
+        type: vertical-stack
+        cards:
+        - type: heading
+          heading: Search results
+          heading_style: subtitle
+        - type: custom:mod-card
+          card_mod:
+            style: |
+              ha-card {
+                overflow-x: auto;
+                background: transparent;
+                border: none;
+                box-shadow: none;
+                padding-bottom: 6px;
+              }
+              ha-card > config-template-card {
+                display: block;
+                width: max-content;
+                min-width: 100%;
+              }
+          card:
+            type: custom:config-template-card
+            entities:
+            - sensor.music_search_results
+            - input_text.music_search_query
+            variables:
+            - '''sensor.music_search_results'''
+            - '''track'''
+            card:
+              type: '${(states[vars[0]]?.attributes.query === (states[''input_text.music_search_query'']?.state || '''').trim() ? (states[vars[0]]?.attributes.items || []) : []).length
+                ? ''custom:layout-card'' : ''markdown''}'
+              content: '${states[vars[0]]?.attributes.query !== (states[''input_text.music_search_query'']?.state || '''').trim() ? ''Searching…'' : states[vars[0]]?.state === ''error''
+                ? ''Search could not load. Check the Music Assistant connection and try again.'' : (states[''input_text.music_search_query'']?.state || '''').trim().length < 2 ? ''Enter
+                at least two characters.'' : ''No matching music found.''}'
+              layout_type: grid
+              layout:
+                card_margin: 0px
+                padding: 0px
+                grid-gap: 10px
+                grid-template-columns: ${'repeat(' + Math.max(1, (states[vars[0]]?.attributes.items || []).length) + ', 148px)'}
+                grid-template-rows: min-content
+              cards: |-
+                ${(states[vars[0]]?.attributes.query === (states['input_text.music_search_query']?.state || '').trim() ? (states[vars[0]]?.attributes.items || []) : []).filter(item => item.uri).map(item => ({
+                  type: 'custom:button-card',
+                  name: String(item.name || 'Untitled').replace(/\[\[\[/g, ''),
+                  entity_picture: typeof item.image === 'string' ? item.image : item.image?.path,
+                  show_entity_picture: !!item.image,
+                  icon: item.media_type === 'album' ? 'mdi:album' : 'mdi:playlist-music',
+                  show_name: true,
+                  tap_action: {
+                    action: 'call-service', service: 'script.music_play_collection',
+                    service_data: {uri: item.uri, media_type: item.media_type || vars[1], radio_mode: true}
+                  },
+                  styles: {
+                    card: [{height: '184px'}, {padding: '8px'}, {'box-shadow': 'none'}],
+                    grid: [{'grid-template-areas': '"i" "n"'}, {'grid-template-rows': '132px 1fr'}],
+                    img_cell: [{height: '128px'}],
+                    entity_picture: [{width: '128px'}, {height: '128px'}, {'object-fit': 'cover'}, {'border-radius': '8px'}],
+                    name: [{'white-space': 'normal'}, {'font-size': '14px'}, {'line-height': '1.3'}]
+                  }
+                }))}
+  - type: vertical-stack
+    view_layout:
+      grid-area: recommendations
+    cards:
+    - type: heading
+      heading: For you
+      heading_style: subtitle
+    - type: custom:mod-card
+      card_mod:
+        style: |
+          ha-card {
+            overflow-x: auto;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            padding-bottom: 6px;
+          }
+          ha-card > config-template-card {
+            display: block;
+            width: max-content;
+            min-width: 100%;
+          }
+      card:
+        type: custom:config-template-card
+        entities:
+        - sensor.music_recommendations
+        variables:
+        - '''sensor.music_recommendations'''
+        - '''playlist'''
+        card:
+          type: '${(states[vars[0]]?.attributes.items || []).length ? ''custom:layout-card'' : ''markdown''}'
+          content: '${!states[vars[0]] ? ''Loading music data. Restart Home Assistant once to load the new Music row sensors.'' : states[vars[0]].state === ''ready'' ? ''No matching
+            collections were returned. Try Refresh music after syncing your library.'' : ''Apple Music recommendations are unavailable. Connect Music Assistant Queue Actions in Settings
+            → Devices & services, then use Refresh music below.''}'
+          layout_type: grid
+          layout:
+            card_margin: 0px
+            padding: 0px
+            grid-gap: 10px
+            grid-template-columns: ${'repeat(' + Math.max(1, (states[vars[0]]?.attributes.items || []).length) + ', 148px)'}
+            grid-template-rows: min-content
+          cards: |-
+            ${(states[vars[0]]?.attributes.items || []).filter(item => item.uri).map(item => ({
+              type: 'custom:button-card',
+              name: String(item.name || 'Untitled').replace(/\[\[\[/g, ''),
+              entity_picture: typeof item.image === 'string' ? item.image : item.image?.path,
+              show_entity_picture: !!item.image,
+              icon: item.media_type === 'album' ? 'mdi:album' : 'mdi:playlist-music',
+              show_name: true,
+              tap_action: {
+                action: 'call-service', service: 'script.music_play_collection',
+                service_data: {uri: item.uri, media_type: item.media_type || vars[1]}
+              },
+              styles: {
+                card: [{height: '184px'}, {padding: '8px'}, {'box-shadow': 'none'}],
+                grid: [{'grid-template-areas': '"i" "n"'}, {'grid-template-rows': '132px 1fr'}],
+                img_cell: [{height: '128px'}],
+                entity_picture: [{width: '128px'}, {height: '128px'}, {'object-fit': 'cover'}, {'border-radius': '8px'}],
+                name: [{'white-space': 'normal'}, {'font-size': '14px'}, {'line-height': '1.3'}]
+              }
+            }))}
+    - type: custom:button-card
+      name: Refresh music
+      icon: mdi:refresh
+      show_icon: true
+      tap_action:
+        action: call-service
+        service: script.music_refresh_library
+      styles:
+        card:
+        - height: 40px
+        grid:
+        - grid-template-areas: '"i n"'
+        - grid-template-columns: 28px auto
+        - justify-content: center
+        icon:
+        - width: 20px
+  - type: vertical-stack
+    view_layout:
+      grid-area: playlists
+    cards:
+    - type: heading
+      heading: Playlists
+      heading_style: subtitle
+    - type: custom:mod-card
+      card_mod:
+        style: |
+          ha-card {
+            overflow-x: auto;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            padding-bottom: 6px;
+          }
+          ha-card > config-template-card {
+            display: block;
+            width: max-content;
+            min-width: 100%;
+          }
+      card:
+        type: custom:config-template-card
+        entities:
+        - sensor.music_playlists
+        variables:
+        - '''sensor.music_playlists'''
+        - '''playlist'''
+        card:
+          type: '${(states[vars[0]]?.attributes.items || []).length ? ''custom:layout-card'' : ''markdown''}'
+          content: '${!states[vars[0]] ? ''Loading music data. Restart Home Assistant once to load the new Music row sensors.'' : states[vars[0]].state === ''ready'' ? ''No matching
+            collections were returned. Try Refresh music after syncing your library.'' : ''No playlists loaded yet. Refresh music after Music Assistant has synced your library.''}'
+          layout_type: grid
+          layout:
+            card_margin: 0px
+            padding: 0px
+            grid-gap: 10px
+            grid-template-columns: ${'repeat(' + Math.max(1, (states[vars[0]]?.attributes.items || []).length) + ', 148px)'}
+            grid-template-rows: min-content
+          cards: |-
+            ${(states[vars[0]]?.attributes.items || []).filter(item => item.uri).map(item => ({
+              type: 'custom:button-card',
+              name: String(item.name || 'Untitled').replace(/\[\[\[/g, ''),
+              entity_picture: typeof item.image === 'string' ? item.image : item.image?.path,
+              show_entity_picture: !!item.image,
+              icon: item.media_type === 'album' ? 'mdi:album' : 'mdi:playlist-music',
+              show_name: true,
+              tap_action: {
+                action: 'call-service', service: 'script.music_play_collection',
+                service_data: {uri: item.uri, media_type: item.media_type || vars[1]}
+              },
+              styles: {
+                card: [{height: '184px'}, {padding: '8px'}, {'box-shadow': 'none'}],
+                grid: [{'grid-template-areas': '"i" "n"'}, {'grid-template-rows': '132px 1fr'}],
+                img_cell: [{height: '128px'}],
+                entity_picture: [{width: '128px'}, {height: '128px'}, {'object-fit': 'cover'}, {'border-radius': '8px'}],
+                name: [{'white-space': 'normal'}, {'font-size': '14px'}, {'line-height': '1.3'}]
+              }
+            }))}
+  - type: vertical-stack
+    view_layout:
+      grid-area: albums
+    cards:
+    - type: heading
+      heading: Albums · recently played
+      heading_style: subtitle
+    - type: custom:mod-card
+      card_mod:
+        style: |
+          ha-card {
+            overflow-x: auto;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            padding-bottom: 6px;
+          }
+          ha-card > config-template-card {
+            display: block;
+            width: max-content;
+            min-width: 100%;
+          }
+      card:
+        type: custom:config-template-card
+        entities:
+        - sensor.music_albums
+        variables:
+        - '''sensor.music_albums'''
+        - '''album'''
+        card:
+          type: '${(states[vars[0]]?.attributes.items || []).length ? ''custom:layout-card'' : ''markdown''}'
+          content: '${!states[vars[0]] ? ''Loading music data. Restart Home Assistant once to load the new Music row sensors.'' : states[vars[0]].state === ''ready'' ? ''No matching
+            collections were returned. Try Refresh music after syncing your library.'' : ''No albums loaded yet. Refresh music after Music Assistant has synced your library.''}'
+          layout_type: grid
+          layout:
+            card_margin: 0px
+            padding: 0px
+            grid-gap: 10px
+            grid-template-columns: ${'repeat(' + Math.max(1, (states[vars[0]]?.attributes.items || []).length) + ', 148px)'}
+            grid-template-rows: min-content
+          cards: |-
+            ${(states[vars[0]]?.attributes.items || []).filter(item => item.uri).map(item => ({
+              type: 'custom:button-card',
+              name: String(item.name || 'Untitled').replace(/\[\[\[/g, ''),
+              entity_picture: typeof item.image === 'string' ? item.image : item.image?.path,
+              show_entity_picture: !!item.image,
+              icon: item.media_type === 'album' ? 'mdi:album' : 'mdi:playlist-music',
+              show_name: true,
+              tap_action: {
+                action: 'call-service', service: 'script.music_play_collection',
+                service_data: {uri: item.uri, media_type: item.media_type || vars[1]}
+              },
+              styles: {
+                card: [{height: '184px'}, {padding: '8px'}, {'box-shadow': 'none'}],
+                grid: [{'grid-template-areas': '"i" "n"'}, {'grid-template-rows': '132px 1fr'}],
+                img_cell: [{height: '128px'}],
+                entity_picture: [{width: '128px'}, {height: '128px'}, {'object-fit': 'cover'}, {'border-radius': '8px'}],
+                name: [{'white-space': 'normal'}, {'font-size': '14px'}, {'line-height': '1.3'}]
+              }
+            }))}

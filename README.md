@@ -24,6 +24,62 @@ Dashboards are in YAML mode (`dashboards/`). Resources (HACS cards) are declared
 - `custom:state-switch`
 - `kiosk-mode`
 
+## Music tabs
+
+Both dashboards include `dashboards/shared/music.yaml`. They share destination
+buttons, compact Mini Media Player controls, and three horizontal artwork rows:
+For you (Apple Music recommendations), Playlists, and Albums (recently played first).
+Tapping a cover calls `script.music_play_collection`, which resolves the selected
+destination at execution time, prepares its speaker group if necessary, and starts
+the collection. It does not add the collection behind the existing queue.
+
+The Search music field searches Apple Music and the Music Assistant library for
+tracks, albums, artists, and playlists. Press Enter or use Search; results appear
+above the recommendation rows and play on the selected destination. Clear hides
+results. Tap a search-result cover to start a station (`radio_mode: true`) from
+that result. Search results have a single action. This starts a similar-music mix and
+does not save a station to Apple Music. The query is shared between the two dashboards. The native input-text
+helper and a fourth trigger-based template sensor provide the query/results;
+search does not depend on Queue Actions. Stale results are hidden while a new
+query is loading. A live search returned results through this path without
+changing playback.
+
+The rows use the installed layout-card, config-template-card, button-card, and
+card-mod packages. There is no new custom JavaScript module or embedded webpage.
+`templates/music.yaml` supplies three row sensors and one search-results sensor. Each row fetches
+independently at startup, every ten minutes, when templates are reloaded, or when
+`script.music_refresh_library` fires `music_library_refresh`. Playlist/album data
+comes from the official Music Assistant integration. Recommendations use the
+manually installed Music Assistant Queue Actions backend (`custom_components/mass_queue/`).
+
+Restart Home Assistant to load the new template sensors and scripts. Queue Actions
+must also be added/configured under Settings > Devices & services with
+`http://nas.local:8095/`. Installing its files alone does not activate it.
+If recommendations cannot load, that row shows a message; playlist/album data
+requests run independently. After completing setup, use Refresh music. The sensors
+cache up to eighteen items per row, preserve recommendation order, deduplicate
+recommendation URIs, and exclude individual recommendation tracks. A fresh
+installation does not have cached row data until the first successful request.
+
+`input_select.music_destination` stores the selected destination for both Music
+tabs. `script.music_switch_destination` moves a playing queue, pauses members left
+behind, and prepares Main Floor (Living Room, Office, Dining Room, Three Season
+Porch), Bedroom, Basement, or Record Player. Roam is excluded. The helper updates
+only after successful commands. The script resolves the active queue owner from
+Music Assistant player IDs and delegates the handoff to the native transfer action
+before adjusting unwanted members and forming the selected destination group. A partial service failure can leave a partially
+changed group; inspect the script trace. With multiple independent queues playing,
+the previous selected destination is preferred as source, otherwise the first
+playing configured room is used.
+
+Data templates and row-card expressions have offline checks. A live destination
+script test transferred the current track to Bedroom only; a subsequent read
+confirmed all four Main Floor speakers playing and Bedroom idle. Data requests
+and tablet rendering need separate verification. Home views retain their Mini Media Player controls; tapping
+artwork/name opens Music in the same dashboard. Other Home controls and weather
+are unchanged. Previously downloaded Music Assistant Player Card files remain
+on disk but are no longer loaded or used by these views.
+
 ## Key Files
 
 | File | Purpose |

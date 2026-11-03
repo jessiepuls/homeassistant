@@ -33,15 +33,52 @@ views:
                 "hallway"
         cards:
 
-          - type: vertical-stack
+          - type: custom:layout-card
+            layout_type: grid
             view_layout:
               grid-area: rail
+            layout:
+              height: 100%
+              margin: 0px
+              padding: 0px
+              card_margin: 0px
+              grid-gap: 8px
+              grid-template-columns: minmax(0, 1fr)
+              grid-template-rows: auto minmax(140px, 1fr)
+              mediaquery:
+                "(max-width: 768px)":
+                  grid-template-rows: auto auto
             cards:
               - type: custom:clock-weather-card
                 entity: weather.openweathermap
                 forecast_rows: 3
-              - type: custom:sonos-card
-                heightPercentage: 83
+              - type: custom:mini-media-player
+                entity: media_player.living_room_2
+                name: Living Room
+                artwork: cover
+                card_mod:
+                  style: |
+                    :host {
+                      height: 100%;
+                    }
+                    ha-card {
+                      height: 100%;
+                      min-height: 140px;
+                      box-sizing: border-box;
+                    }
+                    .mmp-player {
+                      background: linear-gradient(
+                        to top,
+                        rgba(0, 0, 0, 0.85),
+                        rgba(0, 0, 0, 0.25)
+                      );
+                    }
+                hide:
+                  power: true
+                  source: true
+                tap_action:
+                  action: navigate
+                  navigation_path: /lovelace-main-panel/music
 
           - type: picture-elements
             image: /local/photos/living.jpg?v=5
@@ -927,3 +964,5 @@ views:
                   bottom: 5%
                   left: 32%
                   transform: translateX(-50%)
+
+  - !include shared/music.yaml

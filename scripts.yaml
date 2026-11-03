@@ -49,3 +49,180 @@ play_music_three_season_porch:
     data:
       media_content_type: "SPOTIFY"
       media_content_id: "shuffle playlist Daily Mix 1"
+
+music_switch_destination:
+  alias: Music - switch listening destination
+  description: Move the playing queue to the selected destination, replacing the previous speaker group.
+  mode: single
+  fields:
+    destination:
+      required: true
+      selector:
+        select:
+          options:
+          - Main Floor
+          - Bedroom
+          - Basement
+          - Record Player
+  sequence:
+  - variables:
+      destinations:
+        Main Floor:
+        - media_player.living_room_2
+        - media_player.office_2
+        - media_player.dining_room_2
+        - media_player.three_season_porch
+        Bedroom:
+        - media_player.bedroom_2
+        Basement:
+        - media_player.basement_2
+        Record Player:
+        - media_player.record_player
+      queue_entities:
+        RINCON_74CA60C37DB801400: media_player.bedroom_2
+        RINCON_F0F6C172D5EB01400: media_player.living_room_2
+        RINCON_F0F6C1AE9FB801400: media_player.dining_room_2
+        RINCON_C4387521378201400: media_player.three_season_porch
+        RINCON_74CA60C33D2E01400: media_player.office_2
+        RINCON_48A6B8423BC501400: media_player.basement_2
+        RINCON_38420B82206401400: media_player.record_player
+  - if:
+    - condition: template
+      value_template: '{{ destination not in destinations }}'
+    then:
+    - stop: Unknown music destination
+      error: true
+  - variables:
+      desired: '{{ destinations[destination] }}'
+      previous: '{{ destinations.get(states(''input_select.music_destination''), destinations[''Main Floor''])[0] }}'
+      playing: '{{ expand(destinations.values() | sum(start=[])) | selectattr(''state'', ''eq'', ''playing'') | map(attribute=''entity_id'') | list }}'
+      paused: '{{ expand(destinations.values() | sum(start=[])) | selectattr(''state'', ''eq'', ''paused'') | map(attribute=''entity_id'') | list }}'
+  - variables:
+      source_candidate: '{{ previous if previous in playing else (playing | first | default(previous if previous in paused else (paused | first | default('''')))) }}'
+      target_player: '{{ desired[0] }}'
+  - variables:
+      source: '{{ queue_entities.get(state_attr(source_candidate, ''active_queue''), source_candidate) if source_candidate else '''' }}'
+  - repeat:
+      for_each: '{{ desired }}'
+      sequence:
+      - if:
+        - condition: template
+          value_template: '{{ states(repeat.item) in [''unknown'', ''unavailable''] }}'
+        then:
+        - stop: A selected speaker is unavailable
+          error: true
+  - if:
+    - condition: template
+      value_template: '{{ source != '''' and source != target_player }}'
+    then:
+    - action: music_assistant.transfer_queue
+      target:
+        entity_id: '{{ target_player }}'
+      data:
+        source_player: '{{ source }}'
+        auto_play: '{{ is_state(source, ''playing'') }}'
+  - variables:
+      current_members: '{{ state_attr(target_player, ''group_members'') or [target_player] }}'
+  - variables:
+      extras: '{{ current_members | reject(''in'', desired) | list }}'
+  - repeat:
+      for_each: '{{ extras }}'
+      sequence:
+      - action: media_player.unjoin
+        target:
+          entity_id: '{{ repeat.item }}'
+      - action: media_player.media_stop
+        target:
+          entity_id: '{{ repeat.item }}'
+  - if:
+    - condition: template
+      value_template: '{{ desired | length > 1 }}'
+    then:
+    - action: media_player.join
+      target:
+        entity_id: '{{ target_player }}'
+      data:
+        group_members: '{{ desired[1:] }}'
+  - action: input_select.select_option
+    target:
+      entity_id: input_select.music_destination
+    data:
+      option: '{{ destination }}'
+  max_exceeded: silent
+  trace:
+    stored_traces: 10
+
+music_refresh_library:
+  alias: Music - refresh dashboard rows
+  mode: single
+  sequence:
+    - event: music_library_refresh
+
+music_play_collection:
+  alias: Music - play a dashboard collection
+  mode: single
+  fields:
+    uri:
+      required: true
+      selector:
+        text:
+    media_type:
+      required: true
+      selector:
+        select:
+          options:
+            - playlist
+            - album
+            - radio
+            - track
+            - artist
+    radio_mode:
+      name: Start a station
+      default: false
+      selector:
+        boolean:
+  sequence:
+    - variables:
+        destinations:
+          Main Floor:
+            - media_player.living_room_2
+            - media_player.office_2
+            - media_player.dining_room_2
+            - media_player.three_season_porch
+          Bedroom:
+            - media_player.bedroom_2
+          Basement:
+            - media_player.basement_2
+          Record Player:
+            - media_player.record_player
+        destination: "{{ states('input_select.music_destination') }}"
+    - if:
+        - condition: template
+          value_template: "{{ destination not in destinations or media_type not in ['playlist', 'album', 'radio', 'track', 'artist'] or not uri }}"
+      then:
+        - stop: Invalid music destination or collection
+          error: true
+    - variables:
+        desired: "{{ destinations[destination] }}"
+    - if:
+        - condition: template
+          value_template: >-
+            {{ (state_attr(desired[0], 'group_members') or [desired[0]]) | sort != desired | sort }}
+      then:
+        - action: script.music_switch_destination
+          data:
+            destination: "{{ destination }}"
+    - action: music_assistant.play_media
+      target:
+        entity_id: "{{ desired[0] }}"
+      data:
+        media_id: "{{ uri }}"
+        media_type: "{{ media_type }}"
+        enqueue: replace
+        radio_mode: "{{ radio_mode | default(false) | bool }}"
+
+music_search:
+  alias: Music - search
+  mode: restart
+  sequence:
+    - event: music_search_requested

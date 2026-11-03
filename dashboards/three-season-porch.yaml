@@ -63,9 +63,16 @@ views:
                 "string ceiling"
                 "fan fan"
         cards:
-          - type: custom:sonos-card
-            entityId: media_player.three_season_porch_sonos
-            heightPercentage: 94
+          - type: custom:mini-media-player
+            entity: media_player.three_season_porch
+            name: Three Season Porch
+            artwork: full-cover
+            hide:
+              power: true
+              source: true
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace-three-season-porch/music
             view_layout:
               grid-area: media
           - type: weather-forecast
@@ -118,3 +125,5 @@ views:
               - type: fan-speed
             view_layout:
               grid-area: fan
+
+  - !include shared/music.yaml

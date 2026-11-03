@@ -16,6 +16,17 @@ sensor:
       - "time_date"
       - "time_utc"
 
+# Remember the selected listening destination across both dashboards.
+input_select:
+  music_destination:
+    name: Music destination
+    icon: mdi:speaker-multiple
+    options:
+      - Main Floor
+      - Bedroom
+      - Basement
+      - Record Player
+
 input_boolean:
   chicken_door_close_alert_active:
     name: Chicken door close alert active
@@ -98,3 +109,14 @@ script: !include scripts.yaml
 scene: !include scenes.yaml
 light: !include lights.yaml
 group: !include groups.yaml
+
+# Data for the shared Music dashboard rows.
+template: !include templates/music.yaml
+
+# Search the Music Assistant library and connected providers from either Music tab.
+input_text:
+  music_search_query:
+    name: Search music
+    icon: mdi:magnify
+    max: 100
+    mode: text

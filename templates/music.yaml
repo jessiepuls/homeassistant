@@ -1,0 +1,133 @@
+# Each row refreshes independently so a failed recommendation service cannot block the library.
+- triggers: &id001
+  - trigger: homeassistant
+    event: start
+  - trigger: time_pattern
+    minutes: /10
+  - trigger: event
+    event_type: music_library_refresh
+  - trigger: event
+    event_type: event_template_reloaded
+  actions:
+  - variables:
+      music_recommendations_result: {}
+  - action: mass_queue.get_recommendations
+    continue_on_error: true
+    data:
+      entity: media_player.living_room_2
+      providers:
+      - apple_music
+    response_variable: music_recommendations_result
+  sensor:
+  - name: Music Recommendations
+    unique_id: dashboard_music_recommendations
+    state: |-
+      {% if music_recommendations_result is mapping and 'response' in music_recommendations_result %}
+        ready
+      {% else %}
+        unavailable
+      {% endif %}
+    attributes:
+      items: |-
+        {% set ns = namespace(items=[], seen=[]) %} {% for section in music_recommendations_result.get('response', []) %}
+          {% for item in section.get('items', []) %}
+            {% if item.get('media_type') in ['playlist', 'album', 'radio']
+                  and item.get('uri') and item.uri not in ns.seen and ns.items | length < 18 %}
+              {% set ns.items = ns.items + [item] %}
+              {% set ns.seen = ns.seen + [item.uri] %}
+            {% endif %}
+          {% endfor %}
+        {% endfor %} {{ ns.items }}
+      updated_at: '{{ now().isoformat() }}'
+- triggers: *id001
+  actions:
+  - variables:
+      music_playlists_result: {}
+  - action: music_assistant.get_library
+    continue_on_error: true
+    data:
+      config_entry_id: 01M6HDCTCX7DZ1YYB2NCX1A6FH
+      media_type: playlist
+      limit: 18
+      order_by: last_played_desc
+    response_variable: music_playlists_result
+  sensor:
+  - name: Music Playlists
+    unique_id: dashboard_music_playlists
+    state: '{{ ''ready'' if ''items'' in music_playlists_result else ''unavailable'' }}'
+    attributes:
+      items: '{{ music_playlists_result.get(''items'', []) }}'
+      updated_at: '{{ now().isoformat() }}'
+- triggers: *id001
+  actions:
+  - variables:
+      music_albums_result: {}
+  - action: music_assistant.get_library
+    continue_on_error: true
+    data:
+      config_entry_id: 01M6HDCTCX7DZ1YYB2NCX1A6FH
+      media_type: album
+      limit: 18
+      order_by: last_played_desc
+    response_variable: music_albums_result
+  sensor:
+  - name: Music Albums
+    unique_id: dashboard_music_albums
+    state: '{{ ''ready'' if ''items'' in music_albums_result else ''unavailable'' }}'
+    attributes:
+      items: '{{ music_albums_result.get(''items'', []) }}'
+      updated_at: '{{ now().isoformat() }}'
+- triggers:
+    - trigger: state
+      entity_id: input_text.music_search_query
+      for:
+        seconds: 1
+    - trigger: event
+      event_type: music_search_requested
+    - trigger: event
+      event_type: event_template_reloaded
+  actions:
+    - variables:
+        music_query: "{{ states('input_text.music_search_query') | trim }}"
+        music_search_result: {}
+    - if:
+        - condition: template
+          value_template: "{{ music_query | length >= 2 and music_query not in ['unknown', 'unavailable'] }}"
+      then:
+        - action: music_assistant.search
+          continue_on_error: true
+          data:
+            config_entry_id: 01M6HDCTCX7DZ1YYB2NCX1A6FH
+            name: "{{ music_query }}"
+            media_type:
+              - track
+              - album
+              - artist
+              - playlist
+            limit: 6
+            library_only: false
+          response_variable: music_search_result
+  sensor:
+    - name: Music Search Results
+      unique_id: dashboard_music_search_results
+      state: >-
+        {% if music_query | length < 2 or music_query in ['unknown', 'unavailable'] %}
+          idle
+        {% elif 'tracks' in music_search_result %}
+          ready
+        {% else %}
+          error
+        {% endif %}
+      attributes:
+        query: "{{ music_query }}"
+        items: >-
+          {% set ns = namespace(items=[]) %}
+          {% for key in ['tracks', 'albums', 'artists', 'playlists'] %}
+            {% for item in music_search_result.get(key, []) %}
+              {% set artists = item.get('artists', []) | map(attribute='name') | join(', ') %}
+              {% set name = item.get('name', 'Untitled') ~ ' · ' ~ item.get('media_type', key) %}
+              {% if artists %}{% set name = name ~ ' · ' ~ artists %}{% endif %}
+              {% set ns.items = ns.items + [dict(item, name=name)] %}
+            {% endfor %}
+          {% endfor %}
+          {{ ns.items }}
