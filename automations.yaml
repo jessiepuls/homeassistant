@@ -156,6 +156,33 @@
          is_state('cover.run_door_door', 'closed') }}
     timeout: '00:06:00'
     continue_on_timeout: true
+  # Refresh after the first six minutes, then allow another six minutes for confirmation.
+  - if:
+    - condition: template
+      value_template: >-
+        {{ not (is_state('cover.coop_door', 'closed') and
+                is_state('cover.run_door_door', 'closed')) }}
+    then:
+    - action: homeassistant.update_entity
+      target:
+        entity_id: cover.coop_door
+      continue_on_error: true
+    - wait_template: >-
+        {{ is_state('cover.coop_door', 'closed') and
+           is_state('cover.run_door_door', 'closed') }}
+      timeout: '00:06:00'
+      continue_on_timeout: true
+  # Both doors share a coordinator; refreshing one fetches the state of both.
+  - if:
+    - condition: template
+      value_template: >-
+        {{ not (is_state('cover.coop_door', 'closed') and
+                is_state('cover.run_door_door', 'closed')) }}
+    then:
+    - action: homeassistant.update_entity
+      target:
+        entity_id: cover.coop_door
+      continue_on_error: true
   - if:
     - condition: template
       value_template: >-
@@ -169,14 +196,18 @@
       target:
         entity_id: notify.jessies_iphone_17
       data:
-        title: Chicken door close failed
+        title: Chicken door closure not confirmed
         message: >-
+          Closure was not confirmed after a 12-minute confirmation window and a final refresh.
           Coop door: {{ states('cover.coop_door') }}. Run door:
-          {{ states('cover.run_door_door') }}. Check the Omlet doors.
+          {{ states('cover.run_door_door') }}. This may be delayed reporting;
+          check the Omlet app or the doors.
   mode: single
+  trace:
+    stored_traces: 20
 - id: '1792281600001'
-  alias: Chicken doors recovered after close failure
-  description: Notify once both doors close after a nightly close-failure alert.
+  alias: Chicken doors confirmed closed after alert
+  description: Notify once both doors are confirmed closed after a closure-confirmation alert.
   triggers:
   - trigger: template
     value_template: >-
@@ -188,8 +219,8 @@
     target:
       entity_id: notify.jessies_iphone_17
     data:
-      title: Chicken doors recovered
-      message: Both the coop door and run door are now closed.
+      title: Both chicken doors now confirmed closed
+      message: Home Assistant has now confirmed both the coop door and run door are closed.
   - action: input_boolean.turn_off
     target:
       entity_id: input_boolean.chicken_door_close_alert_active
