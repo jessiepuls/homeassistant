@@ -15,9 +15,15 @@ bedtime:
   icon: mdi:sleep
   mode: single
   sequence:
-  - action: media_player.turn_off
-    target:
-      entity_id: media_player.upstairs_tv
+  # An offline TV must not prevent the remaining bedtime actions.
+  - if:
+    - condition: template
+      value_template: "{{ states('media_player.upstairs_tv') not in ['unknown', 'unavailable', 'off'] }}"
+    then:
+    - action: media_player.turn_off
+      target:
+        entity_id: media_player.upstairs_tv
+      continue_on_error: true
   - action: light.turn_on
     data:
       brightness_pct: 30
