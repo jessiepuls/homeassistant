@@ -11,13 +11,18 @@
   actions:
   - variables:
       music_recommendations_result: {}
-  - action: mass_queue.get_recommendations
-    continue_on_error: true
-    data:
-      entity: media_player.living_room_2
-      providers:
-      - apple_music
-    response_variable: music_recommendations_result
+  # Queue Actions registers its actions during setup; wait until its entry is loaded.
+  - if:
+    - condition: template
+      value_template: "{{ config_entry_attr('01M6HQY4RZEH5QJ44NT8E5CW5D', 'state') == 'loaded' }}"
+    then:
+    - action: mass_queue.get_recommendations
+      continue_on_error: true
+      data:
+        entity: media_player.living_room_2
+        providers:
+        - apple_music
+      response_variable: music_recommendations_result
   sensor:
   - name: Music Recommendations
     unique_id: dashboard_music_recommendations
