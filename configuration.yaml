@@ -46,20 +46,20 @@ lovelace:
   resource_mode: yaml
   resources:
     - type: module
-      url: /hacsfiles/lovelace-card-mod/card-mod.js
+      url: /local/community/lovelace-card-mod/card-mod.js
     - type: module
-      url: /hacsfiles/lovelace-layout-card/layout-card.js?v=20261028
+      url: /local/community/lovelace-layout-card/layout-card.js?v=20261028
     - type: module
-      url: /hacsfiles/mini-media-player/mini-media-player-bundle.js
+      url: /local/community/mini-media-player/mini-media-player-bundle.js
     - type: module
-      url: /hacsfiles/config-template-card/config-template-card.js
+      url: /local/community/config-template-card/config-template-card.js
     - type: module
-      url: /hacsfiles/button-card/button-card.js?v=20261028
+      url: /local/community/button-card/button-card.js?v=20261028
     - type: module
-      url: /hacsfiles/lovelace-state-switch/state-switch.js
+      url: /local/community/lovelace-state-switch/state-switch.js
     - type: css
       url: /local/style.css
-    - url: /hacsfiles/clock-weather-card/clock-weather-card.js
+    - url: /local/community/clock-weather-card/clock-weather-card.js
       type: module
   dashboards:
     lovelace-three-season-porch:
