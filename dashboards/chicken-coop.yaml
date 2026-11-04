@@ -240,17 +240,34 @@ views:
               grid-area: automation
             cards:
               - type: entity-filter
-                title: Attention needed
+                card:
+                  type: entities
+                  title: Attention needed
+                  show_header_toggle: false
                 show_empty: false
                 entities:
-                  - sensor.coop_door_door_fault
-                  - sensor.run_door_door_fault
-                  - sensor.jessica_s_feeder_feeder_fault
-                  - sensor.feeder2_feeder_fault
+                  - entity: sensor.coop_door_door_fault
+                    conditions:
+                      - condition: state
+                        state_not: none
+                  - entity: sensor.run_door_door_fault
+                    conditions:
+                      - condition: state
+                        state_not: none
+                  - entity: sensor.jessica_s_feeder_feeder_fault
+                    conditions:
+                      - condition: state
+                        state_not: none
+                  - entity: sensor.feeder2_feeder_fault
+                    conditions:
+                      - condition: state
+                        state_not: none
                   - cover.coop_door
                   - cover.run_door_door
                   - cover.jessica_s_feeder_feeder
                   - cover.feeder2_feeder
-                state_filter:
-                  - unavailable
-                  - unknown
+                conditions:
+                  - condition: state
+                    state:
+                      - unavailable
+                      - unknown
