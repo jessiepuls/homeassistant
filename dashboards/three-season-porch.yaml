@@ -63,44 +63,97 @@ views:
                 "string ceiling"
                 "fan fan"
         cards:
-          - type: custom:config-template-card
-            entities:
-            - media_player.three_season_porch
+          - type: custom:state-switch
+            entity: template
+            template: '{{ ''grouped'' if (state_attr(''media_player.three_season_porch'', ''group_members'') or []) | length > 1 else ''solo'' }}'
+            default: solo
             card_mod:
-              style: |2
-                 :host { display: block; height: 100%; }
-                #card { height: 100%; }
-                #card > mini-media-player { height: 100%; }
-            card:
-              type: custom:mini-media-player
-              entity: media_player.three_season_porch
-              name: Three Season Porch
-              artwork: full-cover
-              hide:
-                power: true
-                source: true
-                group_button: true
-              tap_action:
-                action: navigate
-                navigation_path: /lovelace-three-season-porch/music
-              speaker_group:
-                platform: media_player
-                sync_volume: ${(states['media_player.three_season_porch']?.attributes.group_members || []).length > 1}
-                entities:
-                - entity_id: media_player.living_room_2
-                  name: Living Room
-                - entity_id: media_player.office_2
-                  name: Office
-                - entity_id: media_player.dining_room_2
-                  name: Dining Room
-                - entity_id: media_player.three_season_porch
-                  name: Three Season Porch
-                - entity_id: media_player.bedroom_2
-                  name: Bedroom
-                - entity_id: media_player.basement_2
-                  name: Basement
-                - entity_id: media_player.record_player
-                  name: Record Player
+              style: |
+                :host { display: block; height: 100%; min-height: 0; }
+                #root { height: 100%; grid-template-rows: minmax(0, 1fr) 0px; box-sizing: border-box; }
+                #root > div.visible { height: 100%; min-height: 0; }
+                mini-media-player { display: block; height: 100%; }
+            states:
+              solo:
+                type: custom:mini-media-player
+                entity: media_player.three_season_porch
+                name: Three Season Porch
+                artwork: full-cover
+                hide:
+                  power: true
+                  source: true
+                  group_button: true
+                tap_action:
+                  action: navigate
+                  navigation_path: /lovelace-three-season-porch/music
+                speaker_group:
+                  platform: media_player
+                  sync_volume: false
+                  entities:
+                  - entity_id: media_player.living_room_2
+                    name: Living Room
+                  - entity_id: media_player.office_2
+                    name: Office
+                  - entity_id: media_player.dining_room_2
+                    name: Dining Room
+                  - entity_id: media_player.three_season_porch
+                    name: Three Season Porch
+                  - entity_id: media_player.bedroom_2
+                    name: Bedroom
+                  - entity_id: media_player.basement_2
+                    name: Basement
+                  - entity_id: media_player.record_player
+                    name: Record Player
+                card_mod:
+                  style: |
+                    :host { display: block; height: 100%; }
+                    ha-card { height: 100%; min-height: 240px; }
+                    ha-card:before { padding-top: 0 !important; transition: none !important; }
+                    .mmp-player { margin-top: auto; transition: none !important; }
+                    @media (max-width: 768px) {
+                      :host { height: auto; }
+                      ha-card { height: auto; aspect-ratio: 1; }
+                    }
+              grouped:
+                type: custom:mini-media-player
+                entity: media_player.three_season_porch
+                name: Three Season Porch
+                artwork: full-cover
+                hide:
+                  power: true
+                  source: true
+                  group_button: true
+                tap_action:
+                  action: navigate
+                  navigation_path: /lovelace-three-season-porch/music
+                speaker_group:
+                  platform: media_player
+                  sync_volume: true
+                  entities:
+                  - entity_id: media_player.living_room_2
+                    name: Living Room
+                  - entity_id: media_player.office_2
+                    name: Office
+                  - entity_id: media_player.dining_room_2
+                    name: Dining Room
+                  - entity_id: media_player.three_season_porch
+                    name: Three Season Porch
+                  - entity_id: media_player.bedroom_2
+                    name: Bedroom
+                  - entity_id: media_player.basement_2
+                    name: Basement
+                  - entity_id: media_player.record_player
+                    name: Record Player
+                card_mod:
+                  style: |
+                    :host { display: block; height: 100%; }
+                    ha-card { height: 100%; min-height: 240px; }
+                    ha-card:before { padding-top: 0 !important; transition: none !important; }
+                    .mmp-player { margin-top: auto; transition: none !important; }
+                    @media (max-width: 768px) {
+                      :host { height: auto; }
+                      ha-card { height: auto; aspect-ratio: 1; }
+                    }
             view_layout:
               grid-area: media
           - type: weather-forecast

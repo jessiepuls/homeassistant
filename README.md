@@ -44,8 +44,12 @@ changing playback.
 The Main Floor volume slider and Home players use Mini Media Player's group-volume
 synchronization: changing volume applies the same percentage to every configured
 member of the active group. When a Home player is standalone, synchronization is
-disabled so its volume still works. This is separate from the one-time equalization
-performed when selecting Main Floor. No new backend automation is involved.
+disabled so its volume still works. State-switch keeps the solo and grouped player
+instances mounted and selects between them only when grouping changes. Track and
+artwork updates reach the existing player without rebuilding it. The porch Home
+player reserves its height independently of artwork loading. This is separate from
+the one-time equalization performed when selecting Main Floor. No new backend
+automation is involved.
 
 The rows use the installed layout-card, config-template-card, button-card, and
 card-mod packages. There is no new custom JavaScript module or embedded webpage.
