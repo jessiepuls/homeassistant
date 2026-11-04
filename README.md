@@ -6,7 +6,7 @@ Personal Home Assistant configuration.
 
 | Dashboard | Description |
 |---|---|
-| Main Panel | Primary home control panel — weather, Sonos, and room-by-room light/fan controls |
+| Main Panel | Primary home control panel — weather, Music Assistant playback, and room-by-room light/fan controls |
 | Chicken Coop | Coop door & feeder controls, battery levels, feed history, and automation toggles |
 | Three Season Porch | Porch-specific controls |
 
@@ -21,7 +21,7 @@ Dashboards are in YAML mode (`dashboards/`). Resources (HACS cards) are declared
 - `custom:mini-media-player`
 - `custom:atomic-calendar-revive`
 - `custom:state-switch`
-- `kiosk-mode`
+- `custom:config-template-card` — dynamic music controls and library rows
 
 ## Music tabs
 
@@ -83,25 +83,29 @@ script test transferred the current track to Bedroom only; a subsequent read
 confirmed all four Main Floor speakers playing and Bedroom idle. Data requests
 and tablet rendering need separate verification. Home views retain their Mini Media Player controls; tapping
 artwork/name opens Music in the same dashboard. Other Home controls and weather
-are unchanged. Previously downloaded Music Assistant Player Card files remain
-on disk but are no longer loaded or used by these views.
+are unchanged. Unused Sonos Card and experimental Music Assistant Player Card files
+have been removed; neither card is loaded by these views.
 
 ## Key Files
 
 | File | Purpose |
 |---|---|
-| `configuration.yaml` | Main config — Sonos hosts, Lovelace resources & dashboards |
+| `configuration.yaml` | Main config — helpers, Lovelace resources & dashboards |
 | `automations.yaml` | All automations |
 | `lights.yaml` | Light groups (living room, kitchen cabinets) |
 | `groups.yaml` | Entity groups (outdoor lights) |
 | `scripts.yaml` | Scripts |
 | `scenes.yaml` | Scenes |
 | `dashboards/` | Lovelace YAML dashboards |
-| `custom_components/` | Custom integrations (Omlet Smart Coop) |
+| `custom_components/` | Custom integrations (including Omlet Smart Coop and Music Assistant Queue Actions) |
 
 ## Custom Integrations
 
 - **Omlet Smart Coop** — controls the chicken coop door and feeder, exposes battery levels and last open/close timestamps
+
+- **Music Assistant Queue Actions** — supplies Apple Music recommendations for the shared Music tabs
+
+Music Assistant runs separately on the NAS and connects through the official Home Assistant integration. The native Home Assistant Sonos integration is no longer required by this setup.
 
 ## Secrets
 
