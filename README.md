@@ -16,10 +16,8 @@ Dashboards are in YAML mode (`dashboards/`). Resources (HACS cards) are declared
 
 - `custom:layout-card` — responsive grid layouts
 - `custom:clock-weather-card` — clock + weather forecast
-- `custom:mini-graph-card` — feed level history graph
 - `custom:button-card` — state-based icon/color buttons
 - `custom:mini-media-player`
-- `custom:atomic-calendar-revive`
 - `custom:state-switch`
 - `custom:config-template-card` — dynamic music controls and library rows
 
