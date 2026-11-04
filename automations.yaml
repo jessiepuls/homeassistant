@@ -93,31 +93,87 @@
       - light.hue_smart_plug_1_2
 - id: '1748154090198'
   alias: Chicken Coop Door Open
-  description: ''
+  description: Open only the coop door and allow for delayed Omlet confirmation.
   triggers:
   - trigger: sun
     event: sunrise
     offset: '01:00:00'
   - trigger: time
-    at: 07:00:00
-  conditions:
-  - condition: or
-    conditions:
-    - condition: device
-      device_id: e26628038ef92e9846da78982743feea
-      domain: cover
-      entity_id: 37429b3d46890887caf19f8ce4a0f3d6
-      type: is_closing
-    - condition: device
-      device_id: e26628038ef92e9846da78982743feea
-      domain: cover
-      entity_id: 37429b3d46890887caf19f8ce4a0f3d6
-      type: is_closed
+    at: '07:00:00'
   actions:
-  - device_id: e26628038ef92e9846da78982743feea
-    domain: cover
-    entity_id: 37429b3d46890887caf19f8ce4a0f3d6
-    type: open
+  - if:
+    - condition: state
+      entity_id: cover.coop_door
+      state:
+      - closed
+      - closing
+    then:
+    - action: cover.open_cover
+      target:
+        entity_id: cover.coop_door
+      continue_on_error: true
+  - wait_template: "{{ is_state('cover.coop_door', 'open') }}"
+    timeout: '00:06:00'
+    continue_on_timeout: true
+  - if:
+    - condition: template
+      value_template: "{{ not is_state('cover.coop_door', 'open') }}"
+    then:
+    - action: homeassistant.update_entity
+      target:
+        entity_id: cover.coop_door
+      continue_on_error: true
+    - wait_template: "{{ is_state('cover.coop_door', 'open') }}"
+      timeout: '00:06:00'
+      continue_on_timeout: true
+  - if:
+    - condition: template
+      value_template: "{{ not is_state('cover.coop_door', 'open') }}"
+    then:
+    - action: homeassistant.update_entity
+      target:
+        entity_id: cover.coop_door
+      continue_on_error: true
+  - if:
+    - condition: template
+      value_template: "{{ not is_state('cover.coop_door', 'open') }}"
+    - condition: state
+      entity_id: input_boolean.chicken_door_open_alert_active
+      state: 'off'
+    then:
+    - action: input_boolean.turn_on
+      target:
+        entity_id: input_boolean.chicken_door_open_alert_active
+    - action: notify.send_message
+      target:
+        entity_id: notify.jessies_iphone_17
+      data:
+        title: Coop door opening not confirmed
+        message: >-
+          Opening was not confirmed after a 12-minute confirmation window and a final refresh.
+          Coop door: {{ states('cover.coop_door') }}. This may be delayed reporting;
+          check the Omlet app or the door.
+  mode: single
+  trace:
+    stored_traces: 20
+- id: '1793793600001'
+  alias: Coop door confirmed open after alert
+  description: Notify once the coop door is confirmed open after an opening-confirmation alert.
+  triggers:
+  - trigger: template
+    value_template: >-
+      {{ is_state('input_boolean.chicken_door_open_alert_active', 'on') and
+         is_state('cover.coop_door', 'open') }}
+  actions:
+  - action: notify.send_message
+    target:
+      entity_id: notify.jessies_iphone_17
+    data:
+      title: Coop door now confirmed open
+      message: Home Assistant has now confirmed the coop door is open.
+  - action: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.chicken_door_open_alert_active
   mode: single
 - id: '1748275171272'
   alias: Chicken Coop Door Close

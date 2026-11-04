@@ -28,6 +28,9 @@ input_select:
       - Record Player
 
 input_boolean:
+  chicken_door_open_alert_active:
+    name: Chicken door open alert active
+    icon: mdi:alert-circle-outline
   chicken_door_close_alert_active:
     name: Chicken door close alert active
     icon: mdi:alert-circle-outline
