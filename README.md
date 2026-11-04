@@ -110,3 +110,11 @@ Music Assistant runs separately on the NAS and connects through the official Hom
 ## Secrets
 
 Sensitive values (IPs, API keys) are stored in `secrets.yaml` (not committed).
+
+## Configuration checks
+
+GitHub Actions runs YAML lint once in `yamllint.yaml` and validates the Home
+Assistant configuration in `ha-config-check.yaml`, using the version in
+`.HA_VERSION`. No placeholder secrets are needed by the current YAML configuration.
+The State Bonding blueprint used by the lighting automations is included in
+`blueprints/automation/chrissalter/` so a fresh checkout has that dependency.

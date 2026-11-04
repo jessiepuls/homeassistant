@@ -1,0 +1,29 @@
+blueprint:
+  name: State Bonding
+  description: Bind entities together to act in unison (selected entites must all
+    support the same on/off state values)
+  domain: automation
+  input:
+    entity_list:
+      name: Entities
+      selector:
+        entity:
+          multiple: true
+  source_url: https://community.home-assistant.io/t/state-bonding-simplified-and-easier/532650
+mode: single
+trigger:
+- platform: state
+  entity_id: !input entity_list
+  from: 'off'
+  to: 'on'
+- platform: state
+  entity_id: !input entity_list
+  from: 'on'
+  to: 'off'
+condition:
+- condition: template
+  value_template: '{{trigger.to_state.state != trigger.from_state.state }}'
+action:
+- service: homeassistant.turn_{{ trigger.to_state.state }}
+  target:
+    entity_id: !input entity_list

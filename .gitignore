@@ -3,7 +3,13 @@
 .cloud/*
 nest/*
 .storage/*
+# Keep runtime/downloaded blueprints private except the dependency used by automations.
 blueprints/*
+!blueprints/automation/
+blueprints/automation/*
+!blueprints/automation/chrissalter/
+blueprints/automation/chrissalter/*
+!blueprints/automation/chrissalter/state-bonding-simplified-and-easier.yaml
 custom_components/*
 *.log
 *.log.*
