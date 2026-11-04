@@ -2,7 +2,7 @@ outdoor:
   name: Outdoor
   entities:
     - switch.front_yard_lamp_post
-    - switch.back_yard_lights
+    - switch.exterior_string_lights
     - switch.front_door
     - light.exterior_deck_lights
     - light.exterior_driveway_light
