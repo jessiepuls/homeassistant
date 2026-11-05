@@ -51,7 +51,9 @@ views:
             cards:
               - type: custom:clock-weather-card
                 entity: weather.openweathermap
-                forecast_rows: 3
+                sections:
+                  forecast_list:
+                    count: 3
               - type: custom:mod-card
                 card_mod:
                   style:
