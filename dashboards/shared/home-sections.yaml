@@ -1,0 +1,1078 @@
+# Experimental Sections view. The existing Home view remains the comparison baseline.
+title: Home preview
+path: home-sections
+icon: mdi:view-dashboard-outline
+show_icon_and_title: true
+type: sections
+max_columns: 3
+dense_section_placement: false
+badges:
+- type: entity
+  entity: sensor.chicken_coop_alerts
+  name: Chicken alerts
+  icon: mdi:alert-circle
+  color: orange
+  show_name: true
+  show_state: true
+  visibility:
+  - condition: numeric_state
+    entity: sensor.chicken_coop_alerts
+    above: 0
+  tap_action:
+    action: navigate
+    navigation_path: /lovelace-chicken-coop/chicken-coop
+sections:
+- type: grid
+  cards:
+  - type: custom:mod-card
+    grid_options:
+      columns: full
+      rows: auto
+    card_mod:
+      style:
+        .: |
+          /* Match three 840 x 525 room photos, their borders, and two section gaps. */
+          :host { display: block; }
+          ha-card {
+            container-type: inline-size;
+            border: none;
+            padding: 0;
+            background: none;
+            box-shadow: none;
+          }
+          hui-vertical-stack-card {
+            display: block;
+            height: calc(187.5cqw + 2 * var(--ha-section-grid-row-gap, 8px) + 3px);
+            min-height: 0;
+          }
+          @media (max-width: 768px) {
+            hui-vertical-stack-card { height: auto; }
+          }
+        hui-vertical-stack-card$: |
+          :host { display: block; }
+          #root {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            gap: var(--ha-section-grid-row-gap, 8px);
+          }
+          #root > * { display: block; margin: 0 !important; }
+          #root > :first-child { flex: 0 0 auto; height: auto; }
+          #root > :first-child clock-weather-card { display: block; height: auto; }
+          #root > :last-child { flex: 1 0 180px; min-height: 180px; }
+          @media (max-width: 768px) {
+            #root { height: auto; }
+            #root > :last-child { flex: 0 0 auto; }
+          }
+    card:
+      type: vertical-stack
+      cards:
+      - type: custom:clock-weather-card
+        entity: weather.openweathermap
+        sections:
+          forecast_list:
+            count: 3
+      - type: custom:mod-card
+        card_mod:
+          style:
+            .: |
+              :host { display: block; height: 100%; min-height: 0; }
+              ha-card {
+                height: 100%;
+                min-height: 180px;
+                padding: 0;
+                border: none;
+                box-shadow: none;
+                background: none;
+              }
+              state-switch { display: block; height: 100%; }
+            state-switch$:
+              .: |
+                :host { display: block; height: 100%; }
+                #root {
+                  height: 100%;
+                  margin: 0;
+                  padding: 0;
+                  box-sizing: border-box;
+                  grid-template-rows: minmax(0, 1fr) 0px;
+                }
+                #root > div.visible { height: 100%; min-height: 0; }
+                mini-media-player { display: block; height: 100%; }
+        card:
+          type: custom:state-switch
+          entity: template
+          template: '{{ ''grouped'' if (state_attr(''media_player.living_room_2'', ''group_members'') or []) | length > 1 else ''solo'' }}'
+          default: solo
+          states:
+            solo:
+              type: custom:mini-media-player
+              entity: media_player.living_room_2
+              name: Living Room
+              artwork: cover
+              card_mod:
+                style: |
+                  :host { display: block; height: 100%; }
+                  ha-card { height: 100%; min-height: 180px; box-sizing: border-box; }
+                  .mmp-player {
+                    margin-top: auto;
+                    width: 100%;
+                    background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.25));
+                  }
+              hide:
+                power: true
+                source: true
+                group_button: true
+              tap_action:
+                action: navigate
+                navigation_path: /lovelace-main-panel/music
+              speaker_group:
+                platform: media_player
+                sync_volume: false
+                entities:
+                - entity_id: media_player.living_room_2
+                  name: Living Room
+                - entity_id: media_player.office_2
+                  name: Office
+                - entity_id: media_player.dining_room_2
+                  name: Dining Room
+                - entity_id: media_player.three_season_porch
+                  name: Three Season Porch
+                - entity_id: media_player.bedroom_2
+                  name: Bedroom
+                - entity_id: media_player.basement_2
+                  name: Basement
+                - entity_id: media_player.record_player
+                  name: Record Player
+            grouped:
+              type: custom:mini-media-player
+              entity: media_player.living_room_2
+              name: Living Room
+              artwork: cover
+              card_mod:
+                style: |
+                  :host { display: block; height: 100%; }
+                  ha-card { height: 100%; min-height: 180px; box-sizing: border-box; }
+                  .mmp-player {
+                    margin-top: auto;
+                    width: 100%;
+                    background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.25));
+                  }
+              hide:
+                power: true
+                source: true
+                group_button: true
+              tap_action:
+                action: navigate
+                navigation_path: /lovelace-main-panel/music
+              speaker_group:
+                platform: media_player
+                sync_volume: true
+                entities:
+                - entity_id: media_player.living_room_2
+                  name: Living Room
+                - entity_id: media_player.office_2
+                  name: Office
+                - entity_id: media_player.dining_room_2
+                  name: Dining Room
+                - entity_id: media_player.three_season_porch
+                  name: Three Season Porch
+                - entity_id: media_player.bedroom_2
+                  name: Bedroom
+                - entity_id: media_player.basement_2
+                  name: Basement
+                - entity_id: media_player.record_player
+                  name: Record Player
+- type: grid
+  cards:
+  - type: picture-elements
+    image: /local/photos/living.jpg?v=5
+    elements:
+    - type: image
+      image: /local/scrim.svg?v=5
+      style:
+        left: 50%
+        bottom: 0%
+        transform: translateX(-50%)
+        width: 100%
+        height: 26%
+        pointer-events: none
+    - type: custom:button-card
+      name: Living Room
+      show_icon: false
+      tap_action:
+        action: none
+      styles:
+        card:
+        - background: rgba(0, 0, 0, 0.5)
+        - border: none
+        - box-shadow: none
+        - padding: 2px 10px
+        - border-radius: 6px
+        name:
+        - font-size: 15px
+        - font-weight: 500
+        - color: white
+      style:
+        top: 13%
+        left: 5%
+        transform: none
+    - type: custom:button-card
+      icon: mdi:power
+      show_name: false
+      size: 22px
+      tap_action:
+        action: perform-action
+        perform_action: light.turn_off
+        target:
+          area_id: living_room
+      styles:
+        card:
+        - background: rgba(0, 0, 0, 0.5)
+        - border-radius: 50%
+        - padding: 5px
+        - box-shadow: none
+        - border: none
+        icon:
+        - color: white
+      style:
+        top: 13%
+        right: 5%
+        transform: none
+    - type: custom:button-card
+      entity: light.living_room_lamps
+      icon: mdi:lamp
+      show_name: false
+      show_state: false
+      color_type: icon
+      size: 22px
+      tap_action:
+        action: toggle
+      styles:
+        card:
+        - background: none
+        - box-shadow: none
+        - border: none
+        - width: 34px
+        - height: 34px
+        - padding: 0
+      style:
+        bottom: 5%
+        left: 10%
+        transform: translateX(-50%)
+    - type: custom:button-card
+      entity: light.livingroom
+      icon: mdi:lightbulb-group-outline
+      show_name: false
+      show_state: false
+      color_type: icon
+      size: 22px
+      tap_action:
+        action: toggle
+      styles:
+        card:
+        - background: none
+        - box-shadow: none
+        - border: none
+        - width: 34px
+        - height: 34px
+        - padding: 0
+      style:
+        bottom: 5%
+        left: 26%
+        transform: translateX(-50%)
+    - type: custom:button-card
+      entity: fan.ceiling_fan
+      icon: mdi:ceiling-fan
+      show_name: false
+      show_state: false
+      color_type: icon
+      size: 22px
+      tap_action:
+        action: toggle
+      styles:
+        card:
+        - background: none
+        - box-shadow: none
+        - border: none
+        - width: 34px
+        - height: 34px
+        - padding: 0
+      style:
+        bottom: 5%
+        left: 44%
+        transform: translateX(-50%)
+    - type: custom:button-card
+      entity: fan.ceiling_fan
+      icon: mdi:circle
+      size: 9px
+      show_name: false
+      show_state: false
+      color: var(--disabled-text-color)
+      tap_action:
+        action: perform-action
+        perform_action: fan.set_percentage
+        target:
+          entity_id: fan.ceiling_fan
+        data:
+          percentage: 33
+      state:
+      - operator: template
+        value: '[[[ return entity.state === ''on'' && Math.round(entity.attributes.percentage) <= 33 ]]]'
+        color: var(--state-fan-active-color, var(--state-active-color, var(--paper-item-icon-active-color)))
+      styles:
+        card:
+        - background: none
+        - box-shadow: none
+        - border: none
+        - width: 22px
+        - height: 34px
+        - padding: 0
+      style:
+        bottom: 5%
+        left: 56%
+        transform: translateX(-50%)
+    - type: custom:button-card
+      entity: fan.ceiling_fan
+      icon: mdi:circle
+      size: 9px
+      show_name: false
+      show_state: false
+      color: var(--disabled-text-color)
+      tap_action:
+        action: perform-action
+        perform_action: fan.set_percentage
+        target:
+          entity_id: fan.ceiling_fan
+        data:
+          percentage: 66
+      state:
+      - operator: template
+        value: '[[[ return entity.state === ''on'' && Math.round(entity.attributes.percentage) > 33 && Math.round(entity.attributes.percentage) < 100 ]]]'
+        color: var(--state-fan-active-color, var(--state-active-color, var(--paper-item-icon-active-color)))
+      styles:
+        card:
+        - background: none
+        - box-shadow: none
+        - border: none
+        - width: 22px
+        - height: 34px
+        - padding: 0
+      style:
+        bottom: 5%
+        left: 64%
+        transform: translateX(-50%)
+    - type: custom:button-card
+      entity: fan.ceiling_fan
+      icon: mdi:circle
+      size: 9px
+      show_name: false
+      show_state: false
+      color: var(--disabled-text-color)
+      tap_action:
+        action: perform-action
+        perform_action: fan.set_percentage
+        target:
+          entity_id: fan.ceiling_fan
+        data:
+          percentage: 100
+      state:
+      - operator: template
+        value: '[[[ return entity.state === ''on'' && Math.round(entity.attributes.percentage) >= 100 ]]]'
+        color: var(--state-fan-active-color, var(--state-active-color, var(--paper-item-icon-active-color)))
+      styles:
+        card:
+        - background: none
+        - box-shadow: none
+        - border: none
+        - width: 22px
+        - height: 34px
+        - padding: 0
+      style:
+        bottom: 5%
+        left: 72%
+        transform: translateX(-50%)
+    grid_options:
+      columns: full
+      rows: auto
+  - type: picture-elements
+    image: /local/photos/dining.jpg?v=5
+    elements:
+    - type: image
+      image: /local/scrim.svg?v=5
+      style:
+        left: 50%
+        bottom: 0%
+        transform: translateX(-50%)
+        width: 100%
+        height: 26%
+        pointer-events: none
+    - type: custom:button-card
+      name: Dining Room
+      show_icon: false
+      tap_action:
+        action: none
+      styles:
+        card:
+        - background: rgba(0, 0, 0, 0.5)
+        - border: none
+        - box-shadow: none
+        - padding: 2px 10px
+        - border-radius: 6px
+        name:
+        - font-size: 15px
+        - font-weight: 500
+        - color: white
+      style:
+        top: 13%
+        left: 5%
+        transform: none
+    - type: custom:button-card
+      icon: mdi:power
+      show_name: false
+      size: 22px
+      tap_action:
+        action: perform-action
+        perform_action: light.turn_off
+        target:
+          area_id:
+          - dining_room
+          - dining
+      styles:
+        card:
+        - background: rgba(0, 0, 0, 0.5)
+        - border-radius: 50%
+        - padding: 5px
+        - box-shadow: none
+        - border: none
+        icon:
+        - color: white
+      style:
+        top: 13%
+        right: 5%
+        transform: none
+    - type: custom:button-card
+      entity: light.dining_room_ceiling_fan_light
+      icon: mdi:ceiling-light
+      show_name: false
+      show_state: false
+      color_type: icon
+      size: 22px
+      tap_action:
+        action: toggle
+      styles:
+        card:
+        - background: none
+        - box-shadow: none
+        - border: none
+        - width: 34px
+        - height: 34px
+        - padding: 0
+      style:
+        bottom: 5%
+        left: 12%
+        transform: translateX(-50%)
+    grid_options:
+      columns: full
+      rows: auto
+  - type: picture-elements
+    image: /local/photos/outdoors.jpg?v=5
+    elements:
+    - type: image
+      image: /local/scrim.svg?v=5
+      style:
+        left: 50%
+        bottom: 0%
+        transform: translateX(-50%)
+        width: 100%
+        height: 26%
+        pointer-events: none
+    - type: custom:button-card
+      name: Outdoors
+      show_icon: false
+      tap_action:
+        action: none
+      styles:
+        card:
+        - background: rgba(0, 0, 0, 0.5)
+        - border: none
+        - box-shadow: none
+        - padding: 2px 10px
+        - border-radius: 6px
+        name:
+        - font-size: 15px
+        - font-weight: 500
+        - color: white
+      style:
+        top: 13%
+        left: 5%
+        transform: none
+    - type: custom:button-card
+      icon: mdi:power
+      show_name: false
+      size: 22px
+      tap_action:
+        action: perform-action
+        perform_action: homeassistant.turn_off
+        target:
+          entity_id: group.outdoor
+      styles:
+        card:
+        - background: rgba(0, 0, 0, 0.5)
+        - border-radius: 50%
+        - padding: 5px
+        - box-shadow: none
+        - border: none
+        icon:
+        - color: white
+      style:
+        top: 13%
+        right: 5%
+        transform: none
+    - type: custom:button-card
+      entity: group.outdoor
+      icon: mdi:string-lights
+      show_name: false
+      show_state: false
+      color_type: icon
+      size: 22px
+      tap_action:
+        action: toggle
+      styles:
+        card:
+        - background: none
+        - box-shadow: none
+        - border: none
+        - width: 34px
+        - height: 34px
+        - padding: 0
+      style:
+        bottom: 5%
+        left: 10%
+        transform: translateX(-50%)
+    - type: custom:button-card
+      entity: light.exterior_deck_lights
+      icon: mdi:outdoor-lamp
+      show_name: false
+      show_state: false
+      color_type: icon
+      size: 22px
+      tap_action:
+        action: toggle
+      styles:
+        card:
+        - background: none
+        - box-shadow: none
+        - border: none
+        - width: 34px
+        - height: 34px
+        - padding: 0
+      style:
+        bottom: 5%
+        left: 28%
+        transform: translateX(-50%)
+    - type: custom:button-card
+      entity: light.exterior_driveway_light
+      icon: mdi:car
+      show_name: false
+      show_state: false
+      color_type: icon
+      size: 22px
+      tap_action:
+        action: toggle
+      styles:
+        card:
+        - background: none
+        - box-shadow: none
+        - border: none
+        - width: 34px
+        - height: 34px
+        - padding: 0
+      style:
+        bottom: 5%
+        left: 46%
+        transform: translateX(-50%)
+    - type: custom:button-card
+      entity: switch.front_door
+      icon: mdi:door
+      show_name: false
+      show_state: false
+      color_type: icon
+      size: 22px
+      tap_action:
+        action: toggle
+      styles:
+        card:
+        - background: none
+        - box-shadow: none
+        - border: none
+        - width: 34px
+        - height: 34px
+        - padding: 0
+      style:
+        bottom: 5%
+        left: 64%
+        transform: translateX(-50%)
+    - type: custom:button-card
+      entity: switch.front_yard_lamp_post
+      icon: mdi:lamp
+      show_name: false
+      show_state: false
+      color_type: icon
+      size: 22px
+      tap_action:
+        action: toggle
+      styles:
+        card:
+        - background: none
+        - box-shadow: none
+        - border: none
+        - width: 34px
+        - height: 34px
+        - padding: 0
+      style:
+        bottom: 5%
+        left: 82%
+        transform: translateX(-50%)
+    grid_options:
+      columns: full
+      rows: auto
+- type: grid
+  cards:
+  - type: picture-elements
+    image: /local/photos/kitchen.jpg?v=5
+    elements:
+    - type: image
+      image: /local/scrim.svg?v=5
+      style:
+        left: 50%
+        bottom: 0%
+        transform: translateX(-50%)
+        width: 100%
+        height: 26%
+        pointer-events: none
+    - type: custom:button-card
+      name: Kitchen
+      show_icon: false
+      tap_action:
+        action: none
+      styles:
+        card:
+        - background: rgba(0, 0, 0, 0.5)
+        - border: none
+        - box-shadow: none
+        - padding: 2px 10px
+        - border-radius: 6px
+        name:
+        - font-size: 15px
+        - font-weight: 500
+        - color: white
+      style:
+        top: 13%
+        left: 5%
+        transform: none
+    - type: custom:button-card
+      icon: mdi:power
+      show_name: false
+      size: 22px
+      tap_action:
+        action: perform-action
+        perform_action: light.turn_off
+        target:
+          area_id: kitchen
+      styles:
+        card:
+        - background: rgba(0, 0, 0, 0.5)
+        - border-radius: 50%
+        - padding: 5px
+        - box-shadow: none
+        - border: none
+        icon:
+        - color: white
+      style:
+        top: 13%
+        right: 5%
+        transform: none
+    - type: custom:button-card
+      entity: light.kitchen_cabinets
+      icon: mdi:led-strip-variant
+      show_name: false
+      show_state: false
+      color_type: icon
+      size: 22px
+      tap_action:
+        action: toggle
+      styles:
+        card:
+        - background: none
+        - box-shadow: none
+        - border: none
+        - width: 34px
+        - height: 34px
+        - padding: 0
+      style:
+        bottom: 5%
+        left: 18%
+        transform: translateX(-50%)
+    - type: custom:button-card
+      entity: light.kitchen_main_lights
+      icon: mdi:wall-sconce-flat
+      show_name: false
+      show_state: false
+      color_type: icon
+      size: 22px
+      tap_action:
+        action: toggle
+      styles:
+        card:
+        - background: none
+        - box-shadow: none
+        - border: none
+        - width: 34px
+        - height: 34px
+        - padding: 0
+      style:
+        bottom: 5%
+        left: 40%
+        transform: translateX(-50%)
+    grid_options:
+      columns: full
+      rows: auto
+  - type: picture-elements
+    image: /local/photos/bedroom.jpg?v=5
+    elements:
+    - type: image
+      image: /local/scrim.svg?v=5
+      style:
+        left: 50%
+        bottom: 0%
+        transform: translateX(-50%)
+        width: 100%
+        height: 26%
+        pointer-events: none
+    - type: custom:button-card
+      name: Bedroom
+      show_icon: false
+      tap_action:
+        action: none
+      styles:
+        card:
+        - background: rgba(0, 0, 0, 0.5)
+        - border: none
+        - box-shadow: none
+        - padding: 2px 10px
+        - border-radius: 6px
+        name:
+        - font-size: 15px
+        - font-weight: 500
+        - color: white
+      style:
+        top: 13%
+        left: 5%
+        transform: none
+    - type: custom:button-card
+      icon: mdi:power
+      show_name: false
+      size: 22px
+      tap_action:
+        action: perform-action
+        perform_action: light.turn_off
+        target:
+          area_id: master_bedroom
+          entity_id:
+          - light.bedroom_right_nightstand_lamp
+          - light.bedroom_left_nightstand_lamp
+      styles:
+        card:
+        - background: rgba(0, 0, 0, 0.5)
+        - border-radius: 50%
+        - padding: 5px
+        - box-shadow: none
+        - border: none
+        icon:
+        - color: white
+      style:
+        top: 13%
+        right: 5%
+        transform: none
+    - type: custom:button-card
+      entity: light.bedroom_nightstand_lamps
+      name: Nightstand Lamps
+      icon: mdi:lamp
+      show_name: false
+      show_state: false
+      color_type: icon
+      size: 22px
+      tap_action:
+        action: toggle
+      styles:
+        card:
+        - background: none
+        - box-shadow: none
+        - border: none
+        - width: 34px
+        - height: 34px
+        - padding: 0
+      style:
+        bottom: 5%
+        left: 8%
+        transform: translateX(-50%)
+    - type: custom:button-card
+      entity: light.master_bedroom_ceiling_fan
+      icon: mdi:ceiling-fan-light
+      show_name: false
+      show_state: false
+      color_type: icon
+      size: 22px
+      tap_action:
+        action: toggle
+      styles:
+        card:
+        - background: none
+        - box-shadow: none
+        - border: none
+        - width: 34px
+        - height: 34px
+        - padding: 0
+      style:
+        bottom: 5%
+        left: 22%
+        transform: translateX(-50%)
+    - type: custom:button-card
+      entity: fan.master_bedroom_ceiling_fan
+      icon: mdi:ceiling-fan
+      show_name: false
+      show_state: false
+      color_type: icon
+      size: 22px
+      tap_action:
+        action: toggle
+      styles:
+        card:
+        - background: none
+        - box-shadow: none
+        - border: none
+        - width: 34px
+        - height: 34px
+        - padding: 0
+      style:
+        bottom: 5%
+        left: 38%
+        transform: translateX(-50%)
+    - type: custom:button-card
+      entity: fan.master_bedroom_ceiling_fan
+      icon: mdi:circle
+      size: 9px
+      show_name: false
+      show_state: false
+      color: var(--disabled-text-color)
+      tap_action:
+        action: perform-action
+        perform_action: fan.set_percentage
+        target:
+          entity_id: fan.master_bedroom_ceiling_fan
+        data:
+          percentage: 33
+      state:
+      - operator: template
+        value: '[[[ return entity.state === ''on'' && Math.round(entity.attributes.percentage) <= 33 ]]]'
+        color: var(--state-fan-active-color, var(--state-active-color, var(--paper-item-icon-active-color)))
+      styles:
+        card:
+        - background: none
+        - box-shadow: none
+        - border: none
+        - width: 22px
+        - height: 34px
+        - padding: 0
+      style:
+        bottom: 5%
+        left: 49%
+        transform: translateX(-50%)
+    - type: custom:button-card
+      entity: fan.master_bedroom_ceiling_fan
+      icon: mdi:circle
+      size: 9px
+      show_name: false
+      show_state: false
+      color: var(--disabled-text-color)
+      tap_action:
+        action: perform-action
+        perform_action: fan.set_percentage
+        target:
+          entity_id: fan.master_bedroom_ceiling_fan
+        data:
+          percentage: 66
+      state:
+      - operator: template
+        value: '[[[ return entity.state === ''on'' && Math.round(entity.attributes.percentage) > 33 && Math.round(entity.attributes.percentage) < 100 ]]]'
+        color: var(--state-fan-active-color, var(--state-active-color, var(--paper-item-icon-active-color)))
+      styles:
+        card:
+        - background: none
+        - box-shadow: none
+        - border: none
+        - width: 22px
+        - height: 34px
+        - padding: 0
+      style:
+        bottom: 5%
+        left: 56%
+        transform: translateX(-50%)
+    - type: custom:button-card
+      entity: fan.master_bedroom_ceiling_fan
+      icon: mdi:circle
+      size: 9px
+      show_name: false
+      show_state: false
+      color: var(--disabled-text-color)
+      tap_action:
+        action: perform-action
+        perform_action: fan.set_percentage
+        target:
+          entity_id: fan.master_bedroom_ceiling_fan
+        data:
+          percentage: 100
+      state:
+      - operator: template
+        value: '[[[ return entity.state === ''on'' && Math.round(entity.attributes.percentage) >= 100 ]]]'
+        color: var(--state-fan-active-color, var(--state-active-color, var(--paper-item-icon-active-color)))
+      styles:
+        card:
+        - background: none
+        - box-shadow: none
+        - border: none
+        - width: 22px
+        - height: 34px
+        - padding: 0
+      style:
+        bottom: 5%
+        left: 63%
+        transform: translateX(-50%)
+    - type: custom:button-card
+      entity: script.bedtime
+      icon: mdi:sleep
+      show_name: false
+      show_state: false
+      color_type: icon
+      size: 22px
+      tap_action:
+        action: perform-action
+        perform_action: script.turn_on
+        target:
+          entity_id: script.bedtime
+      styles:
+        card:
+        - background: none
+        - box-shadow: none
+        - border: none
+        - width: 34px
+        - height: 34px
+        - padding: 0
+      style:
+        bottom: 5%
+        left: 80%
+        transform: translateX(-50%)
+    grid_options:
+      columns: full
+      rows: auto
+  - type: picture-elements
+    image: /local/photos/hallway.jpg?v=5
+    elements:
+    - type: image
+      image: /local/scrim.svg?v=5
+      style:
+        left: 50%
+        bottom: 0%
+        transform: translateX(-50%)
+        width: 100%
+        height: 26%
+        pointer-events: none
+    - type: custom:button-card
+      name: Hallway & Stairs
+      show_icon: false
+      tap_action:
+        action: none
+      styles:
+        card:
+        - background: rgba(0, 0, 0, 0.5)
+        - border: none
+        - box-shadow: none
+        - padding: 2px 10px
+        - border-radius: 6px
+        name:
+        - font-size: 15px
+        - font-weight: 500
+        - color: white
+      style:
+        top: 13%
+        left: 5%
+        transform: none
+    - type: custom:button-card
+      icon: mdi:power
+      show_name: false
+      size: 22px
+      tap_action:
+        action: perform-action
+        perform_action: light.turn_off
+        target:
+          area_id:
+          - hallway
+          - stairs
+      styles:
+        card:
+        - background: rgba(0, 0, 0, 0.5)
+        - border-radius: 50%
+        - padding: 5px
+        - box-shadow: none
+        - border: none
+        icon:
+        - color: white
+      style:
+        top: 13%
+        right: 5%
+        transform: none
+    - type: custom:button-card
+      entity: light.hallway_main_lights
+      icon: mdi:wall-sconce-flat
+      show_name: false
+      show_state: false
+      color_type: icon
+      size: 22px
+      tap_action:
+        action: toggle
+      styles:
+        card:
+        - background: none
+        - box-shadow: none
+        - border: none
+        - width: 34px
+        - height: 34px
+        - padding: 0
+      style:
+        bottom: 5%
+        left: 14%
+        transform: translateX(-50%)
+    - type: custom:button-card
+      entity: light.stairs_main_lights
+      icon: mdi:stairs
+      show_name: false
+      show_state: false
+      color_type: icon
+      size: 22px
+      tap_action:
+        action: toggle
+      styles:
+        card:
+        - background: none
+        - box-shadow: none
+        - border: none
+        - width: 34px
+        - height: 34px
+        - padding: 0
+      style:
+        bottom: 5%
+        left: 32%
+        transform: translateX(-50%)
+    grid_options:
+      columns: full
+      rows: auto

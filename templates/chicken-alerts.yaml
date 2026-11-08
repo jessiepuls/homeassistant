@@ -1,0 +1,80 @@
+# Count actionable chicken issues; normal door and heater states are not alerts.
+- sensor:
+  - name: Chicken Coop Alerts
+    unique_id: chicken_coop_alert_summary
+    icon: mdi:alert-circle-outline
+    state: |-
+      {% set ns = namespace(issues=[]) %}
+      {% for entity, label in [
+        ('input_boolean.chicken_door_open_alert_active', 'Coop door opening not confirmed'),
+        ('input_boolean.chicken_door_close_alert_active', 'Door closure not confirmed'),
+        ('input_boolean.chicken_plug_offline_alert_active', 'Chicken plug offline')
+      ] %}
+        {% if is_state(entity, 'on') %}{% set ns.issues = ns.issues + [label] %}{% endif %}
+      {% endfor %}
+      {% for entity, label in [
+        ('sensor.coop_door_door_fault', 'Coop door'),
+        ('sensor.run_door_door_fault', 'Run door'),
+        ('sensor.jessica_s_feeder_feeder_fault', 'Feeder 1'),
+        ('sensor.feeder2_feeder_fault', 'Feeder 2')
+      ] %}
+        {% set fault = states(entity) %}
+        {% if fault not in ['none', 'unknown', 'unavailable', '', 'None'] %}
+          {% set ns.issues = ns.issues + [label ~ ' reports ' ~ fault] %}
+        {% endif %}
+      {% endfor %}
+      {% for entity, label in [
+        ('cover.coop_door', 'Coop door'),
+        ('cover.run_door_door', 'Run door'),
+        ('cover.jessica_s_feeder_feeder', 'Feeder 1'),
+        ('cover.feeder2_feeder', 'Feeder 2'),
+        ('switch.chicken_coop_lights', 'Run light'),
+        ('switch.chicken_coop_waterer1', 'Water heater 1'),
+        ('switch.chicken_coop_waterer2', 'Water heater 2')
+      ] %}
+        {% set device = expand(entity) | first | default(none) %}
+        {% set plug_outage = is_state('input_boolean.chicken_plug_offline_alert_active', 'on') and entity.startswith('switch.') %}
+        {% if device is not none and device.state in ['unknown', 'unavailable']
+              and not plug_outage and (as_timestamp(now()) - as_timestamp(device.last_changed)) >= 300 %}
+          {% set ns.issues = ns.issues + [label ~ ' unavailable'] %}
+        {% endif %}
+      {% endfor %}
+      {{ ns.issues | length }}
+    attributes:
+      issues: |-
+        {% set ns = namespace(issues=[]) %}
+        {% for entity, label in [
+          ('input_boolean.chicken_door_open_alert_active', 'Coop door opening not confirmed'),
+          ('input_boolean.chicken_door_close_alert_active', 'Door closure not confirmed'),
+          ('input_boolean.chicken_plug_offline_alert_active', 'Chicken plug offline')
+        ] %}
+          {% if is_state(entity, 'on') %}{% set ns.issues = ns.issues + [label] %}{% endif %}
+        {% endfor %}
+        {% for entity, label in [
+          ('sensor.coop_door_door_fault', 'Coop door'),
+          ('sensor.run_door_door_fault', 'Run door'),
+          ('sensor.jessica_s_feeder_feeder_fault', 'Feeder 1'),
+          ('sensor.feeder2_feeder_fault', 'Feeder 2')
+        ] %}
+          {% set fault = states(entity) %}
+          {% if fault not in ['none', 'unknown', 'unavailable', '', 'None'] %}
+            {% set ns.issues = ns.issues + [label ~ ' reports ' ~ fault] %}
+          {% endif %}
+        {% endfor %}
+        {% for entity, label in [
+          ('cover.coop_door', 'Coop door'),
+          ('cover.run_door_door', 'Run door'),
+          ('cover.jessica_s_feeder_feeder', 'Feeder 1'),
+          ('cover.feeder2_feeder', 'Feeder 2'),
+          ('switch.chicken_coop_lights', 'Run light'),
+          ('switch.chicken_coop_waterer1', 'Water heater 1'),
+          ('switch.chicken_coop_waterer2', 'Water heater 2')
+        ] %}
+          {% set device = expand(entity) | first | default(none) %}
+          {% set plug_outage = is_state('input_boolean.chicken_plug_offline_alert_active', 'on') and entity.startswith('switch.') %}
+          {% if device is not none and device.state in ['unknown', 'unavailable']
+                and not plug_outage and (as_timestamp(now()) - as_timestamp(device.last_changed)) >= 300 %}
+            {% set ns.issues = ns.issues + [label ~ ' unavailable'] %}
+          {% endif %}
+        {% endfor %}
+        {{ ns.issues }}

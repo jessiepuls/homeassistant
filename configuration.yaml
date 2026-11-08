@@ -28,6 +28,9 @@ input_select:
       - Record Player
 
 input_boolean:
+  chicken_plug_offline_alert_active:
+    name: Chicken plug offline alert active
+    icon: mdi:power-plug-off-outline
   chicken_door_open_alert_active:
     name: Chicken door open alert active
     icon: mdi:alert-circle-outline
@@ -90,8 +93,8 @@ scene: !include scenes.yaml
 light: !include lights.yaml
 group: !include groups.yaml
 
-# Data for the shared Music dashboard rows.
-template: !include templates/music.yaml
+# Shared dashboard data: music rows and chicken alert summary.
+template: !include_dir_merge_list templates/
 
 # Search the Music Assistant library and connected providers from either Music tab.
 input_text:

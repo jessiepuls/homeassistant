@@ -409,3 +409,54 @@
           - switch.chicken_coop_waterer1
           - switch.chicken_coop_waterer2
   mode: restart
+- id: '1794088800002'
+  alias: Chicken Coop Plug Connectivity Alert
+  description: Alert once after five minutes offline, then notify when the plug reconnects. A periodic check also handles HA restarts and automation reloads.
+  triggers:
+  - trigger: time_pattern
+    minutes: /1
+  - trigger: homeassistant
+    event: start
+  actions:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.chicken_plug_offline_alert_active
+        state: 'off'
+      - condition: template
+        value_template: >-
+          {% set plug = states.switch.chicken_coop_chicken_plug %}
+          {{ plug is defined and plug.state in ['unknown', 'unavailable'] and
+             (as_timestamp(now()) - as_timestamp(plug.last_changed)) >= 300 }}
+      sequence:
+      - action: notify.send_message
+        target:
+          entity_id: notify.jessies_iphone_17
+        data:
+          title: Chicken coop outlet offline
+          message: >-
+            The chicken coop smart plug has been unreachable for at least five minutes.
+            Lights and water heaters may have lost power. Check the breaker, plug,
+            and Wi-Fi connection. Home Assistant cannot confirm which caused the outage.
+      - action: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.chicken_plug_offline_alert_active
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.chicken_plug_offline_alert_active
+        state: 'on'
+      - condition: template
+        value_template: "{{ states('switch.chicken_coop_chicken_plug') in ['on', 'off'] }}"
+      sequence:
+      - action: notify.send_message
+        target:
+          entity_id: notify.jessies_iphone_17
+        data:
+          title: Chicken coop outlet back online
+          message: >-
+            The chicken coop smart plug is reachable again. Check the lights and
+            water heater states if power was interrupted.
+      - action: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.chicken_plug_offline_alert_active
+  mode: single

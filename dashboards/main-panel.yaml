@@ -1070,3 +1070,6 @@ views:
                   transform: translateX(-50%)
 
   - !include shared/music.yaml
+
+  # HA caches YAML dashboards by this file; update its timestamp after editing included views.
+  - !include shared/home-sections.yaml
