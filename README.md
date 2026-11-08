@@ -6,9 +6,20 @@ Personal Home Assistant configuration.
 
 | Dashboard | Description |
 |---|---|
-| Main Panel | Primary home control panel — weather, Music Assistant playback, and room-by-room light/fan controls |
-| Chicken Coop | Coop door & feeder controls, battery levels, feed history, and automation toggles |
-| Three Season Porch | Porch-specific controls |
+| Main Panel | Shared household dashboard: Home, Porch, Music, and Chickens tabs |
+| Chicken Coop | Compatibility dashboard using the same shared Chickens view |
+| Three Season Porch | Compatibility dashboard using the shared Porch and Music views |
+
+Main Panel is the primary dashboard. Tablet startup paths can select the relevant tab:
+`/lovelace-main-panel/home`, `/lovelace-main-panel/porch`,
+`/lovelace-main-panel/music`, or `/lovelace-main-panel/chicken-coop`.
+Home uses Sections; the Porch and Chickens layouts remain unchanged.
+The conditional Chicken alerts badge on Home opens the Chickens tab.
+
+View definitions live in `dashboards/shared/`; the entry-point dashboards include
+them so compatibility dashboards use the same controls. Home Assistant checks the
+entry-point YAML timestamp when caching a dashboard: after editing a shared view,
+update the timestamp of each dashboard that includes it, or force a dashboard reload.
 
 Dashboards are in YAML mode (`dashboards/`). Resources (HACS cards) are declared in `configuration.yaml` under `lovelace.resources`.
 

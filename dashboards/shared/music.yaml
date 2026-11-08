@@ -1,5 +1,6 @@
 # Shared music destinations, search, playback, and artwork rows.
 title: Music
+show_icon_and_title: true
 path: music
 icon: mdi:music
 panel: true

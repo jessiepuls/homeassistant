@@ -1,7 +1,7 @@
-# Experimental Sections view. The existing Home view remains the comparison baseline.
-title: Home preview
-path: home-sections
-icon: mdi:view-dashboard-outline
+# Main Home view: native Sections with shared chicken alert navigation.
+title: Home
+path: home
+icon: mdi:home
 show_icon_and_title: true
 type: sections
 max_columns: 3
@@ -20,7 +20,7 @@ badges:
     above: 0
   tap_action:
     action: navigate
-    navigation_path: /lovelace-chicken-coop/chicken-coop
+    navigation_path: /lovelace-main-panel/chicken-coop
 sections:
 - type: grid
   cards:
