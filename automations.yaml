@@ -93,14 +93,16 @@
       - light.hue_smart_plug_1_2
 - id: '1748154090198'
   alias: Chicken Coop Door Open
-  description: Open only the coop door and allow for delayed Omlet confirmation.
+  description: Turn on the run light and open the coop door one hour before sunrise, allowing for delayed Omlet confirmation.
   triggers:
   - trigger: sun
     event: sunrise
-    offset: '01:00:00'
-  - trigger: time
-    at: '07:00:00'
+    offset: '-01:00:00'
   actions:
+  - action: switch.turn_on
+    target:
+      entity_id: switch.chicken_coop_lights
+    continue_on_error: true
   - if:
     - condition: state
       entity_id: cover.coop_door
@@ -353,4 +355,16 @@
       - light.three_season_porch
       - light.three_season_porch_lamps
     data: {}
+  mode: single
+- id: '1794002400001'
+  alias: Chicken Coop Morning Lights Off
+  description: Turn off the run light one hour after sunrise.
+  triggers:
+  - trigger: sun
+    event: sunrise
+    offset: '01:00:00'
+  actions:
+  - action: switch.turn_off
+    target:
+      entity_id: switch.chicken_coop_lights
   mode: single
