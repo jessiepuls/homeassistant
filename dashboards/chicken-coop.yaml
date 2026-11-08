@@ -102,7 +102,7 @@ views:
                       action: more-info
                   - type: custom:button-card
                     entity: switch.chicken_coop_waterer1
-                    name: Waterer 1
+                    name: Water heater 1
                     icon: mdi:water-boiler
                     show_state: true
                     color_type: icon
@@ -115,7 +115,7 @@ views:
                       action: more-info
                   - type: custom:button-card
                     entity: switch.chicken_coop_waterer2
-                    name: Waterer 2
+                    name: Water heater 2
                     icon: mdi:water-boiler
                     show_state: true
                     color_type: icon
@@ -134,6 +134,8 @@ views:
                     name: Morning opening
                   - entity: automation.close_coop_door
                     name: Nightly closing
+                  - entity: automation.chicken_coop_waterer_freeze_protection
+                    name: Waterer freeze protection
 
           - type: grid
             title: Feed and power levels

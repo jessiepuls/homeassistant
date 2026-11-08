@@ -368,3 +368,44 @@
     target:
       entity_id: switch.chicken_coop_lights
   mode: single
+- id: '1794088800001'
+  alias: Chicken Coop Waterer Freeze Protection
+  description: Turn both waterer outlets on at 36 F or below and off at 40 F or above; retain their state in between or when temperature data is unavailable.
+  triggers:
+  - trigger: state
+    entity_id: sensor.openweathermap_temperature
+  - trigger: homeassistant
+    event: start
+  - trigger: time_pattern
+    minutes: /10
+  actions:
+  - variables:
+      temperature: "{{ states('sensor.openweathermap_temperature') | float(none) }}"
+      temperature_unit: "{{ state_attr('sensor.openweathermap_temperature', 'unit_of_measurement') }}"
+  - if:
+    - condition: template
+      value_template: "{{ temperature is none or temperature_unit not in ['°F', '°C'] }}"
+    then:
+    - stop: Outdoor temperature unavailable; leaving waterer outlets unchanged.
+  - variables:
+      temperature_f: "{{ temperature * 9 / 5 + 32 if temperature_unit == '°C' else temperature }}"
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: "{{ temperature_f <= 36 }}"
+      sequence:
+      - action: switch.turn_on
+        target:
+          entity_id:
+          - switch.chicken_coop_waterer1
+          - switch.chicken_coop_waterer2
+    - conditions:
+      - condition: template
+        value_template: "{{ temperature_f >= 40 }}"
+      sequence:
+      - action: switch.turn_off
+        target:
+          entity_id:
+          - switch.chicken_coop_waterer1
+          - switch.chicken_coop_waterer2
+  mode: restart
