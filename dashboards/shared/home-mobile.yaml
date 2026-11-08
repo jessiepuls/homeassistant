@@ -1,0 +1,348 @@
+# Phone controls for the shared Home tab; shown below 768px.
+type: grid
+visibility:
+- condition: screen
+  media_query: '(max-width: 767px)'
+cards:
+- type: weather-forecast
+  entity: weather.openweathermap
+  show_forecast: false
+  grid_options:
+    columns: full
+    rows: auto
+- type: custom:state-switch
+  entity: template
+  template: '{{ ''grouped'' if (state_attr(''media_player.living_room_2'', ''group_members'') or []) | length > 1 else ''solo'' }}'
+  default: solo
+  states:
+    solo:
+      type: custom:mini-media-player
+      entity: media_player.living_room_2
+      name: Living Room
+      artwork: cover
+      card_mod:
+        style: "ha-card { height: 180px; box-sizing: border-box; }\n.mmp-player {\n  margin-top: auto;\n  width: 100%;\n  background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.25));\n\
+          }\n"
+      hide:
+        power: true
+        source: true
+        group_button: true
+      tap_action:
+        action: navigate
+        navigation_path: /lovelace-main-panel/music
+      speaker_group:
+        platform: media_player
+        sync_volume: false
+        entities:
+        - entity_id: media_player.living_room_2
+          name: Living Room
+        - entity_id: media_player.office_2
+          name: Office
+        - entity_id: media_player.dining_room_2
+          name: Dining Room
+        - entity_id: media_player.three_season_porch
+          name: Three Season Porch
+        - entity_id: media_player.bedroom_2
+          name: Bedroom
+        - entity_id: media_player.basement_2
+          name: Basement
+        - entity_id: media_player.record_player
+          name: Record Player
+    grouped:
+      type: custom:mini-media-player
+      entity: media_player.living_room_2
+      name: Living Room
+      artwork: cover
+      card_mod:
+        style: "ha-card { height: 180px; box-sizing: border-box; }\n.mmp-player {\n  margin-top: auto;\n  width: 100%;\n  background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.25));\n\
+          }\n"
+      hide:
+        power: true
+        source: true
+        group_button: true
+      tap_action:
+        action: navigate
+        navigation_path: /lovelace-main-panel/music
+      speaker_group:
+        platform: media_player
+        sync_volume: true
+        entities:
+        - entity_id: media_player.living_room_2
+          name: Living Room
+        - entity_id: media_player.office_2
+          name: Office
+        - entity_id: media_player.dining_room_2
+          name: Dining Room
+        - entity_id: media_player.three_season_porch
+          name: Three Season Porch
+        - entity_id: media_player.bedroom_2
+          name: Bedroom
+        - entity_id: media_player.basement_2
+          name: Basement
+        - entity_id: media_player.record_player
+          name: Record Player
+  grid_options:
+    columns: full
+    rows: auto
+- type: heading
+  heading: Living Room
+  grid_options:
+    columns: full
+    rows: auto
+- type: tile
+  entity: light.living_room_lamps
+  name: Lamps
+  grid_options:
+    columns: 6
+    rows: 1
+  tap_action:
+    action: more-info
+  icon_tap_action:
+    action: toggle
+- type: tile
+  entity: light.livingroom
+  name: Ceiling lights
+  grid_options:
+    columns: 6
+    rows: 1
+  tap_action:
+    action: more-info
+  icon_tap_action:
+    action: toggle
+- type: tile
+  entity: fan.ceiling_fan
+  name: Fan
+  grid_options:
+    columns: 6
+    rows: 1
+  tap_action:
+    action: more-info
+  icon_tap_action:
+    action: toggle
+- type: heading
+  heading: Kitchen
+  grid_options:
+    columns: full
+    rows: auto
+- type: tile
+  entity: light.kitchen_cabinets
+  name: Cabinets
+  grid_options:
+    columns: 6
+    rows: 1
+  tap_action:
+    action: more-info
+  icon_tap_action:
+    action: toggle
+- type: tile
+  entity: light.kitchen_main_lights
+  name: Main lights
+  grid_options:
+    columns: 6
+    rows: 1
+  tap_action:
+    action: more-info
+  icon_tap_action:
+    action: toggle
+- type: heading
+  heading: Dining Room
+  grid_options:
+    columns: full
+    rows: auto
+- type: tile
+  entity: light.dining_room_ceiling_fan_light
+  name: Ceiling light
+  grid_options:
+    columns: 6
+    rows: 1
+  tap_action:
+    action: more-info
+  icon_tap_action:
+    action: toggle
+- type: heading
+  heading: Bedroom
+  grid_options:
+    columns: full
+    rows: auto
+- type: tile
+  entity: light.bedroom_nightstand_lamps
+  name: Lamps
+  grid_options:
+    columns: 6
+    rows: 1
+  tap_action:
+    action: more-info
+  icon_tap_action:
+    action: toggle
+- type: tile
+  entity: light.master_bedroom_ceiling_fan
+  name: Ceiling light
+  grid_options:
+    columns: 6
+    rows: 1
+  tap_action:
+    action: more-info
+  icon_tap_action:
+    action: toggle
+- type: tile
+  entity: fan.master_bedroom_ceiling_fan
+  name: Fan
+  grid_options:
+    columns: 6
+    rows: 1
+  tap_action:
+    action: more-info
+  icon_tap_action:
+    action: toggle
+- type: heading
+  heading: Porch
+  grid_options:
+    columns: full
+    rows: auto
+- type: tile
+  entity: light.three_season_porch_lamp2
+  name: Floor lamp
+  grid_options:
+    columns: 6
+    rows: 1
+  tap_action:
+    action: more-info
+  icon_tap_action:
+    action: toggle
+- type: tile
+  entity: light.three_season_porch_table_lamp
+  name: Table lamp
+  grid_options:
+    columns: 6
+    rows: 1
+  tap_action:
+    action: more-info
+  icon_tap_action:
+    action: toggle
+- type: tile
+  entity: light.three_season_porch_string_lights
+  name: String lights
+  grid_options:
+    columns: 6
+    rows: 1
+  tap_action:
+    action: more-info
+  icon_tap_action:
+    action: toggle
+- type: tile
+  entity: light.three_season_porch_ceiling_fan
+  name: Ceiling light
+  grid_options:
+    columns: 6
+    rows: 1
+  tap_action:
+    action: more-info
+  icon_tap_action:
+    action: toggle
+- type: tile
+  entity: fan.three_season_porch_ceiling_fan
+  name: Fan
+  grid_options:
+    columns: 6
+    rows: 1
+  tap_action:
+    action: more-info
+  icon_tap_action:
+    action: toggle
+- type: tile
+  entity: switch.heater
+  name: Heater
+  grid_options:
+    columns: 6
+    rows: 1
+  tap_action:
+    action: more-info
+  icon_tap_action:
+    action: toggle
+- type: heading
+  heading: Outdoors
+  grid_options:
+    columns: full
+    rows: auto
+- type: tile
+  entity: group.outdoor
+  name: Outdoor lights
+  grid_options:
+    columns: 6
+    rows: 1
+  tap_action:
+    action: more-info
+  icon_tap_action:
+    action: toggle
+- type: tile
+  entity: light.exterior_deck_lights
+  name: Deck
+  grid_options:
+    columns: 6
+    rows: 1
+  tap_action:
+    action: more-info
+  icon_tap_action:
+    action: toggle
+- type: tile
+  entity: light.exterior_driveway_light
+  name: Driveway
+  grid_options:
+    columns: 6
+    rows: 1
+  tap_action:
+    action: more-info
+  icon_tap_action:
+    action: toggle
+- type: tile
+  entity: switch.front_yard_lamp_post
+  name: Lamp post
+  grid_options:
+    columns: 6
+    rows: 1
+  tap_action:
+    action: more-info
+  icon_tap_action:
+    action: toggle
+- type: heading
+  heading: Hallway & Stairs
+  grid_options:
+    columns: full
+    rows: auto
+- type: tile
+  entity: light.hallway_main_lights
+  name: Hallway
+  grid_options:
+    columns: 6
+    rows: 1
+  tap_action:
+    action: more-info
+  icon_tap_action:
+    action: toggle
+- type: tile
+  entity: light.stairs_main_lights
+  name: Stairs
+  grid_options:
+    columns: 6
+    rows: 1
+  tap_action:
+    action: more-info
+  icon_tap_action:
+    action: toggle
+- type: heading
+  heading: Bedtime
+  grid_options:
+    columns: full
+    rows: auto
+- type: button
+  entity: script.bedtime
+  name: Run bedtime
+  icon: mdi:power-sleep
+  grid_options:
+    columns: full
+    rows: 2
+  tap_action:
+    action: perform-action
+    perform_action: script.bedtime
+    confirmation:
+      text: Run the bedtime routine?

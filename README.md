@@ -13,6 +13,10 @@ Main Panel is the primary dashboard. Tablet startup paths can select the relevan
 `/lovelace-main-panel/music`, or `/lovelace-main-panel/chicken-coop`.
 Home uses Sections; the Porch and Chickens layouts remain unchanged.
 The conditional Chicken alerts badge on Home opens the Chickens tab.
+On screens narrower than 768px, the same Home tab shows compact weather and music,
+and room controls as native tiles. Use the top tabs for navigation. Tap an icon to toggle a
+device; tap its text to open controls (including fan speed). The bedtime action
+asks for confirmation. Tablet layouts remain visible at 768px and above.
 
 View definitions live in `dashboards/shared/`; the entry-point dashboards include
 them from one dashboard. Home Assistant checks the

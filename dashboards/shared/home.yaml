@@ -22,7 +22,11 @@ badges:
     action: navigate
     navigation_path: /lovelace-main-panel/chicken-coop
 sections:
+- !include home-mobile.yaml
 - type: grid
+  visibility:
+  - condition: screen
+    media_query: "(min-width: 768px)"
   cards:
   - type: custom:mod-card
     grid_options:
@@ -183,6 +187,9 @@ sections:
                 - entity_id: media_player.record_player
                   name: Record Player
 - type: grid
+  visibility:
+  - condition: screen
+    media_query: "(min-width: 768px)"
   cards:
   - type: picture-elements
     image: /local/photos/living.jpg?v=5
@@ -637,6 +644,9 @@ sections:
       columns: full
       rows: auto
 - type: grid
+  visibility:
+  - condition: screen
+    media_query: "(min-width: 768px)"
   cards:
   - type: picture-elements
     image: /local/photos/kitchen.jpg?v=5
