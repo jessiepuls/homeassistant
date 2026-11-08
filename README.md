@@ -7,8 +7,6 @@ Personal Home Assistant configuration.
 | Dashboard | Description |
 |---|---|
 | Main Panel | Shared household dashboard: Home, Porch, Music, and Chickens tabs |
-| Chicken Coop | Compatibility dashboard using the same shared Chickens view |
-| Three Season Porch | Compatibility dashboard using the shared Porch and Music views |
 
 Main Panel is the primary dashboard. Tablet startup paths can select the relevant tab:
 `/lovelace-main-panel/home`, `/lovelace-main-panel/porch`,
@@ -17,7 +15,7 @@ Home uses Sections; the Porch and Chickens layouts remain unchanged.
 The conditional Chicken alerts badge on Home opens the Chickens tab.
 
 View definitions live in `dashboards/shared/`; the entry-point dashboards include
-them so compatibility dashboards use the same controls. Home Assistant checks the
+them from one dashboard. Home Assistant checks the
 entry-point YAML timestamp when caching a dashboard: after editing a shared view,
 update the timestamp of each dashboard that includes it, or force a dashboard reload.
 
@@ -34,7 +32,7 @@ Dashboards are in YAML mode (`dashboards/`). Resources (HACS cards) are declared
 
 ## Music tabs
 
-Both dashboards include `dashboards/shared/music.yaml`. They share destination
+The Music tab includes `dashboards/shared/music.yaml` with destination
 buttons, compact Mini Media Player controls, and three horizontal artwork rows:
 For you (Apple Music recommendations), Playlists, and Albums (recently played first).
 Tapping a cover calls `script.music_play_collection`, which resolves the selected
@@ -46,7 +44,7 @@ tracks, albums, artists, and playlists. Press Enter or use Search; results appea
 above the recommendation rows and play on the selected destination. Clear hides
 results. Tap a search-result cover to start a station (`radio_mode: true`) from
 that result. Search results have a single action. This starts a similar-music mix and
-does not save a station to Apple Music. The query is shared between the two dashboards. The native input-text
+does not save a station to Apple Music. The query is shared across dashboard views. The native input-text
 helper and a fourth trigger-based template sensor provide the query/results;
 search does not depend on Queue Actions. Stale results are hidden while a new
 query is loading. A live search returned results through this path without
@@ -79,8 +77,8 @@ cache up to eighteen items per row, preserve recommendation order, deduplicate
 recommendation URIs, and exclude individual recommendation tracks. A fresh
 installation does not have cached row data until the first successful request.
 
-`input_select.music_destination` stores the selected destination for both Music
-tabs. `script.music_switch_destination` moves a playing queue, pauses members left
+`input_select.music_destination` stores the selected destination for the Music
+tab. `script.music_switch_destination` moves a playing queue, pauses members left
 behind, and prepares Main Floor (Living Room, Office, Dining Room, Three Season
 Porch), Bedroom, Basement, or Record Player. Roam is excluded. Selecting Main Floor sets all four individual speaker volumes to a fixed 20%. Other destinations keep their volumes;
 The helper updates

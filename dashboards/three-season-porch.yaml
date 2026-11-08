@@ -1,5 +1,0 @@
-# Compatibility dashboard for existing tablet URLs.
-button_card_templates: !include shared/porch-button-templates.yaml
-views:
-  - !include shared/porch.yaml
-  - !include shared/music.yaml

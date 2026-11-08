@@ -65,25 +65,11 @@ lovelace:
     - url: /local/community/clock-weather-card/clock-weather-card.js?v=3.1.0
       type: module
   dashboards:
-    lovelace-three-season-porch:
-      mode: yaml
-      icon: mdi:fireplace
-      title: Three Season Porch
-      filename: dashboards/three-season-porch.yaml
-      show_in_sidebar: true
-      require_admin: false
     lovelace-main-panel:
       mode: yaml
       icon: mdi:home
       title: Main Panel
       filename: dashboards/main-panel.yaml
-      show_in_sidebar: true
-      require_admin: false
-    lovelace-chicken-coop:
-      mode: yaml
-      icon: mdi:egg
-      title: Chicken Coop
-      filename: dashboards/chicken-coop.yaml
       show_in_sidebar: true
       require_admin: false
 

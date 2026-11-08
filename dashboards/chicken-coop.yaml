@@ -1,3 +1,0 @@
-# Compatibility dashboard; use the Chickens tab in Main Panel for shared navigation.
-views:
-  - !include shared/chicken-coop.yaml
