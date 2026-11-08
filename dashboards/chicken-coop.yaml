@@ -88,35 +88,44 @@ views:
                 square: false
                 cards:
                   - type: custom:button-card
+                    entity: switch.chicken_coop_lights
                     name: Run light
-                    label: 'State: pending'
                     icon: mdi:lightbulb-outline
-                    show_label: true
+                    show_state: true
+                    color_type: icon
+                    state:
+                      - value: 'on'
+                        color: var(--state-switch-active-color, var(--amber-color))
                     tap_action:
-                      action: none
-                    styles:
-                      card:
-                        - opacity: 0.55
+                      action: toggle
+                    hold_action:
+                      action: more-info
                   - type: custom:button-card
+                    entity: switch.chicken_coop_waterer1
                     name: Waterer 1
-                    label: 'Power: pending'
                     icon: mdi:water-boiler
-                    show_label: true
+                    show_state: true
+                    color_type: icon
+                    state:
+                      - value: 'on'
+                        color: var(--state-switch-active-color, var(--amber-color))
                     tap_action:
-                      action: none
-                    styles:
-                      card:
-                        - opacity: 0.55
+                      action: toggle
+                    hold_action:
+                      action: more-info
                   - type: custom:button-card
+                    entity: switch.chicken_coop_waterer2
                     name: Waterer 2
-                    label: 'Power: pending'
                     icon: mdi:water-boiler
-                    show_label: true
+                    show_state: true
+                    color_type: icon
+                    state:
+                      - value: 'on'
+                        color: var(--state-switch-active-color, var(--amber-color))
                     tap_action:
-                      action: none
-                    styles:
-                      card:
-                        - opacity: 0.55
+                      action: toggle
+                    hold_action:
+                      action: more-info
               - type: entities
                 title: Automations
                 show_header_toggle: false
@@ -233,7 +242,9 @@ views:
                   - cover.run_door_door
                   - cover.jessica_s_feeder_feeder
                   - cover.feeder2_feeder
-                  # Add the run light entity here once connected.
+                  - switch.chicken_coop_lights
+                  - switch.chicken_coop_waterer1
+                  - switch.chicken_coop_waterer2
 
           - type: vertical-stack
             view_layout:
@@ -266,6 +277,9 @@ views:
                   - cover.run_door_door
                   - cover.jessica_s_feeder_feeder
                   - cover.feeder2_feeder
+                  - switch.chicken_coop_lights
+                  - switch.chicken_coop_waterer1
+                  - switch.chicken_coop_waterer2
                 conditions:
                   - condition: state
                     state:
