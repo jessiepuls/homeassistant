@@ -133,3 +133,11 @@ Assistant configuration in `ha-config-check.yaml`, using the version in
 `.HA_VERSION`. No placeholder secrets are needed by the current YAML configuration.
 The State Bonding blueprint used by the lighting automations is included in
 `blueprints/automation/chrissalter/` so a fresh checkout has that dependency.
+
+### Music keyboard controls
+
+On the Music tab, Space toggles playback, Left/Right changes tracks, and Up/Down
+adjusts the selected player and its active group by three percentage points.
+Shortcuts ignore typing, focused interactive controls, modifiers, held-key repeats,
+and other views. The local module is tracked at `www/dashboard/music-hotkeys.js`.
+Reload Lovelace resources and refresh the browser after changing this module.

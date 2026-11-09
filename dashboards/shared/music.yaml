@@ -13,7 +13,7 @@ cards:
     padding: 8px
     grid-gap: 12px
     grid-template-columns: minmax(0, 1fr)
-    grid-template-areas: '"destination" "playback" "search" "recommendations" "playlists" "albums"'
+    grid-template-areas: '"destination" "playback" "hotkeys" "search" "recommendations" "playlists" "albums"'
   cards:
   - type: grid
     columns: 5
@@ -296,6 +296,17 @@ cards:
           source: true
           group_button: true
         info: scroll
+  - type: custom:music-hotkeys
+    path: /lovelace-main-panel/music
+    destination_entity: input_select.music_destination
+    destinations:
+      Main Floor: media_player.living_room_2
+      Everywhere: media_player.living_room_2
+      Bedroom: media_player.bedroom_2
+      Basement: media_player.basement_2
+      Record Player: media_player.record_player
+    view_layout:
+      grid-area: hotkeys
   - type: vertical-stack
     view_layout:
       grid-area: search
