@@ -84,7 +84,7 @@ installation does not have cached row data until the first successful request.
 `input_select.music_destination` stores the selected destination for the Music
 tab. `script.music_switch_destination` moves a playing queue, pauses members left
 behind, and prepares Main Floor (Living Room, Office, Dining Room, Three Season
-Porch), Bedroom, Basement, or Record Player. Roam is excluded. Selecting Main Floor sets all four individual speaker volumes to a fixed 20%. Other destinations keep their volumes;
+Porch), Bedroom, Basement, or Record Player. Everywhere includes all seven speakers, including the Record Player; Roam is excluded. Selecting Main Floor or Everywhere sets each selected speaker to a fixed 20%. Other destinations keep their volumes;
 The helper updates
 only after successful commands. The script resolves the active queue owner from
 Music Assistant player IDs and delegates the handoff to the native transfer action

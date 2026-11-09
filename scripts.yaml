@@ -86,6 +86,7 @@ music_switch_destination:
         select:
           options:
           - Main Floor
+          - Everywhere
           - Bedroom
           - Basement
           - Record Player
@@ -97,6 +98,14 @@ music_switch_destination:
         - media_player.office_2
         - media_player.dining_room_2
         - media_player.three_season_porch
+        Everywhere:
+        - media_player.living_room_2
+        - media_player.office_2
+        - media_player.dining_room_2
+        - media_player.three_season_porch
+        - media_player.bedroom_2
+        - media_player.basement_2
+        - media_player.record_player
         Bedroom:
         - media_player.bedroom_2
         Basement:
@@ -171,7 +180,7 @@ music_switch_destination:
         group_members: '{{ desired[1:] }}'
   - if:
     - condition: template
-      value_template: '{{ destination == ''Main Floor'' and is_number(main_floor_volume) and 0 <= main_floor_volume | float <= 1 }}'
+      value_template: '{{ destination in [''Main Floor'', ''Everywhere''] and is_number(main_floor_volume) and 0 <= main_floor_volume | float <= 1 }}'
     then:
     - repeat:
         for_each: '{{ desired }}'
@@ -227,6 +236,14 @@ music_play_collection:
             - media_player.office_2
             - media_player.dining_room_2
             - media_player.three_season_porch
+          Everywhere:
+            - media_player.living_room_2
+            - media_player.office_2
+            - media_player.dining_room_2
+            - media_player.three_season_porch
+            - media_player.bedroom_2
+            - media_player.basement_2
+            - media_player.record_player
           Bedroom:
             - media_player.bedroom_2
           Basement:

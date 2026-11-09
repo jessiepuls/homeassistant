@@ -23,6 +23,7 @@ input_select:
     icon: mdi:speaker-multiple
     options:
       - Main Floor
+      - Everywhere
       - Bedroom
       - Basement
       - Record Player
