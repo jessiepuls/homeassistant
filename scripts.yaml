@@ -15,7 +15,7 @@ bedtime:
   icon: mdi:sleep
   mode: single
   sequence:
-  # An offline TV must not prevent the remaining bedtime actions.
+  # Keep device failures from interrupting the rest of the routine.
   - if:
     - condition: template
       value_template: "{{ states('media_player.upstairs_tv') not in ['unknown', 'unavailable', 'off'] }}"
@@ -25,14 +25,17 @@ bedtime:
         entity_id: media_player.upstairs_tv
       continue_on_error: true
   - action: light.turn_on
-    data:
-      brightness_pct: 30
+    continue_on_error: true
     target:
       entity_id: light.bedroom_nightstand_lamps
   - action: light.turn_off
+    continue_on_error: true
     target:
-      entity_id: light.hallway_main_lights
+      entity_id:
+      - light.hallway_main_lights
+      - light.stairs_main_lights
   - action: light.turn_off
+    continue_on_error: true
     target:
       area_id:
       - kitchen
@@ -40,14 +43,37 @@ bedtime:
       - outdoors
       - dining_room
   - action: switch.turn_off
+    continue_on_error: true
     target:
       area_id:
       - outdoors
       - living_room
   - action: light.turn_off
+    continue_on_error: true
     target:
       entity_id: light.three_season_porch_lamps
   - action: script.turn_off_three_season_porch_heater
+    continue_on_error: true
+  # Stop each active Music Assistant player separately so one offline speaker
+  # cannot prevent other speakers or the rest of bedtime from being handled.
+  - repeat:
+      for_each:
+      - media_player.living_room_2
+      - media_player.office_2
+      - media_player.dining_room_2
+      - media_player.three_season_porch
+      - media_player.bedroom_2
+      - media_player.basement_2
+      - media_player.record_player
+      sequence:
+      - if:
+        - condition: template
+          value_template: "{{ states(repeat.item) in ['playing', 'paused', 'buffering'] }}"
+        then:
+        - action: media_player.media_stop
+          target:
+            entity_id: '{{ repeat.item }}'
+          continue_on_error: true
 
 music_switch_destination:
   alias: Music - switch listening destination
