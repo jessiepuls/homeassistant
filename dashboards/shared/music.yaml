@@ -46,7 +46,7 @@ cards:
         - width: 24px
     - type: custom:button-card
       name: Everywhere
-      icon: mdi:home-sound-outlined
+      icon: mdi:home-group
       entity: input_select.music_destination
       show_state: false
       tap_action:
