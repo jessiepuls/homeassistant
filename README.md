@@ -141,3 +141,7 @@ adjusts the selected player and its active group by three percentage points.
 Shortcuts ignore typing, focused interactive controls, modifiers, held-key repeats,
 and other views. The local module is tracked at `www/dashboard/music-hotkeys.js`.
 Reload Lovelace resources and refresh the browser after changing this module.
+
+Across all four Main Panel tabs, Alt+1 opens Home, Alt+2 Porch, Alt+3 Music,
+and Alt+4 Chickens (Option+1–4 on Mac). These shortcuts ignore text entry,
+open dialogs, and dashboard editing, and do nothing outside Main Panel.

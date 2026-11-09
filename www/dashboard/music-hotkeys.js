@@ -91,3 +91,47 @@ class MusicHotkeys extends HTMLElement {
 }
 
 if (!customElements.get('music-hotkeys')) customElements.define('music-hotkeys', MusicHotkeys);
+
+// Resource-level navigation works even when the Music card is not mounted.
+// Use physical digit codes because Option+digits produces symbols on macOS.
+function dashboardTabShortcut(event) {
+  const tabs = { Digit1: 'home', Digit2: 'porch', Digit3: 'music', Digit4: 'chicken-coop' };
+  const tab = tabs[event.code];
+  const prefix = '/lovelace-main-panel';
+  const path = window.location.pathname;
+  if (!tab || !event.altKey || event.ctrlKey || event.metaKey || event.shiftKey ||
+      event.repeat || event.defaultPrevented || document.visibilityState === 'hidden' ||
+      !(path === prefix || path.startsWith(prefix + '/')) ||
+      window.history.state?.dialog) return;
+
+  const blocked = (node) => node instanceof Element &&
+    (node.isContentEditable || node.matches(
+      'input,textarea,select,[role="textbox"],[role="combobox"],[role="dialog"],dialog,ha-dialog'
+    ) || node.lovelace?.editMode);
+  if (event.composedPath().some(blocked)) return;
+  let focused = document.activeElement;
+  while (focused) {
+    if (blocked(focused)) return;
+    focused = focused.shadowRoot?.activeElement;
+  }
+  // Edit mode can be active while keyboard focus is on the page background.
+  const editingDashboard = (root) => {
+    for (const node of root.querySelectorAll('*')) {
+      if (node.localName === 'hui-root' && node.lovelace?.editMode) return true;
+      if (node.shadowRoot && editingDashboard(node.shadowRoot)) return true;
+    }
+    return false;
+  };
+  if (editingDashboard(document)) return;
+
+  event.preventDefault();
+  const destination = `${prefix}/${tab}`;
+  if (path === destination) return;
+  window.history.pushState({ from: path + window.location.search }, '', destination);
+  window.dispatchEvent(new CustomEvent('location-changed', { detail: { replace: false } }));
+}
+
+// Resource reloads must replace the listener instead of installing duplicates.
+if (window.householdTabShortcut) window.removeEventListener('keydown', window.householdTabShortcut);
+window.householdTabShortcut = dashboardTabShortcut;
+window.addEventListener('keydown', dashboardTabShortcut);

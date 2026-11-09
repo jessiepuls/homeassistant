@@ -50,7 +50,7 @@ lovelace:
   resource_mode: yaml
   resources:
     - type: module
-      url: /local/dashboard/music-hotkeys.js?v=1
+      url: /local/dashboard/music-hotkeys.js?v=2
     - type: module
       url: /local/community/lovelace-card-mod/card-mod.js
     - type: module
