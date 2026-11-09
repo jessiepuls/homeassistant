@@ -1,147 +1,98 @@
-# Home Assistant Config
+# Home Assistant configuration
 
-Personal Home Assistant configuration.
+Configuration for this household’s Home Assistant dashboards, lighting, music,
+and chicken coop. This is a personal setup with specific device IDs and local
+assets, rather than a ready-to-install dashboard package.
 
-## Dashboards
+## Using the dashboard
 
-| Dashboard | Description |
-|---|---|
-| Main Panel | Shared household dashboard: Home, Porch, Music, and Chickens tabs |
+Open **Main Panel** in Home Assistant. All screens share these four tabs:
 
-Main Panel is the primary dashboard. Tablet startup paths can select the relevant tab:
-`/lovelace-main-panel/home`, `/lovelace-main-panel/porch`,
-`/lovelace-main-panel/music`, or `/lovelace-main-panel/chicken-coop`.
-Home uses Sections; the Porch and Chickens layouts remain unchanged.
-The conditional Chicken alerts badge on Home opens the Chickens tab.
-On screens narrower than 768px, the same Home tab shows compact weather and music,
-and room controls as native tiles. Use the top tabs for navigation. Tap an icon to toggle a
-device; tap its text to open controls (including fan speed). The bedtime action
-asks for confirmation. Tablet layouts remain visible at 768px and above.
+| Tab | What’s there | Startup path |
+|---|---|---|
+| Home | Room controls, weather, and music playback | `/lovelace-main-panel/home` |
+| Porch | Porch lights, fan, heater, weather, and music | `/lovelace-main-panel/porch` |
+| Music | Speaker selection, search, recommendations, playlists, and albums | `/lovelace-main-panel/music` |
+| Chickens | Doors, feeders, run light, water heaters, and device status | `/lovelace-main-panel/chicken-coop` |
 
-View definitions live in `dashboards/shared/`; the entry-point dashboards include
-them from one dashboard. Home Assistant checks the
-entry-point YAML timestamp when caching a dashboard: after editing a shared view,
-update the timestamp of each dashboard that includes it, or force a dashboard reload.
+Use a startup path to choose which tab a tablet opens. Home automatically uses
+compact controls on screens narrower than 768px. On mobile tiles, tap the icon to
+toggle a device or the text for more controls, such as fan speed.
 
-Dashboards are in YAML mode (`dashboards/`). Resources (HACS cards) are declared in `configuration.yaml` under `lovelace.resources`.
+A **Chicken alerts** badge appears on Home when attention is needed. Tap it to
+open Chickens; the badge is hidden when there are no alerts.
 
-## HACS Cards Used
+### Playing music
 
-- `custom:layout-card` — responsive grid layouts
-- `custom:clock-weather-card` — clock + weather forecast
-- `custom:button-card` — state-based icon/color buttons
-- `custom:mini-media-player`
-- `custom:state-switch`
-- `custom:config-template-card` — dynamic music controls and library rows
+1. Open Music and choose where to listen.
+2. Tap a cover in **For you**, **Playlists**, or **Albums** to start that collection.
+   Albums are ordered with recently played items first.
+3. To find something specific, enter a search and press Enter or tap Search.
+   Tapping a result starts a similar-music station; it does not save a station to
+   Apple Music. Clear hides the results.
 
-## Music tabs
+| Destination | Speakers | Starting volume |
+|---|---|---|
+| Main Floor | Living Room, Office, Dining Room, Three Season Porch | 20% each |
+| Everywhere | Main Floor, Bedroom, Basement, Record Player | 20% each |
+| Bedroom, Basement, Record Player | Only the selected speaker | Previous volume |
 
-The Music tab includes `dashboards/shared/music.yaml` with destination
-buttons, compact Mini Media Player controls, and three horizontal artwork rows:
-For you (Apple Music recommendations), Playlists, and Albums (recently played first).
-Tapping a cover calls `script.music_play_collection`, which resolves the selected
-destination at execution time, prepares its speaker group if necessary, and starts
-the collection. It does not add the collection behind the existing queue.
+Changing destinations moves the current queue and replaces the speaker group.
+Roam is excluded. The Record Player speaker is in the porch and is separate from
+the regular porch speaker. Group playback controls adjust the active group.
+Tapping the player’s artwork or name on Home or Porch opens Music.
 
-The Search music field searches Apple Music and the Music Assistant library for
-tracks, albums, artists, and playlists. Press Enter or use Search; results appear
-above the recommendation rows and play on the selected destination. Clear hides
-results. Tap a search-result cover to start a station (`radio_mode: true`) from
-that result. Search results have a single action. This starts a similar-music mix and
-does not save a station to Apple Music. The query is shared across dashboard views. The native input-text
-helper and a fourth trigger-based template sensor provide the query/results;
-search does not depend on Queue Actions. Stale results are hidden while a new
-query is loading. A live search returned results through this path without
-changing playback.
+Rows refresh every ten minutes; **Refresh music** requests an update immediately.
+If recommendations are unavailable, check the Queue Actions setup below.
 
-The Main Floor volume slider and Home players use Mini Media Player's group-volume
-synchronization: changing volume applies the same percentage to every configured
-member of the active group. When a Home player is standalone, synchronization is
-disabled so its volume still works. State-switch keeps the solo and grouped player
-instances mounted and selects between them only when grouping changes. Track and
-artwork updates reach the existing player without rebuilding it. The porch Home
-player reserves its height independently of artwork loading. This is separate from
-the one-time equalization performed when selecting Main Floor. No new backend
-automation is involved.
+### Keyboard shortcuts
 
-The rows use the installed layout-card, config-template-card, button-card, and
-card-mod packages. There is no new custom JavaScript module or embedded webpage.
-`templates/music.yaml` supplies three row sensors and one search-results sensor. Each row fetches
-independently at startup, every ten minutes, when templates are reloaded, or when
-`script.music_refresh_library` fires `music_library_refresh`. Playlist/album data
-comes from the official Music Assistant integration. Recommendations use the
-manually installed Music Assistant Queue Actions backend (`custom_components/mass_queue/`).
+Shortcuts work while the dashboard has keyboard focus and ignore text entry.
 
-Restart Home Assistant to load the new template sensors and scripts. Queue Actions
-must also be added/configured under Settings > Devices & services with
-`http://nas.local:8095/`. Installing its files alone does not activate it.
-If recommendations cannot load, that row shows a message; playlist/album data
-requests run independently. After completing setup, use Refresh music. The sensors
-cache up to eighteen items per row, preserve recommendation order, deduplicate
-recommendation URIs, and exclude individual recommendation tracks. A fresh
-installation does not have cached row data until the first successful request.
+| Where | Shortcut | Action |
+|---|---|---|
+| Any Main Panel tab | Alt+1 / Option+1 on Mac | Home |
+| Any Main Panel tab | Alt+2 / Option+2 on Mac | Porch |
+| Any Main Panel tab | Alt+3 / Option+3 on Mac | Music |
+| Any Main Panel tab | Alt+4 / Option+4 on Mac | Chickens |
+| Music | Space | Play/pause |
+| Music | Left / Right arrow | Previous/next track |
+| Music | Up / Down arrow | Active group volume up/down by 3 percentage points |
 
-`input_select.music_destination` stores the selected destination for the Music
-tab. `script.music_switch_destination` moves a playing queue, pauses members left
-behind, and prepares Main Floor (Living Room, Office, Dining Room, Three Season
-Porch), Bedroom, Basement, or Record Player. Everywhere includes all seven speakers, including the Record Player; Roam is excluded. Selecting Main Floor or Everywhere sets each selected speaker to a fixed 20%. Other destinations keep their volumes;
-The helper updates
-only after successful commands. The script resolves the active queue owner from
-Music Assistant player IDs and delegates the handoff to the native transfer action
-before adjusting unwanted members and forming the selected destination group. A partial service failure can leave a partially
-changed group; inspect the script trace. With multiple independent queues playing,
-the previous selected destination is preferred as source, otherwise the first
-playing configured room is used.
+## Setting up or restoring
 
-Data templates and row-card expressions have offline checks. A live destination
-script test transferred the current track to Bedroom only; a subsequent read
-confirmed all four Main Floor speakers playing and Bedroom idle. Data requests
-and tablet rendering need separate verification. Home views retain their Mini Media Player controls; tapping
-artwork/name opens Music in the same dashboard. Other Home controls and weather
-are unchanged. Unused Sonos Card and experimental Music Assistant Player Card files
-have been removed; neither card is loaded by these views.
+Restore the full Home Assistant Docker volume for an existing installation.
+Git alone does not contain integration credentials, device registrations,
+downloaded integrations/cards, or most dashboard assets.
 
-## Key Files
+For a new installation, use `.HA_VERSION` as the tested Home Assistant version,
+then configure the integrations and update entity IDs, area IDs, Music Assistant
+player IDs, and config-entry IDs to match your installation. In particular,
+`templates/music.yaml` references this household’s Queue Actions config entry.
 
-| File | Purpose |
-|---|---|
-| `configuration.yaml` | Main config — helpers, Lovelace resources & dashboards |
-| `automations.yaml` | All automations |
-| `lights.yaml` | Light groups (living room, kitchen cabinets) |
-| `groups.yaml` | Entity groups (outdoor lights) |
-| `scripts.yaml` | Scripts |
-| `scenes.yaml` | Scenes |
-| `dashboards/` | Lovelace YAML dashboards |
-| `custom_components/` | Custom integrations (including Omlet Smart Coop and Music Assistant Queue Actions) |
+Dependencies:
 
-## Custom Integrations
+- **Music Assistant:** runs separately at `http://nas.local:8095/`, with Apple Music
+  and Sonos speakers configured there. Add the official Music Assistant integration
+  in HA; the native HA Sonos integration is not needed.
+- **[Music Assistant Queue Actions](https://github.com/droans/mass_queue):** install
+  the custom integration, then add it in **Settings → Devices & services** using
+  the Music Assistant address. Copying its files alone does not configure it.
+  It supplies recommendations; search, playlists, and albums use the official integration.
+- **Other custom integrations:** [Omlet Smart Coop](https://github.com/krozgrov/ha-omlet-integration),
+  [Meross LAN](https://github.com/krahabb/meross_lan), and
+  [Arlo Camera Support](https://github.com/twrecked/hass-aarlo).
+- **Frontend cards:** Card Mod, Layout Card, Clock Weather Card, Button Card,
+  Mini Media Player, State Switch, and Config Template Card. Resource URLs are
+  declared under `lovelace.resources` in `configuration.yaml`.
+- **Local assets:** restore the room photos and styles under `www/`. The custom
+  keyboard module, `www/dashboard/music-hotkeys.js`, is tracked in Git.
 
-- **Omlet Smart Coop** — controls the chicken coop door and feeder, exposes battery levels and last open/close timestamps
+Keep credentials in HA’s integration settings or the untracked `secrets.yaml`.
+Back up the entire Docker volume to retain data that is not in Git.
 
-- **Music Assistant Queue Actions** — supplies Apple Music recommendations for the shared Music tabs
+## Development and maintenance
 
-Music Assistant runs separately on the NAS and connects through the official Home Assistant integration. The native Home Assistant Sonos integration is no longer required by this setup.
-
-## Secrets
-
-Sensitive values (IPs, API keys) are stored in `secrets.yaml` (not committed).
-
-## Configuration checks
-
-GitHub Actions runs YAML lint once in `yamllint.yaml` and validates the Home
-Assistant configuration in `ha-config-check.yaml`, using the version in
-`.HA_VERSION`. No placeholder secrets are needed by the current YAML configuration.
-The State Bonding blueprint used by the lighting automations is included in
-`blueprints/automation/chrissalter/` so a fresh checkout has that dependency.
-
-### Music keyboard controls
-
-On the Music tab, Space toggles playback, Left/Right changes tracks, and Up/Down
-adjusts the selected player and its active group by three percentage points.
-Shortcuts ignore typing, focused interactive controls, modifiers, held-key repeats,
-and other views. The local module is tracked at `www/dashboard/music-hotkeys.js`.
-Reload Lovelace resources and refresh the browser after changing this module.
-
-Across all four Main Panel tabs, Alt+1 opens Home, Alt+2 Porch, Alt+3 Music,
-and Alt+4 Chickens (Option+1–4 on Mac). These shortcuts ignore text entry,
-open dialogs, and dashboard editing, and do nothing outside Main Panel.
+For configuration files, applying edits, resource reloads, and CI checks, see the
+[development guide](docs/development.md). These steps are for maintaining the
+setup; they are not required for everyday dashboard use.
