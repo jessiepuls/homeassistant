@@ -20,7 +20,6 @@ tts/*
 www/*
 .ha_run.lock
 *~*
-aarlo*
 # Maintain our own dashboard module; downloaded frontend resources remain ignored.
 !www/dashboard/
 !www/dashboard/music-hotkeys.js
