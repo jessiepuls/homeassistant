@@ -12,7 +12,7 @@ Open **Main Panel** in Home Assistant. All screens share these four tabs:
 |---|---|---|
 | Home | Room controls, weather, and music playback | `/lovelace-main-panel/home` |
 | Porch | Porch lights, fan, heater, weather, and music | `/lovelace-main-panel/porch` |
-| Music | Speaker selection, search, recommendations, playlists, and albums | `/lovelace-main-panel/music` |
+| Music | Speaker selection, search, podcasts, recommendations, playlists, and albums | `/lovelace-main-panel/music` |
 | Chickens | Doors, feeders, run light, water heaters, and device status | `/lovelace-main-panel/chicken-coop` |
 
 Use a startup path to choose which tab a tablet opens. Home automatically uses
@@ -30,6 +30,14 @@ open Chickens; the badge is hidden when there are no alerts.
 3. To find something specific, enter a search and press Enter or tap Search.
    Tapping a result starts a similar-music station; it does not save a station to
    Apple Music. Clear hides the results.
+4. Tap a cover in **Podcasts**, or a podcast in search results, to list its 30
+   newest episodes. Tap an episode to play it; partly played episodes resume.
+   Episodes show their date and length, time left, or Played. Close hides the list.
+5. While an episode with embedded chapters plays, **Chapters** appears under the
+   player. The current chapter is highlighted; tap one to jump to it.
+
+The Music player shows elapsed and remaining time and 15-second skip buttons.
+Drag or tap the progress bar to seek.
 
 Destinations can be individual speakers or groups. Changing destinations moves
 the current queue and replaces the speaker group. Group playback controls adjust

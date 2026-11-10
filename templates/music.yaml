@@ -82,6 +82,92 @@
     attributes:
       items: '{{ music_albums_result.get(''items'', []) }}'
       updated_at: '{{ now().isoformat() }}'
+- triggers: *id001
+  actions:
+  - variables:
+      music_podcasts_result: {}
+  - action: music_assistant.get_library
+    continue_on_error: true
+    data:
+      config_entry_id: 01M6HDCTCX7DZ1YYB2NCX1A6FH
+      media_type: podcast
+      limit: 50
+      order_by: last_played_desc
+    response_variable: music_podcasts_result
+  sensor:
+  - name: Music Podcasts
+    unique_id: dashboard_music_podcasts
+    state: '{{ ''ready'' if ''items'' in music_podcasts_result else ''unavailable'' }}'
+    attributes:
+      items: '{{ music_podcasts_result.get(''items'', []) }}'
+      updated_at: '{{ now().isoformat() }}'
+# The official integration does not expose episode played state, so episodes come through Queue Actions.
+- triggers:
+  - trigger: state
+    entity_id: input_text.music_podcast_selected
+  - trigger: time_pattern
+    minutes: /10
+  - trigger: event
+    event_type: music_library_refresh
+  - trigger: event
+    event_type: event_template_reloaded
+  actions:
+  - variables:
+      podcast_uri: >-
+        {% set uri = states('input_text.music_podcast_selected') | trim %}
+        {{ '' if uri in ['unknown', 'unavailable'] else uri }}
+      podcast_ref: "{{ podcast_uri.split('://podcast/', 1) }}"
+      music_podcast_episodes_result: {}
+  - if:
+    - condition: template
+      value_template: "{{ podcast_ref | length == 2 and config_entry_attr('01M6HQY4RZEH5QJ44NT8E5CW5D', 'state') == 'loaded' }}"
+    then:
+    - action: mass_queue.send_command
+      continue_on_error: true
+      data:
+        config_entry_id: 01M6HQY4RZEH5QJ44NT8E5CW5D
+        command: music/podcasts/podcast_episodes
+        data: "{{ {'provider_instance_id_or_domain': podcast_ref[0], 'item_id': podcast_ref[1]} }}"
+      response_variable: music_podcast_episodes_result
+  sensor:
+  - name: Music Podcast Episodes
+    unique_id: dashboard_music_podcast_episodes
+    state: |-
+      {% if not podcast_uri %}
+        idle
+      {% elif music_podcast_episodes_result is mapping and 'response' in music_podcast_episodes_result %}
+        ready
+      {% else %}
+        unavailable
+      {% endif %}
+    attributes:
+      uri: '{{ podcast_uri }}'
+      podcast: |-
+        {% set first = (music_podcast_episodes_result.get('response') or [{}]) | first %}
+        {{ (first.get('podcast') or {}).get('name', '') }}
+      items: |-
+        {% set ns = namespace(items=[]) %}
+        {% for ep in (music_podcast_episodes_result.get('response') or []) | sort(attribute='position', reverse=true) %}
+          {% if loop.index <= 30 and ep.get('uri') %}
+            {% set duration = ep.get('duration') or 0 %}
+            {% set resume = (ep.get('resume_position_ms') or 0) / 1000 %}
+            {% set release_date = (ep.get('metadata') or {}).get('release_date') %}
+            {% set released = as_datetime(release_date, none) if release_date else none %}
+            {% if ep.get('fully_played') %}
+              {% set status = 'Played' %}
+            {% elif resume > 0 and duration > resume %}
+              {% set status = ((duration - resume) / 60) | round | int ~ ' min left' %}
+            {% elif duration %}
+              {% set status = (duration / 60) | round | int ~ ' min' %}
+            {% else %}
+              {% set status = '' %}
+            {% endif %}
+            {% set detail = [released.strftime('%b %-d, %Y') if released else '', status] | select | join(' · ') %}
+            {% set ns.items = ns.items + [{'name': ep.get('name') or 'Untitled', 'uri': ep.uri, 'detail': detail, 'played': ep.get('fully_played') or false}] %}
+          {% endif %}
+        {% endfor %}
+        {{ ns.items }}
+      updated_at: '{{ now().isoformat() }}'
 - triggers:
     - trigger: state
       entity_id: input_text.music_search_query
@@ -109,6 +195,7 @@
               - album
               - artist
               - playlist
+              - podcast
             limit: 6
             library_only: false
           response_variable: music_search_result
@@ -127,7 +214,7 @@
         query: "{{ music_query }}"
         items: >-
           {% set ns = namespace(items=[]) %}
-          {% for key in ['tracks', 'albums', 'artists', 'playlists'] %}
+          {% for key in ['tracks', 'albums', 'artists', 'playlists', 'podcasts'] %}
             {% for item in music_search_result.get(key, []) %}
               {% set artists = item.get('artists', []) | map(attribute='name') | join(', ') %}
               {% set name = item.get('name', 'Untitled') ~ ' · ' ~ item.get('media_type', key) %}
@@ -136,3 +223,71 @@
             {% endfor %}
           {% endfor %}
           {{ ns.items }}
+# Music Assistant does not read chapters embedded in episode audio, so Podcast Chapters reads them from the MP3.
+- triggers:
+  - trigger: state
+    entity_id:
+    - media_player.living_room_2
+    - media_player.bedroom_2
+    - media_player.basement_2
+    - media_player.record_player
+    attribute: media_content_id
+  - trigger: state
+    entity_id: input_select.music_destination
+  - trigger: homeassistant
+    event: start
+  - trigger: event
+    event_type: event_template_reloaded
+  actions:
+  - variables:
+      chapter_players:
+        Main Floor: media_player.living_room_2
+        Everywhere: media_player.living_room_2
+        Bedroom: media_player.bedroom_2
+        Basement: media_player.basement_2
+        Record Player: media_player.record_player
+      chapter_player: "{{ chapter_players.get(states('input_select.music_destination'), 'media_player.living_room_2') }}"
+      episode_uri: "{{ state_attr(chapter_player, 'media_content_id') or '' }}"
+      episode_url: ''
+      episode_item_result: {}
+      chapters_result: {}
+  - if:
+    - condition: template
+      value_template: "{{ '://podcast_episode/' in episode_uri and config_entry_attr('01M6HQY4RZEH5QJ44NT8E5CW5D', 'state') == 'loaded' }}"
+    then:
+    - action: mass_queue.send_command
+      continue_on_error: true
+      data:
+        config_entry_id: 01M6HQY4RZEH5QJ44NT8E5CW5D
+        command: music/item_by_uri
+        data: "{{ {'uri': episode_uri} }}"
+      response_variable: episode_item_result
+    - variables:
+        episode_url: >-
+          {% set mappings = (episode_item_result.get('response') or {}).get('provider_mappings') or [] %}
+          {{ (mappings | selectattr('url') | map(attribute='url') | first) if mappings | selectattr('url') | list else '' }}
+    - if:
+      - condition: template
+        value_template: "{{ episode_url | length > 0 }}"
+      then:
+      - action: podcast_chapters.get
+        continue_on_error: true
+        data:
+          url: '{{ episode_url }}'
+        response_variable: chapters_result
+  sensor:
+  - name: Music Podcast Chapters
+    unique_id: dashboard_music_podcast_chapters
+    state: |-
+      {% if '://podcast_episode/' not in episode_uri %}
+        idle
+      {% elif chapters_result is mapping and 'chapters' in chapters_result %}
+        ready
+      {% else %}
+        unavailable
+      {% endif %}
+    attributes:
+      player: '{{ chapter_player }}'
+      uri: '{{ episode_uri }}'
+      chapters: "{{ chapters_result.get('chapters', []) }}"
+      updated_at: '{{ now().isoformat() }}'

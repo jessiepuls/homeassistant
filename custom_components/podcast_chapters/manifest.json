@@ -1,0 +1,10 @@
+{
+  "domain": "podcast_chapters",
+  "name": "Podcast Chapters",
+  "codeowners": [],
+  "dependencies": [],
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "requirements": [],
+  "version": "1.0.0"
+}

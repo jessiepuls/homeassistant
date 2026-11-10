@@ -11,6 +11,8 @@ blueprints/automation/*
 blueprints/automation/chrissalter/*
 !blueprints/automation/chrissalter/state-bonding-simplified-and-easier.yaml
 custom_components/*
+!custom_components/podcast_chapters/
+__pycache__/
 *.log
 *.log.*
 home-assistant*db*
@@ -23,3 +25,4 @@ www/*
 # Maintain our own dashboard module; downloaded frontend resources remain ignored.
 !www/dashboard/
 !www/dashboard/music-hotkeys.js
+!www/dashboard/podcast-chapters.js

@@ -9,6 +9,10 @@ Restore the full Home Assistant configuration volume. Git does not contain
 integration credentials, device registrations, downloaded integrations/cards,
 or most photos and styles. Keep backing up the full volume after setup.
 
+Also restore the Music Assistant data volume (`music-assistant/data`). It holds
+provider logins (Apple Music, Overcast), player configuration, the library, and
+podcast progress. Without it, every provider has to be set up again.
+
 ## Starting a new installation
 
 Use `.HA_VERSION` as the tested Home Assistant version. Copy the configuration
@@ -25,16 +29,40 @@ YAML does not connect devices or make its entity IDs match your installation.
    can browse music and play it on a speaker before connecting the dashboard.
 3. In HA, open **Settings → Devices & services → Add integration**, select
    **Music Assistant**, and enter that server address when prompted.
-4. For the Apple Music recommendation row, install
+4. For the Apple Music recommendation row and podcast episode lists, install
    [Music Assistant Queue Actions](https://github.com/droans/mass_queue), then add
    it in **Settings → Devices & services** using the same server address. Installing
-   its files alone does not configure it. Search, playlists, and albums use the
-   official integration; this recommendation row specifically requests Apple Music.
+   its files alone does not configure it. Search, playlists, albums, and the
+   podcast row use the official integration; the recommendation row specifically
+   requests Apple Music, and episode lists use Queue Actions because the official
+   integration does not report played or resume state.
 5. Map your players and integration IDs using the checklist below. Then open
    Music and use **Refresh music** to populate the rows.
 
 The native HA Sonos integration is not required for these music controls when
 Sonos players are provided through Music Assistant.
+
+#### Podcasts (Overcast)
+
+Podcasts come from Music Assistant’s Overcast provider (beta in 2.10.9). Add it
+under **Settings → Providers** with your Overcast email and password.
+
+- The Overcast account needs an email login. If the app was set up
+  anonymously, add one under **Settings → Sync Profile** in the iOS app. Sign in
+  with Apple and accounts with 2FA are not supported.
+- Keep **Maximum number of episodes** at 0 to sync every episode.
+- Sync is one-way. Subscriptions and progress come from Overcast; playback in
+  Music Assistant is not sent back, and following or unfollowing in Music
+  Assistant does not change Overcast.
+- Overcast rate-limits its export, so Music Assistant fetches it at most every
+  four hours. Progress from the phone can take that long to appear.
+
+Chapters come from the Podcast Chapters integration in
+`custom_components/podcast_chapters/`, enabled by `podcast_chapters:` in
+`configuration.yaml`. Restart HA after adding it. Music Assistant only reads
+chapters published in the feed, so this integration reads the ones embedded in
+the episode MP3 (ID3 chapter frames). Shows without embedded chapters show no
+Chapters list.
 
 ### Device and integration mapping
 
@@ -45,7 +73,7 @@ Find HA entity IDs in **Developer Tools → States**. Areas are managed in
 |---|---|
 | `configuration.yaml` | Destination names in `input_select.music_destination` |
 | `scripts.yaml` | Both `destinations` maps, the destination selector, and the `queue_entities` player-ID map; choose group starting volumes here |
-| `templates/music.yaml` | Music Assistant `config_entry_id` values, the Queue Actions ID in `config_entry_attr(...)`, recommendation player, and provider filter |
+| `templates/music.yaml` | Music Assistant `config_entry_id` values, the Queue Actions ID in `config_entry_attr(...)` and the episode `send_command`, recommendation player, and provider filter |
 | `dashboards/shared/music.yaml` | Destination buttons, playback states, player entities, and the hotkey card’s destination map |
 | Other files in `dashboards/shared/` | Device entities, room photos, and player/group references |
 | `automations.yaml`, `scripts.yaml`, `templates/chicken-alerts.yaml` | Device entities, area targets, notification actions, and schedules |
@@ -54,7 +82,8 @@ Find HA entity IDs in **Developer Tools → States**. Areas are managed in
 For an integration’s config-entry ID, go to **Settings → Devices & services**,
 open the integration entry’s menu, and use **Copy entry ID** where available.
 The `config_entry_id` fields in music actions need the official Music Assistant
-entry; the recommendation startup check needs the separate Queue Actions entry.
+entry; the recommendation startup check and podcast episode lookup need the
+separate Queue Actions entry.
 
 The script’s `queue_entities` keys are Music Assistant player/queue identifiers,
 not HA entity IDs. Match them to the `active_queue` attribute reported by your

@@ -1,0 +1,8 @@
+get:
+  fields:
+    url:
+      name: Audio URL
+      description: Direct URL of the episode's MP3 file.
+      required: true
+      selector:
+        text:

@@ -52,6 +52,8 @@ lovelace:
     - type: module
       url: /local/dashboard/music-hotkeys.js?v=2
     - type: module
+      url: /local/dashboard/podcast-chapters.js?v=1
+    - type: module
       url: /local/community/lovelace-card-mod/card-mod.js
     - type: module
       url: /local/community/lovelace-layout-card/layout-card.js?v=20261028
@@ -92,6 +94,14 @@ input_text:
     icon: mdi:magnify
     max: 100
     mode: text
+  music_podcast_selected:
+    name: Selected podcast
+    icon: mdi:podcast
+    max: 255
+    mode: text
+
+# Read chapter markers embedded in podcast episode MP3s for the Music tab.
+podcast_chapters:
 
 # Push a compact chicken status screen to the private TRMNL plugin.
 rest_command: !include trmnl/rest-command.yaml

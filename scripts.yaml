@@ -223,6 +223,7 @@ music_play_collection:
             - radio
             - track
             - artist
+            - podcast_episode
     radio_mode:
       name: Start a station
       default: false
@@ -253,7 +254,7 @@ music_play_collection:
         destination: "{{ states('input_select.music_destination') }}"
     - if:
         - condition: template
-          value_template: "{{ destination not in destinations or media_type not in ['playlist', 'album', 'radio', 'track', 'artist'] or not uri }}"
+          value_template: "{{ destination not in destinations or media_type not in ['playlist', 'album', 'radio', 'track', 'artist', 'podcast_episode'] or not uri }}"
       then:
         - stop: Invalid music destination or collection
           error: true
@@ -267,6 +268,21 @@ music_play_collection:
         - action: script.music_switch_destination
           data:
             destination: "{{ destination }}"
+    # Music Assistant saves episode progress only when playback is replaced, so
+    # replaying the loaded episode would resume from a stale position.
+    - if:
+        - condition: template
+          value_template: >-
+            {{ media_type == 'podcast_episode' and state_attr(desired[0], 'media_content_id') == uri }}
+      then:
+        - if:
+            - condition: template
+              value_template: "{{ not is_state(desired[0], 'playing') }}"
+          then:
+            - action: media_player.media_play
+              target:
+                entity_id: "{{ desired[0] }}"
+        - stop: Episode is already loaded
     - action: music_assistant.play_media
       target:
         entity_id: "{{ desired[0] }}"
@@ -275,6 +291,26 @@ music_play_collection:
         media_type: "{{ media_type }}"
         enqueue: replace
         radio_mode: "{{ radio_mode | default(false) | bool }}"
+
+music_open_podcast:
+  alias: Music - show podcast episodes
+  mode: single
+  fields:
+    uri:
+      required: true
+      selector:
+        text:
+  sequence:
+    - action: input_text.set_value
+      target:
+        entity_id: input_text.music_podcast_selected
+      data:
+        value: "{{ uri }}"
+    - action: input_text.set_value
+      target:
+        entity_id: input_text.music_search_query
+      data:
+        value: ""
 
 music_search:
   alias: Music - search
