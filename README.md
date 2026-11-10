@@ -66,3 +66,8 @@ needs to be restored from a backup rather than Git.
 For configuration files, applying edits, resource reloads, and CI checks, see the
 [development guide](docs/development.md). These steps are for maintaining the
 setup; they are not required for everyday dashboard use.
+
+## TRMNL chicken display
+
+For a read-only e-ink screen showing food levels and chicken alerts, see the
+[TRMNL setup guide](docs/trmnl.md).

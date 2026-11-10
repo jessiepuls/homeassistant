@@ -1,0 +1,66 @@
+# One compact payload for TRMNL. Unknown readings remain unknown, never zero.
+- sensor:
+  - name: Chicken TRMNL
+    unique_id: chicken_trmnl_payload
+    state: "{{ states('sensor.chicken_coop_alerts') }}"
+    attributes:
+      payload: >-
+        {%- set existing = state_attr('sensor.chicken_coop_alerts', 'issues') -%}
+        {%- set ns = namespace(issues=existing if existing is sequence and existing is not string else ['Chicken alert status unavailable'], feeders=[], devices=[]) -%}
+        {%- for entity, label in [
+          ('sensor.jessica_s_feeder_feed_level', 'Feeder 1'),
+          ('sensor.feeder2_feed_level', 'Feeder 2')
+        ] -%}
+          {%- set raw = states(entity) -%}
+          {%- set valid = is_number(raw) and 0 <= raw | float <= 100 -%}
+          {%- set level = raw | float | round(0) | int if valid else none -%}
+          {%- set status = 'Unknown' if not valid else ('Refill' if raw | float < 30 else 'OK') -%}
+          {%- if not valid -%}
+            {%- set ns.issues = ns.issues + [label ~ ' food level unavailable'] -%}
+          {%- elif raw | float < 30 -%}
+            {%- set ns.issues = ns.issues + [label ~ ' needs food (' ~ level ~ '%)'] -%}
+          {%- endif -%}
+          {%- set ns.feeders = ns.feeders + [dict(name=label, level=level, status=status)] -%}
+        {%- endfor -%}
+        {%- for entity, label in [
+          ('sensor.coop_door_battery_level_2', 'Coop door'),
+          ('sensor.run_door_battery_level', 'Run door'),
+          ('sensor.jessica_s_feeder_battery_level', 'Feeder 1'),
+          ('sensor.feeder2_battery_level', 'Feeder 2')
+        ] -%}
+          {%- set raw = states(entity) -%}
+          {%- if is_number(raw) and 0 <= raw | float <= 20 -%}
+            {%- set ns.issues = ns.issues + [label ~ ' battery low (' ~ (raw | float | round(0) | int) ~ '%)'] -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- for entity, label, battery in [
+          ('cover.coop_door', 'Coop door', 'sensor.coop_door_battery_level_2'),
+          ('cover.run_door_door', 'Run door', 'sensor.run_door_battery_level'),
+          ('cover.jessica_s_feeder_feeder', 'Feeder 1', 'sensor.jessica_s_feeder_battery_level'),
+          ('cover.feeder2_feeder', 'Feeder 2', 'sensor.feeder2_battery_level'),
+          ('switch.chicken_coop_lights', 'Run light', ''),
+          ('switch.chicken_coop_waterer1', 'Water heater 1', ''),
+          ('switch.chicken_coop_waterer2', 'Water heater 2', '')
+        ] -%}
+          {%- set raw_battery = states(battery) if battery else 'unknown' -%}
+          {%- set battery_level = raw_battery | float | round(0) | int
+              if is_number(raw_battery) and 0 <= raw_battery | float <= 100 else none -%}
+          {%- set ns.devices = ns.devices + [dict(name=label,
+              state=states(entity) | replace('_', ' ') | title,
+              battery=battery_level, has_battery=battery != '')] -%}
+        {%- endfor -%}
+        {{ dict(
+          title='Chicken Coop',
+          summary='Needs attention' if ns.issues else 'No reported problems',
+          issue_count=ns.issues | length,
+          issues=ns.issues,
+          feeders=ns.feeders,
+          devices=ns.devices,
+          schema_version=2,
+          coop_door=states('cover.coop_door') | replace('_', ' ') | title,
+          run_door=states('cover.run_door_door') | replace('_', ' ') | title,
+          heater_1=states('switch.chicken_coop_waterer1') | title,
+          heater_2=states('switch.chicken_coop_waterer2') | title,
+          sent_at=now().strftime('%b %d, %I:%M %p'),
+          timezone=now().strftime('%Z')
+        ) }}

@@ -1,0 +1,65 @@
+<style>
+  .coop { width:100%; height:100%; box-sizing:border-box; padding:16px 20px 10px; display:flex; flex-direction:column; gap:10px; color:#000; background:#fff; font-family:Arial,sans-serif; }
+  .coop * { box-sizing:border-box; }
+  .coop-header { display:flex; justify-content:space-between; align-items:baseline; border-bottom:3px solid #000; padding-bottom:6px; }
+  .coop-title { font-size:24px; font-weight:700; }
+  .coop-summary { font-size:19px; font-weight:700; }
+  .coop-attention { background:#000; color:#fff; padding:3px 8px; }
+  .coop-main { display:grid; grid-template-columns:220px 1fr; gap:22px; }
+  .coop-food { display:flex; flex-direction:column; gap:10px; }
+  .coop-feeder { border:2px solid #000; padding:8px 12px; }
+  .coop-feeder-top { display:flex; justify-content:space-between; font-size:17px; font-weight:700; }
+  .coop-level { font-size:48px; font-weight:700; line-height:1; margin:2px 0 6px; }
+  .coop-level small { font-size:24px; }
+  .coop-bar { height:10px; border:2px solid #000; }
+  .coop-fill { height:100%; background:#000; }
+  .coop-devices { width:100%; border-collapse:collapse; font-size:17px; }
+  .coop-devices th { font-size:13px; font-weight:400; text-align:left; border-bottom:2px solid #000; padding:0 4px 4px; }
+  .coop-devices td { border-bottom:1px solid #000; padding:4px; }
+  .coop-devices td:nth-child(2) { font-weight:700; }
+  .coop-devices th:last-child,.coop-devices td:last-child { text-align:right; }
+  .coop-issues { flex:1; min-height:0; overflow:hidden; font-size:16px; line-height:1.3; }
+  .coop-issues ul { margin:0; padding-left:20px; }
+  .coop-footer { border-top:1px solid #000; padding-top:5px; font-size:12px; display:flex; justify-content:space-between; gap:10px; }
+</style>
+<div class="layout layout--col">
+  <div class="coop">
+    <div class="coop-header">
+      <span class="coop-title">Chicken Coop</span>
+      <span class="coop-summary {% if issue_count > 0 %}coop-attention{% endif %}">{{ summary | default: 'Waiting for HA data' | escape }}</span>
+    </div>
+    {% if schema_version == 2 %}
+    <div class="coop-main">
+      <div class="coop-food">
+        {% for feeder in feeders %}
+        <div class="coop-feeder">
+          <div class="coop-feeder-top"><span>{{ feeder.name | escape }}</span><span>{{ feeder.status | escape }}</span></div>
+          <div class="coop-level">{% if feeder.level != nil %}{{ feeder.level }}<small>%</small>{% else %}—{% endif %}</div>
+          <div class="coop-bar"><div class="coop-fill" style="width:{{ feeder.level | default: 0 }}%"></div></div>
+        </div>
+        {% endfor %}
+      </div>
+      <table class="coop-devices">
+        <thead><tr><th>Device</th><th>Status</th><th>Battery</th></tr></thead>
+        <tbody>
+          {% for device in devices %}
+          <tr><td>{{ device.name | escape }}</td><td>{{ device.state | escape }}</td><td>{% if device.battery != nil %}{{ device.battery }}%{% elsif device.has_battery %}?{% else %}—{% endif %}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="coop-issues">
+      {% if issue_count > 0 %}
+      <ul>{% for issue in issues limit: 3 %}<li>{{ issue | escape }}</li>{% endfor %}</ul>
+      {% if issue_count > 3 %}<div>+ {{ issue_count | minus: 3 }} more — check Home Assistant</div>{% endif %}
+      {% else %}<div>No refill or device alerts reported.</div>{% endif %}
+    </div>
+    {% else %}
+    <div class="coop-issues">Waiting for the updated chicken payload. Check the plugin’s Your Variables panel and preview after the next HA update.</div>
+    {% endif %}
+    <div class="coop-footer">
+      <span>HA sent: {{ sent_at | default: 'No data received' | escape }} {{ timezone | escape }}</span>
+      <span>Omlet readings may be delayed · v2</span>
+    </div>
+  </div>
+</div>

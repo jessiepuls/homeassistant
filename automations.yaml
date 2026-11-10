@@ -460,3 +460,32 @@
         target:
           entity_id: input_boolean.chicken_plug_offline_alert_active
   mode: single
+
+- id: '1794243600001'
+  alias: Chicken TRMNL display update
+  description: Send chicken status every ten minutes and after startup; TRMNL refreshes independently.
+  triggers:
+  - trigger: time_pattern
+    minutes: /10
+  - trigger: homeassistant
+    event: start
+  conditions: []
+  actions:
+  - if:
+    - condition: template
+      value_template: "{{ trigger is defined and trigger.platform == 'homeassistant' }}"
+    then:
+    - delay: '00:00:45'
+  - condition: template
+    value_template: "{{ state_attr('sensor.chicken_trmnl', 'payload') is mapping }}"
+  - action: rest_command.chicken_trmnl_push
+    response_variable: trmnl_response
+  - if:
+    - condition: template
+      value_template: "{{ trmnl_response.status | int(0) != 200 }}"
+    then:
+    - stop: TRMNL rejected the chicken screen update; check the REST response in this trace.
+      error: true
+  mode: single
+  trace:
+    stored_traces: 5

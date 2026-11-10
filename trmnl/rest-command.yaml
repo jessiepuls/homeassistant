@@ -1,0 +1,9 @@
+chicken_trmnl_push:
+  url: !secret chicken_trmnl_webhook_url
+  method: POST
+  content_type: application/json
+  headers:
+    User-Agent: HomeAssistant-Chicken-Display/1.0
+  timeout: 20
+  payload: >-
+    {{ dict(merge_variables=state_attr('sensor.chicken_trmnl', 'payload') or {}) | to_json }}

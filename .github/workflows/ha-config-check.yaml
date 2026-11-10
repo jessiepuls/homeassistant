@@ -15,6 +15,10 @@ jobs:
         id: ha
         run: echo "version=$(cat .HA_VERSION)" >> "$GITHUB_OUTPUT"
 
+      # CI validates structure only and never calls the real webhook.
+      - name: Supply test-only webhook secret
+        run: 'echo "chicken_trmnl_webhook_url: https://example.invalid/trmnl" > secrets.yaml'
+
       - name: Run HA config check
         run: |
           docker run --rm \

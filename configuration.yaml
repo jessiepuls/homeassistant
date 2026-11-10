@@ -92,3 +92,6 @@ input_text:
     icon: mdi:magnify
     max: 100
     mode: text
+
+# Push a compact chicken status screen to the private TRMNL plugin.
+rest_command: !include trmnl/rest-command.yaml
