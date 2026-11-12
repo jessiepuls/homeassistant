@@ -118,8 +118,8 @@ Button Card, Mini Media Player, State Switch, and Config Template Card.
 Check that their installed paths match `lovelace.resources` in `configuration.yaml`.
 
 Restore or supply room photos and styles under `www/`, updating dashboard paths
-as needed. The keyboard module at `www/dashboard/music-hotkeys.js` and the State
-Bonding blueprint under `blueprints/automation/chrissalter/` are included in Git.
+as needed. The dashboard modules in `www/dashboard/` (including the shared media player)
+and the State Bonding blueprint under `blueprints/automation/chrissalter/` are included in Git.
 
 Keep credentials in HA’s integration settings or the untracked `secrets.yaml`.
 Check the configuration, restart HA to load the integrations and dashboard, then

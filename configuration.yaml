@@ -59,6 +59,8 @@ lovelace:
   resource_mode: yaml
   resources:
     - type: module
+      url: /local/dashboard/porch-player.js?v=6
+    - type: module
       url: /local/dashboard/music-hotkeys.js?v=2
     - type: module
       url: /local/dashboard/podcast-chapters.js?v=1

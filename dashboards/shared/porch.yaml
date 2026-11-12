@@ -12,13 +12,12 @@ cards:
       height: calc(100vh - var(--header-height, 0px) - 4px)
       box-sizing: border-box
       padding: 8px
-      grid-gap: 8px
-      grid-template-columns: 3fr 1fr 1fr
-      grid-template-rows: auto 1fr 1fr 1fr 1fr
+      grid-gap: 12px
+      grid-template-columns: 2.1fr 1fr 1fr
+      grid-template-rows: auto 1fr 1fr auto
       grid-template-areas: |
-        "media weather weather"
+        "media climate climate"
         "media lamp table"
-        "media heater heater"
         "media string ceiling"
         "media fan fan"
       mediaquery:
@@ -28,157 +27,94 @@ cards:
           grid-template-rows: auto
           grid-template-areas: |
             "media media"
-            "weather weather"
+            "climate climate"
             "lamp table"
-            "heater heater"
             "string ceiling"
             "fan fan"
     cards:
-      - type: custom:mod-card
+      - type: custom:dashboard-media-player
+        entity: media_player.three_season_porch
+        listen_path: /lovelace-main-panel/music
         view_layout:
           grid-area: media
-        card_mod:
-          style:
-            .: |
-              :host { display: block; height: 100%; min-height: 0; }
-              ha-card {
-                display: flex;
-                height: 100%;
-                min-height: 240px;
-                padding: 0;
-                border: none;
-                background: none;
-                box-shadow: none;
-              }
-              state-switch { display: block; flex: 1; height: 100%; min-width: 0; }
-              @media (max-width: 768px) {
-                :host { height: auto; }
-                ha-card { height: auto; aspect-ratio: 1; }
-              }
-            state-switch$:
-              .: |
-                :host { display: block; height: 100%; }
-                #root {
-                  height: 100%;
-                  margin: 0;
-                  padding: 0;
-                  box-sizing: border-box;
-                  grid-template-rows: minmax(0, 1fr) 0px;
-                }
-                #root > div.visible { height: 100%; min-height: 0; }
-                #root > div > mini-media-player { display: block; height: 100%; }
-              mini-media-player$: |
-                :host { display: block; height: 100%; }
-                ha-card { height: 100%; min-height: 240px; }
-                ha-card:before { padding-top: 0 !important; transition: none !important; }
-                .mmp-player { margin-top: auto; transition: none !important; }
-        card:
-          type: custom:state-switch
-          entity: template
-          template: '{{ ''grouped'' if (state_attr(''media_player.three_season_porch'', ''group_members'') or []) | length > 1 else ''solo'' }}'
-          default: solo
-          card_mod:
-            style: |
-              :host { display: block; height: 100%; min-height: 0; }
-              #root { height: 100%; grid-template-rows: minmax(0, 1fr) 0px; box-sizing: border-box; }
-              #root > div.visible { height: 100%; min-height: 0; }
-              mini-media-player { display: block; height: 100%; }
-          states:
-            solo:
-              type: custom:mini-media-player
-              entity: media_player.three_season_porch
-              name: Three Season Porch
-              artwork: full-cover
-              hide:
-                power: true
-                source: true
-                group_button: true
-              tap_action:
-                action: navigate
-                navigation_path: /lovelace-main-panel/music
-              speaker_group:
-                platform: media_player
-                sync_volume: false
-                entities:
-                - entity_id: media_player.living_room_2
-                  name: Living Room
-                - entity_id: media_player.office_2
-                  name: Office
-                - entity_id: media_player.dining_room_2
-                  name: Dining Room
-                - entity_id: media_player.three_season_porch
-                  name: Three Season Porch
-                - entity_id: media_player.bedroom_2
-                  name: Bedroom
-                - entity_id: media_player.basement_2
-                  name: Basement
-                - entity_id: media_player.record_player
-                  name: Record Player
-              card_mod:
-                style: |
-                  :host { display: block; height: 100%; }
-                  ha-card { height: 100%; min-height: 240px; }
-                  ha-card:before { padding-top: 0 !important; transition: none !important; }
-                  .mmp-player { margin-top: auto; transition: none !important; }
-                  @media (max-width: 768px) {
-                    :host { height: auto; }
-                    ha-card { height: auto; aspect-ratio: 1; }
-                  }
-            grouped:
-              type: custom:mini-media-player
-              entity: media_player.three_season_porch
-              name: Three Season Porch
-              artwork: full-cover
-              hide:
-                power: true
-                source: true
-                group_button: true
-              tap_action:
-                action: navigate
-                navigation_path: /lovelace-main-panel/music
-              speaker_group:
-                platform: media_player
-                sync_volume: true
-                entities:
-                - entity_id: media_player.living_room_2
-                  name: Living Room
-                - entity_id: media_player.office_2
-                  name: Office
-                - entity_id: media_player.dining_room_2
-                  name: Dining Room
-                - entity_id: media_player.three_season_porch
-                  name: Three Season Porch
-                - entity_id: media_player.bedroom_2
-                  name: Bedroom
-                - entity_id: media_player.basement_2
-                  name: Basement
-                - entity_id: media_player.record_player
-                  name: Record Player
-              card_mod:
-                style: |
-                  :host { display: block; height: 100%; }
-                  ha-card { height: 100%; min-height: 240px; }
-                  ha-card:before { padding-top: 0 !important; transition: none !important; }
-                  .mmp-player { margin-top: auto; transition: none !important; }
-                  @media (max-width: 768px) {
-                    :host { height: auto; }
-                    ha-card { height: auto; aspect-ratio: 1; }
-                  }
-      - type: weather-forecast
-        entity: weather.openweathermap
-        forecast_type: hourly
-        view_layout:
-          grid-area: weather
       - type: custom:button-card
-        template: porch_tile
-        entity: switch.heater
-        name: Heater
-        icon: mdi:fireplace
-        state:
-          - color: orange
-            value: "on"
+        entity: sensor.three_season_porch_three_season_porch_sensor_temperature
+        icon: mdi:thermometer
+        show_name: false
+        show_state: true
+        tap_action:
+          action: more-info
         view_layout:
-          grid-area: heater
+          grid-area: climate
+        styles:
+          card:
+            - padding: 16px
+            - box-shadow: none
+          grid:
+            - grid-template-areas: '"i s heater"'
+            - grid-template-columns: 24px 1fr calc((100% - 12px) / 2)
+            - column-gap: 8px
+          icon:
+            - width: 22px
+            - color: var(--secondary-text-color)
+          state:
+            - justify-self: start
+            - font-size: clamp(24px, 3.5vw, 42px)
+            - font-weight: 500
+          custom_fields:
+            heater:
+              - width: 100%
+        custom_fields:
+          heater:
+            card:
+              type: custom:button-card
+              entity: switch.heater
+              name: Heater
+              icon: mdi:fireplace
+              show_icon: true
+              show_state: true
+              tap_action:
+                action: toggle
+              hold_action:
+                action: more-info
+              state:
+                - value: "on"
+                  styles:
+                    card:
+                      - background: rgba(255, 180, 50, 0.12)
+                      - border-color: rgba(255, 180, 50, 0.35)
+                    icon:
+                      - color: var(--warning-color)
+                    state:
+                      - color: var(--warning-color)
+              styles:
+                card:
+                  - padding: 12px
+                  - min-height: 68px
+                  - box-shadow: none
+                  - background: var(--secondary-background-color)
+                  - border: 1px solid var(--divider-color)
+                  - border-radius: 10px
+                  - cursor: pointer
+                grid:
+                  - grid-template-areas: '"i" "n" "s"'
+                  - grid-template-columns: 1fr
+                  - grid-template-rows: min-content min-content min-content
+                  - align-content: center
+                  - row-gap: 6px
+                img_cell:
+                  - justify-self: start
+                  - width: 24px
+                  - height: 24px
+                icon:
+                  - width: 24px
+                  - color: var(--secondary-text-color)
+                name:
+                  - justify-self: start
+                state:
+                  - justify-self: start
+                  - font-size: 12px
+                  - color: var(--secondary-text-color)
       - type: custom:button-card
         template: porch_tile
         entity: light.three_season_porch_lamp2
@@ -207,10 +143,137 @@ cards:
         icon: mdi:ceiling-light
         view_layout:
           grid-area: ceiling
-      - type: tile
+      - type: custom:button-card
         entity: fan.three_season_porch_ceiling_fan
         name: Fan
-        features:
-          - type: fan-speed
+        show_icon: false
+        show_state: true
+        tap_action:
+          action: none
         view_layout:
           grid-area: fan
+        styles:
+          card:
+          - padding: 16px
+          - box-shadow: none
+          grid:
+          - grid-template-areas: '"n s" "controls controls"'
+          - grid-template-columns: 1fr auto
+          - row-gap: 12px
+          name:
+          - justify-self: start
+          state:
+          - font-size: 12px
+          - color: var(--secondary-text-color)
+        custom_fields:
+          controls:
+            card:
+              type: horizontal-stack
+              cards:
+              - type: custom:button-card
+                entity: fan.three_season_porch_ceiling_fan
+                name: 'Off'
+                show_icon: false
+                tap_action:
+                  action: call-service
+                  service: fan.turn_off
+                  service_data:
+                    entity_id: fan.three_season_porch_ceiling_fan
+                state:
+                - operator: template
+                  value: '[[[ return entity && entity.state === ''off''; ]]]'
+                  styles:
+                    card:
+                    - background: var(--primary-color)
+                    - border-color: var(--primary-color)
+                    name:
+                    - color: var(--text-primary-color)
+                styles:
+                  card:
+                  - min-height: 42px
+                  - padding: 8px 4px
+                  - border-radius: 10px
+                  - box-shadow: none
+                  name:
+                  - font-size: 13px
+              - type: custom:button-card
+                entity: fan.three_season_porch_ceiling_fan
+                name: Low
+                show_icon: false
+                tap_action:
+                  action: call-service
+                  service: fan.set_percentage
+                  service_data:
+                    entity_id: fan.three_season_porch_ceiling_fan
+                    percentage: 33
+                state:
+                - operator: template
+                  value: '[[[ return entity && entity.state === ''on'' && Math.max(1, Math.round((entity.attributes.percentage || 0) * 3 / 100)) === 1; ]]]'
+                  styles:
+                    card:
+                    - background: var(--primary-color)
+                    - border-color: var(--primary-color)
+                    name:
+                    - color: var(--text-primary-color)
+                styles:
+                  card:
+                  - min-height: 42px
+                  - padding: 8px 4px
+                  - border-radius: 10px
+                  - box-shadow: none
+                  name:
+                  - font-size: 13px
+              - type: custom:button-card
+                entity: fan.three_season_porch_ceiling_fan
+                name: Med
+                show_icon: false
+                tap_action:
+                  action: call-service
+                  service: fan.set_percentage
+                  service_data:
+                    entity_id: fan.three_season_porch_ceiling_fan
+                    percentage: 66
+                state:
+                - operator: template
+                  value: '[[[ return entity && entity.state === ''on'' && Math.max(1, Math.round((entity.attributes.percentage || 0) * 3 / 100)) === 2; ]]]'
+                  styles:
+                    card:
+                    - background: var(--primary-color)
+                    - border-color: var(--primary-color)
+                    name:
+                    - color: var(--text-primary-color)
+                styles:
+                  card:
+                  - min-height: 42px
+                  - padding: 8px 4px
+                  - border-radius: 10px
+                  - box-shadow: none
+                  name:
+                  - font-size: 13px
+              - type: custom:button-card
+                entity: fan.three_season_porch_ceiling_fan
+                name: High
+                show_icon: false
+                tap_action:
+                  action: call-service
+                  service: fan.set_percentage
+                  service_data:
+                    entity_id: fan.three_season_porch_ceiling_fan
+                    percentage: 100
+                state:
+                - operator: template
+                  value: '[[[ return entity && entity.state === ''on'' && Math.max(1, Math.round((entity.attributes.percentage || 0) * 3 / 100)) === 3; ]]]'
+                  styles:
+                    card:
+                    - background: var(--primary-color)
+                    - border-color: var(--primary-color)
+                    name:
+                    - color: var(--text-primary-color)
+                styles:
+                  card:
+                  - min-height: 42px
+                  - padding: 8px 4px
+                  - border-radius: 10px
+                  - box-shadow: none
+                  name:
+                  - font-size: 13px

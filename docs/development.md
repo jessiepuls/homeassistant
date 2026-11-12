@@ -12,7 +12,7 @@ see the [README](../README.md).
 | `dashboards/shared/` | Tab layouts, mobile Home controls, shared button templates |
 | `templates/` | Music data/search results, podcast episodes and chapters, and chicken alert summary |
 | `custom_components/podcast_chapters/` | Reads chapter markers embedded in podcast MP3s |
-| `www/dashboard/` | Keyboard shortcuts and podcast chapter list modules |
+| `www/dashboard/` | Keyboard shortcuts, podcast chapters, and the shared dashboard media player |
 | `automations.yaml` | Lighting and chicken coop automations |
 | `scripts.yaml` | Bedtime, music destinations/playback, and heater controls |
 | `lights.yaml`, `groups.yaml`, `scenes.yaml` | Light groups, entity groups, and scenes |

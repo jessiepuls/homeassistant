@@ -1,5 +1,6 @@
 # Shared household dashboard. Keep this timestamp current after editing included views:
 # Home Assistant invalidates its YAML dashboard cache using this entry-point file.
+# Cache revision: 2026-11-12.5
 button_card_templates: !include shared/porch-button-templates.yaml
 views:
   - !include shared/home.yaml

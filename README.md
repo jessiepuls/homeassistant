@@ -11,7 +11,7 @@ Open **Main Panel** in Home Assistant. All screens share these four tabs:
 | Tab | What’s there | Startup path |
 |---|---|---|
 | Home | Room controls, weather, and music playback | `/lovelace-main-panel/home` |
-| Porch | Porch lights, fan, heater, weather, and music | `/lovelace-main-panel/porch` |
+| Porch | Playback, room temperature, heater, lights, and fan | `/lovelace-main-panel/porch` |
 | Listen | Speaker selection, search, audiobooks, podcasts, recommendations, playlists, and albums | `/lovelace-main-panel/music` |
 | Chickens | Doors, feeders, run light, water heaters, and device status | `/lovelace-main-panel/chicken-coop` |
 

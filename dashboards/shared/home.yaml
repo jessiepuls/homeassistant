@@ -63,7 +63,7 @@ sections:
           #root > * { display: block; margin: 0 !important; }
           #root > :first-child { flex: 0 0 auto; height: auto; }
           #root > :first-child clock-weather-card { display: block; height: auto; }
-          #root > :last-child { flex: 1 0 180px; min-height: 180px; }
+          #root > :last-child { flex: 1 0 270px; min-height: 270px; }
           @media (max-width: 768px) {
             #root { height: auto; }
             #root > :last-child { flex: 0 0 auto; }
@@ -76,116 +76,10 @@ sections:
         sections:
           forecast_list:
             count: 3
-      - type: custom:mod-card
-        card_mod:
-          style:
-            .: |
-              :host { display: block; height: 100%; min-height: 0; }
-              ha-card {
-                height: 100%;
-                min-height: 180px;
-                padding: 0;
-                border: none;
-                box-shadow: none;
-                background: none;
-              }
-              state-switch { display: block; height: 100%; }
-            state-switch$:
-              .: |
-                :host { display: block; height: 100%; }
-                #root {
-                  height: 100%;
-                  margin: 0;
-                  padding: 0;
-                  box-sizing: border-box;
-                  grid-template-rows: minmax(0, 1fr) 0px;
-                }
-                #root > div.visible { height: 100%; min-height: 0; }
-                mini-media-player { display: block; height: 100%; }
-        card:
-          type: custom:state-switch
-          entity: template
-          template: '{{ ''grouped'' if (state_attr(''media_player.living_room_2'', ''group_members'') or []) | length > 1 else ''solo'' }}'
-          default: solo
-          states:
-            solo:
-              type: custom:mini-media-player
-              entity: media_player.living_room_2
-              name: Living Room
-              artwork: cover
-              card_mod:
-                style: |
-                  :host { display: block; height: 100%; }
-                  ha-card { height: 100%; min-height: 180px; box-sizing: border-box; }
-                  .mmp-player {
-                    margin-top: auto;
-                    width: 100%;
-                    background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.25));
-                  }
-              hide:
-                power: true
-                source: true
-                group_button: true
-              tap_action:
-                action: navigate
-                navigation_path: /lovelace-main-panel/music
-              speaker_group:
-                platform: media_player
-                sync_volume: false
-                entities:
-                - entity_id: media_player.living_room_2
-                  name: Living Room
-                - entity_id: media_player.office_2
-                  name: Office
-                - entity_id: media_player.dining_room_2
-                  name: Dining Room
-                - entity_id: media_player.three_season_porch
-                  name: Three Season Porch
-                - entity_id: media_player.bedroom_2
-                  name: Bedroom
-                - entity_id: media_player.basement_2
-                  name: Basement
-                - entity_id: media_player.record_player
-                  name: Record Player
-            grouped:
-              type: custom:mini-media-player
-              entity: media_player.living_room_2
-              name: Living Room
-              artwork: cover
-              card_mod:
-                style: |
-                  :host { display: block; height: 100%; }
-                  ha-card { height: 100%; min-height: 180px; box-sizing: border-box; }
-                  .mmp-player {
-                    margin-top: auto;
-                    width: 100%;
-                    background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.25));
-                  }
-              hide:
-                power: true
-                source: true
-                group_button: true
-              tap_action:
-                action: navigate
-                navigation_path: /lovelace-main-panel/music
-              speaker_group:
-                platform: media_player
-                sync_volume: true
-                entities:
-                - entity_id: media_player.living_room_2
-                  name: Living Room
-                - entity_id: media_player.office_2
-                  name: Office
-                - entity_id: media_player.dining_room_2
-                  name: Dining Room
-                - entity_id: media_player.three_season_porch
-                  name: Three Season Porch
-                - entity_id: media_player.bedroom_2
-                  name: Bedroom
-                - entity_id: media_player.basement_2
-                  name: Basement
-                - entity_id: media_player.record_player
-                  name: Record Player
+      - type: custom:dashboard-media-player
+        entity: media_player.living_room_2
+        compact: true
+        listen_path: /lovelace-main-panel/music
 - type: grid
   visibility:
   - condition: screen

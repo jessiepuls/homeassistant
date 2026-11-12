@@ -143,208 +143,25 @@ cards:
       grid-area: playback
     states:
       Main Floor:
-        type: custom:state-switch
-        entity: template
-        template: '{{ ''grouped'' if (state_attr(''media_player.living_room_2'', ''group_members'') or []) | length > 1 else ''solo'' }}'
-        default: solo
-        states:
-          solo:
-            type: custom:mini-media-player
-            entity: media_player.living_room_2
-            name: Main Floor
-            artwork: default
-            hide:
-              power: true
-              source: true
-              group_button: true
-              runtime: false
-              runtime_remaining: false
-              jump: false
-            jump_amount: 15
-            card_mod:
-              style: |
-                ha-card { --mini-media-player-progress-height: 8px; }
-            info: scroll
-            speaker_group:
-              platform: media_player
-              sync_volume: false
-              entities:
-              - entity_id: media_player.living_room_2
-                name: Living Room
-              - entity_id: media_player.office_2
-                name: Office
-              - entity_id: media_player.dining_room_2
-                name: Dining Room
-              - entity_id: media_player.three_season_porch
-                name: Three Season Porch
-              - entity_id: media_player.bedroom_2
-                name: Bedroom
-              - entity_id: media_player.basement_2
-                name: Basement
-              - entity_id: media_player.record_player
-                name: Record Player
-          grouped:
-            type: custom:mini-media-player
-            entity: media_player.living_room_2
-            name: Main Floor
-            artwork: default
-            hide:
-              power: true
-              source: true
-              group_button: true
-              runtime: false
-              runtime_remaining: false
-              jump: false
-            jump_amount: 15
-            card_mod:
-              style: |
-                ha-card { --mini-media-player-progress-height: 8px; }
-            info: scroll
-            speaker_group:
-              platform: media_player
-              sync_volume: true
-              entities:
-              - entity_id: media_player.living_room_2
-                name: Living Room
-              - entity_id: media_player.office_2
-                name: Office
-              - entity_id: media_player.dining_room_2
-                name: Dining Room
-              - entity_id: media_player.three_season_porch
-                name: Three Season Porch
-              - entity_id: media_player.bedroom_2
-                name: Bedroom
-              - entity_id: media_player.basement_2
-                name: Basement
-              - entity_id: media_player.record_player
-                name: Record Player
+        type: custom:dashboard-media-player
+        entity: media_player.living_room_2
+        hide_browse: true
       Everywhere:
-        type: custom:state-switch
-        entity: template
-        template: '{{ ''grouped'' if (state_attr(''media_player.living_room_2'', ''group_members'') or []) | length > 1 else ''solo'' }}'
-        default: solo
-        states:
-          solo:
-            type: custom:mini-media-player
-            entity: media_player.living_room_2
-            name: Everywhere
-            artwork: default
-            hide:
-              power: true
-              source: true
-              group_button: true
-              runtime: false
-              runtime_remaining: false
-              jump: false
-            jump_amount: 15
-            card_mod:
-              style: |
-                ha-card { --mini-media-player-progress-height: 8px; }
-            info: scroll
-            speaker_group:
-              platform: media_player
-              sync_volume: false
-              entities:
-              - entity_id: media_player.living_room_2
-                name: Living Room
-              - entity_id: media_player.office_2
-                name: Office
-              - entity_id: media_player.dining_room_2
-                name: Dining Room
-              - entity_id: media_player.three_season_porch
-                name: Three Season Porch
-              - entity_id: media_player.bedroom_2
-                name: Bedroom
-              - entity_id: media_player.basement_2
-                name: Basement
-              - entity_id: media_player.record_player
-                name: Record Player
-          grouped:
-            type: custom:mini-media-player
-            entity: media_player.living_room_2
-            name: Everywhere
-            artwork: default
-            hide:
-              power: true
-              source: true
-              group_button: true
-              runtime: false
-              runtime_remaining: false
-              jump: false
-            jump_amount: 15
-            card_mod:
-              style: |
-                ha-card { --mini-media-player-progress-height: 8px; }
-            info: scroll
-            speaker_group:
-              platform: media_player
-              sync_volume: true
-              entities:
-              - entity_id: media_player.living_room_2
-                name: Living Room
-              - entity_id: media_player.office_2
-                name: Office
-              - entity_id: media_player.dining_room_2
-                name: Dining Room
-              - entity_id: media_player.three_season_porch
-                name: Three Season Porch
-              - entity_id: media_player.bedroom_2
-                name: Bedroom
-              - entity_id: media_player.basement_2
-                name: Basement
-              - entity_id: media_player.record_player
-                name: Record Player
+        type: custom:dashboard-media-player
+        entity: media_player.living_room_2
+        hide_browse: true
       Bedroom:
-        type: custom:mini-media-player
+        type: custom:dashboard-media-player
         entity: media_player.bedroom_2
-        name: Bedroom
-        artwork: default
-        hide:
-          power: true
-          source: true
-          group_button: true
-          runtime: false
-          runtime_remaining: false
-          jump: false
-        jump_amount: 15
-        card_mod:
-          style: |
-            ha-card { --mini-media-player-progress-height: 8px; }
-        info: scroll
+        hide_browse: true
       Basement:
-        type: custom:mini-media-player
+        type: custom:dashboard-media-player
         entity: media_player.basement_2
-        name: Basement
-        artwork: default
-        hide:
-          power: true
-          source: true
-          group_button: true
-          runtime: false
-          runtime_remaining: false
-          jump: false
-        jump_amount: 15
-        card_mod:
-          style: |
-            ha-card { --mini-media-player-progress-height: 8px; }
-        info: scroll
+        hide_browse: true
       Record Player:
-        type: custom:mini-media-player
+        type: custom:dashboard-media-player
         entity: media_player.record_player
-        name: Record Player
-        artwork: default
-        hide:
-          power: true
-          source: true
-          group_button: true
-          runtime: false
-          runtime_remaining: false
-          jump: false
-        jump_amount: 15
-        card_mod:
-          style: |
-            ha-card { --mini-media-player-progress-height: 8px; }
-        info: scroll
+        hide_browse: true
   - type: custom:podcast-chapters
     entity: sensor.music_podcast_chapters
     view_layout:
