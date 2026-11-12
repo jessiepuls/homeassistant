@@ -492,8 +492,11 @@
 
 - id: bedroom_temperature_schedule
   alias: Bedroom temperature schedule
-  description: Bedroom from 10 pm to 8 am, with early bedtime and wake-up overrides; reconcile after restarts and reconnects.
+  description: Bedroom from 10 pm to 8 am only while someone is home, with early bedtime and wake-up overrides; reconcile on presence changes, restarts and reconnects.
   triggers:
+  - trigger: state
+    entity_id: zone.home
+    to: null
   - trigger: time
     at: '22:00:00'
   - trigger: time

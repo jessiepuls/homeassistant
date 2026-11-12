@@ -1,5 +1,5 @@
 # Shared music destinations, search, playback, and artwork rows.
-title: Music
+title: Listen
 show_icon_and_title: true
 path: music
 icon: mdi:music
@@ -13,7 +13,7 @@ cards:
     padding: 8px
     grid-gap: 12px
     grid-template-columns: minmax(0, 1fr)
-    grid-template-areas: '"destination" "playback" "chapters" "hotkeys" "search" "podcasts" "recommendations" "playlists" "albums"'
+    grid-template-areas: '"destination" "playback" "chapters" "hotkeys" "search" "recommendations" "playlists" "albums" "podcasts" "audiobooks"'
   cards:
   - type: grid
     columns: 5
@@ -368,7 +368,7 @@ cards:
       show_header_toggle: false
       entities:
       - entity: input_text.music_search_query
-        name: Search music and podcasts
+        name: Search music, podcasts, and audiobooks
     - type: grid
       columns: 2
       square: false
@@ -445,7 +445,7 @@ cards:
                 ? ''custom:layout-card'' : ''markdown''}'
               content: '${states[vars[0]]?.attributes.query !== (states[''input_text.music_search_query'']?.state || '''').trim() ? ''Searching…'' : states[vars[0]]?.state === ''error''
                 ? ''Search could not load. Check the Music Assistant connection and try again.'' : (states[''input_text.music_search_query'']?.state || '''').trim().length < 2 ? ''Enter
-                at least two characters.'' : ''No matching music found.''}'
+                at least two characters.'' : ''No matching music, podcasts, or audiobooks found.''}'
               layout_type: grid
               layout:
                 card_margin: 0px
@@ -459,14 +459,14 @@ cards:
                   name: String(item.name || 'Untitled').replace(/\[\[\[/g, ''),
                   entity_picture: typeof item.image === 'string' ? item.image : item.image?.path,
                   show_entity_picture: !!item.image,
-                  icon: item.media_type === 'album' ? 'mdi:album' : item.media_type === 'podcast' ? 'mdi:podcast' : 'mdi:playlist-music',
+                  icon: item.media_type === 'audiobook' ? 'mdi:book-headphones' : item.media_type === 'album' ? 'mdi:album' : item.media_type === 'podcast' ? 'mdi:podcast' : 'mdi:playlist-music',
                   show_name: true,
                   tap_action: item.media_type === 'podcast' ? {
                     action: 'call-service', service: 'script.music_open_podcast',
                     service_data: {uri: item.uri}
                   } : {
                     action: 'call-service', service: 'script.music_play_collection',
-                    service_data: {uri: item.uri, media_type: item.media_type || vars[1], radio_mode: true}
+                    service_data: {uri: item.uri, media_type: item.media_type || vars[1], radio_mode: item.media_type !== 'audiobook'}
                   },
                   styles: {
                     card: [{height: '184px'}, {padding: '8px'}, {'box-shadow': 'none'}],
@@ -474,162 +474,6 @@ cards:
                     img_cell: [{height: '128px'}],
                     entity_picture: [{width: '128px'}, {height: '128px'}, {'object-fit': 'cover'}, {'border-radius': '8px'}],
                     name: [{'white-space': 'normal'}, {'font-size': '14px'}, {'line-height': '1.3'}]
-                  }
-                }))}
-  - type: vertical-stack
-    view_layout:
-      grid-area: podcasts
-    cards:
-    - type: heading
-      heading: Podcasts
-      heading_style: subtitle
-    - type: custom:mod-card
-      card_mod:
-        style: |
-          ha-card {
-            overflow-x: auto;
-            background: transparent;
-            border: none;
-            box-shadow: none;
-            padding-bottom: 6px;
-          }
-          ha-card > config-template-card {
-            display: block;
-            width: max-content;
-            min-width: 100%;
-          }
-      card:
-        type: custom:config-template-card
-        entities:
-        - sensor.music_podcasts
-        - input_text.music_podcast_selected
-        variables:
-        - '''sensor.music_podcasts'''
-        - '''input_text.music_podcast_selected'''
-        card:
-          type: '${(states[vars[0]]?.attributes.items || []).length ? ''custom:layout-card'' : ''markdown''}'
-          content: '${!states[vars[0]] ? ''Loading music data. Restart Home Assistant once to load the new Music row sensors.'' : states[vars[0]].state === ''ready'' ? ''No podcasts
-            in your library. Check the Overcast provider in Music Assistant.'' : ''No podcasts loaded yet. Refresh music after Music Assistant has synced your library.''}'
-          layout_type: grid
-          layout:
-            card_margin: 0px
-            padding: 0px
-            grid-gap: 10px
-            grid-template-columns: ${'repeat(' + Math.max(1, (states[vars[0]]?.attributes.items || []).length) + ', 148px)'}
-            grid-template-rows: min-content
-          cards: |-
-            ${(states[vars[0]]?.attributes.items || []).filter(item => item.uri).map(item => ({
-              type: 'custom:button-card',
-              name: String(item.name || 'Untitled').replace(/\[\[\[/g, ''),
-              entity_picture: typeof item.image === 'string' ? item.image : item.image?.path,
-              show_entity_picture: !!item.image,
-              icon: 'mdi:podcast',
-              show_name: true,
-              tap_action: {
-                action: 'call-service', service: 'input_text.set_value',
-                service_data: {entity_id: vars[1], value: item.uri}
-              },
-              styles: {
-                card: [{height: '184px'}, {padding: '8px'}, {'box-shadow': 'none'},
-                  {outline: item.uri === states[vars[1]]?.state ? '2px solid var(--primary-color)' : 'none'}, {'outline-offset': '-2px'}],
-                grid: [{'grid-template-areas': '"i" "n"'}, {'grid-template-rows': '132px 1fr'}],
-                img_cell: [{height: '128px'}],
-                entity_picture: [{width: '128px'}, {height: '128px'}, {'object-fit': 'cover'}, {'border-radius': '8px'}],
-                name: [{'white-space': 'normal'}, {'font-size': '14px'}, {'line-height': '1.3'}]
-              }
-            }))}
-    - type: conditional
-      conditions:
-      - condition: state
-        entity: input_text.music_podcast_selected
-        state_not:
-        - ''
-        - unknown
-        - unavailable
-      card:
-        type: vertical-stack
-        cards:
-        - type: custom:button-card
-          entity: sensor.music_podcast_episodes
-          name: "[[[ return entity?.attributes.uri === states['input_text.music_podcast_selected']?.state && entity.attributes.podcast ? entity.attributes.podcast : 'Episodes'; ]]]"
-          label: Close
-          icon: mdi:close
-          show_state: false
-          show_label: true
-          tap_action:
-            action: call-service
-            service: input_text.set_value
-            service_data:
-              entity_id: input_text.music_podcast_selected
-              value: ''
-          styles:
-            card:
-            - height: 40px
-            - padding: 0 12px
-            grid:
-            - grid-template-areas: '"n l i"'
-            - grid-template-columns: 1fr auto 28px
-            name:
-            - justify-self: start
-            - font-weight: 500
-            label:
-            - color: var(--secondary-text-color)
-            icon:
-            - width: 20px
-        - type: custom:mod-card
-          card_mod:
-            style: |
-              ha-card {
-                overflow-x: auto;
-                background: transparent;
-                border: none;
-                box-shadow: none;
-                padding-bottom: 6px;
-              }
-              ha-card > config-template-card {
-                display: block;
-                width: max-content;
-                min-width: 100%;
-              }
-          card:
-            type: custom:config-template-card
-            entities:
-            - sensor.music_podcast_episodes
-            - input_text.music_podcast_selected
-            variables:
-            - '''sensor.music_podcast_episodes'''
-            - '''podcast_episode'''
-            card:
-              type: '${(states[vars[0]]?.attributes.uri === states[''input_text.music_podcast_selected'']?.state ? (states[vars[0]]?.attributes.items || []) : []).length ? ''custom:layout-card''
-                : ''markdown''}'
-              content: '${!states[vars[0]] ? ''Loading music data. Restart Home Assistant once to load the new Music row sensors.'' : states[vars[0]].attributes.uri !== states[''input_text.music_podcast_selected'']?.state
-                ? ''Loading episodes…'' : states[vars[0]].state === ''ready'' ? ''This podcast has no episodes.'' : ''Episodes could not load. Connect Music Assistant Queue Actions in Settings
-                → Devices & services, then use Refresh music below.''}'
-              layout_type: grid
-              layout:
-                card_margin: 0px
-                padding: 0px
-                grid-gap: 10px
-                grid-template-columns: ${'repeat(' + Math.max(1, (states[vars[0]]?.attributes.items || []).length) + ', 220px)'}
-                grid-template-rows: min-content
-              cards: |-
-                ${(states[vars[0]]?.attributes.uri === states['input_text.music_podcast_selected']?.state ? (states[vars[0]]?.attributes.items || []) : []).filter(item => item.uri).map(item => ({
-                  type: 'custom:button-card',
-                  name: String(item.name || 'Untitled').replace(/\[\[\[/g, ''),
-                  label: String(item.detail || '').replace(/\[\[\[/g, ''),
-                  show_icon: false,
-                  show_name: true,
-                  show_label: true,
-                  tap_action: {
-                    action: 'call-service', service: 'script.music_play_collection',
-                    service_data: {uri: item.uri, media_type: vars[1]}
-                  },
-                  styles: {
-                    card: [{height: '112px'}, {padding: '10px'}, {'box-shadow': 'none'}, {opacity: item.played ? '0.6' : '1'}],
-                    grid: [{'grid-template-areas': '"n" "l"'}, {'grid-template-rows': '1fr min-content'}],
-                    name: [{'white-space': 'normal'}, {'font-size': '14px'}, {'line-height': '1.3'}, {'justify-self': 'start'}, {'text-align': 'left'},
-                      {display: '-webkit-box'}, {'-webkit-line-clamp': '3'}, {'-webkit-box-orient': 'vertical'}, {overflow: 'hidden'}],
-                    label: [{'font-size': '12px'}, {color: 'var(--secondary-text-color)'}, {'justify-self': 'start'}]
                   }
                 }))}
   - type: vertical-stack
@@ -816,6 +660,222 @@ cards:
               entity_picture: typeof item.image === 'string' ? item.image : item.image?.path,
               show_entity_picture: !!item.image,
               icon: item.media_type === 'album' ? 'mdi:album' : 'mdi:playlist-music',
+              show_name: true,
+              tap_action: {
+                action: 'call-service', service: 'script.music_play_collection',
+                service_data: {uri: item.uri, media_type: item.media_type || vars[1]}
+              },
+              styles: {
+                card: [{height: '184px'}, {padding: '8px'}, {'box-shadow': 'none'}],
+                grid: [{'grid-template-areas': '"i" "n"'}, {'grid-template-rows': '132px 1fr'}],
+                img_cell: [{height: '128px'}],
+                entity_picture: [{width: '128px'}, {height: '128px'}, {'object-fit': 'cover'}, {'border-radius': '8px'}],
+                name: [{'white-space': 'normal'}, {'font-size': '14px'}, {'line-height': '1.3'}]
+              }
+            }))}
+  - type: vertical-stack
+    view_layout:
+      grid-area: podcasts
+    cards:
+    - type: heading
+      heading: Podcasts
+      heading_style: subtitle
+    - type: custom:mod-card
+      card_mod:
+        style: |
+          ha-card {
+            overflow-x: auto;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            padding-bottom: 6px;
+          }
+          ha-card > config-template-card {
+            display: block;
+            width: max-content;
+            min-width: 100%;
+          }
+      card:
+        type: custom:config-template-card
+        entities:
+        - sensor.music_podcasts
+        - input_text.music_podcast_selected
+        variables:
+        - '''sensor.music_podcasts'''
+        - '''input_text.music_podcast_selected'''
+        card:
+          type: '${(states[vars[0]]?.attributes.items || []).length ? ''custom:layout-card'' : ''markdown''}'
+          content: '${!states[vars[0]] ? ''Loading music data. Restart Home Assistant once to load the new Music row sensors.'' : states[vars[0]].state === ''ready'' ? ''No podcasts
+            in your library. Check the Overcast provider in Music Assistant.'' : ''No podcasts loaded yet. Refresh music after Music Assistant has synced your library.''}'
+          layout_type: grid
+          layout:
+            card_margin: 0px
+            padding: 0px
+            grid-gap: 10px
+            grid-template-columns: ${'repeat(' + Math.max(1, (states[vars[0]]?.attributes.items || []).length) + ', 148px)'}
+            grid-template-rows: min-content
+          cards: |-
+            ${(states[vars[0]]?.attributes.items || []).filter(item => item.uri).map(item => ({
+              type: 'custom:button-card',
+              name: String(item.name || 'Untitled').replace(/\[\[\[/g, ''),
+              entity_picture: typeof item.image === 'string' ? item.image : item.image?.path,
+              show_entity_picture: !!item.image,
+              icon: 'mdi:podcast',
+              show_name: true,
+              tap_action: {
+                action: 'call-service', service: 'input_text.set_value',
+                service_data: {entity_id: vars[1], value: item.uri}
+              },
+              styles: {
+                card: [{height: '184px'}, {padding: '8px'}, {'box-shadow': 'none'},
+                  {outline: item.uri === states[vars[1]]?.state ? '2px solid var(--primary-color)' : 'none'}, {'outline-offset': '-2px'}],
+                grid: [{'grid-template-areas': '"i" "n"'}, {'grid-template-rows': '132px 1fr'}],
+                img_cell: [{height: '128px'}],
+                entity_picture: [{width: '128px'}, {height: '128px'}, {'object-fit': 'cover'}, {'border-radius': '8px'}],
+                name: [{'white-space': 'normal'}, {'font-size': '14px'}, {'line-height': '1.3'}]
+              }
+            }))}
+    - type: conditional
+      conditions:
+      - condition: state
+        entity: input_text.music_podcast_selected
+        state_not:
+        - ''
+        - unknown
+        - unavailable
+      card:
+        type: vertical-stack
+        cards:
+        - type: custom:button-card
+          entity: sensor.music_podcast_episodes
+          name: "[[[ return entity?.attributes.uri === states['input_text.music_podcast_selected']?.state && entity.attributes.podcast ? entity.attributes.podcast : 'Episodes'; ]]]"
+          label: Close
+          icon: mdi:close
+          show_state: false
+          show_label: true
+          tap_action:
+            action: call-service
+            service: input_text.set_value
+            service_data:
+              entity_id: input_text.music_podcast_selected
+              value: ''
+          styles:
+            card:
+            - height: 40px
+            - padding: 0 12px
+            grid:
+            - grid-template-areas: '"n l i"'
+            - grid-template-columns: 1fr auto 28px
+            name:
+            - justify-self: start
+            - font-weight: 500
+            label:
+            - color: var(--secondary-text-color)
+            icon:
+            - width: 20px
+        - type: custom:mod-card
+          card_mod:
+            style: |
+              ha-card {
+                overflow-x: auto;
+                background: transparent;
+                border: none;
+                box-shadow: none;
+                padding-bottom: 6px;
+              }
+              ha-card > config-template-card {
+                display: block;
+                width: max-content;
+                min-width: 100%;
+              }
+          card:
+            type: custom:config-template-card
+            entities:
+            - sensor.music_podcast_episodes
+            - input_text.music_podcast_selected
+            variables:
+            - '''sensor.music_podcast_episodes'''
+            - '''podcast_episode'''
+            card:
+              type: '${(states[vars[0]]?.attributes.uri === states[''input_text.music_podcast_selected'']?.state ? (states[vars[0]]?.attributes.items || []) : []).length ? ''custom:layout-card''
+                : ''markdown''}'
+              content: '${!states[vars[0]] ? ''Loading music data. Restart Home Assistant once to load the new Music row sensors.'' : states[vars[0]].attributes.uri !== states[''input_text.music_podcast_selected'']?.state
+                ? ''Loading episodes…'' : states[vars[0]].state === ''ready'' ? ''This podcast has no episodes.'' : ''Episodes could not load. Connect Music Assistant Queue Actions in Settings
+                → Devices & services, then use Refresh music below.''}'
+              layout_type: grid
+              layout:
+                card_margin: 0px
+                padding: 0px
+                grid-gap: 10px
+                grid-template-columns: ${'repeat(' + Math.max(1, (states[vars[0]]?.attributes.items || []).length) + ', 220px)'}
+                grid-template-rows: min-content
+              cards: |-
+                ${(states[vars[0]]?.attributes.uri === states['input_text.music_podcast_selected']?.state ? (states[vars[0]]?.attributes.items || []) : []).filter(item => item.uri).map(item => ({
+                  type: 'custom:button-card',
+                  name: String(item.name || 'Untitled').replace(/\[\[\[/g, ''),
+                  label: String(item.detail || '').replace(/\[\[\[/g, ''),
+                  show_icon: false,
+                  show_name: true,
+                  show_label: true,
+                  tap_action: {
+                    action: 'call-service', service: 'script.music_play_collection',
+                    service_data: {uri: item.uri, media_type: vars[1]}
+                  },
+                  styles: {
+                    card: [{height: '112px'}, {padding: '10px'}, {'box-shadow': 'none'}, {opacity: item.played ? '0.6' : '1'}],
+                    grid: [{'grid-template-areas': '"n" "l"'}, {'grid-template-rows': '1fr min-content'}],
+                    name: [{'white-space': 'normal'}, {'font-size': '14px'}, {'line-height': '1.3'}, {'justify-self': 'start'}, {'text-align': 'left'},
+                      {display: '-webkit-box'}, {'-webkit-line-clamp': '3'}, {'-webkit-box-orient': 'vertical'}, {overflow: 'hidden'}],
+                    label: [{'font-size': '12px'}, {color: 'var(--secondary-text-color)'}, {'justify-self': 'start'}]
+                  }
+                }))}
+  - type: vertical-stack
+    view_layout:
+      grid-area: audiobooks
+    cards:
+    - type: heading
+      heading: Audiobooks
+      heading_style: subtitle
+    - type: custom:mod-card
+      card_mod:
+        style: |
+          ha-card {
+            overflow-x: auto;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            padding-bottom: 6px;
+          }
+          ha-card > config-template-card {
+            display: block;
+            width: max-content;
+            min-width: 100%;
+          }
+      card:
+        type: custom:config-template-card
+        entities:
+        - sensor.music_audiobooks
+        variables:
+        - '''sensor.music_audiobooks'''
+        - '''audiobook'''
+        card:
+          type: '${(states[vars[0]]?.attributes.items || []).length ? ''custom:layout-card'' : ''markdown''}'
+          content: '${!states[vars[0]] ? ''Audiobook library is loading.'' : states[vars[0]].state === ''ready'' ? ''No audiobooks found. Try Refresh music after syncing your Audible library.''
+            : ''No audiobooks loaded yet. Refresh music after Music Assistant has synced your library.''}'
+          layout_type: grid
+          layout:
+            card_margin: 0px
+            padding: 0px
+            grid-gap: 10px
+            grid-template-columns: ${'repeat(' + Math.max(1, (states[vars[0]]?.attributes.items || []).length) + ', 148px)'}
+            grid-template-rows: min-content
+          cards: |-
+            ${(states[vars[0]]?.attributes.items || []).filter(item => item.uri).map(item => ({
+              type: 'custom:button-card',
+              name: String(item.name || 'Untitled').replace(/\[\[\[/g, ''),
+              entity_picture: typeof item.image === 'string' ? item.image : item.image?.path,
+              show_entity_picture: !!item.image,
+              icon: 'mdi:book-headphones',
               show_name: true,
               tap_action: {
                 action: 'call-service', service: 'script.music_play_collection',

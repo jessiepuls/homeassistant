@@ -82,6 +82,73 @@
     attributes:
       items: '{{ music_albums_result.get(''items'', []) }}'
       updated_at: '{{ now().isoformat() }}'
+- triggers:
+  - trigger: homeassistant
+    event: start
+  - trigger: time_pattern
+    minutes: /1
+  - trigger: event
+    event_type: music_library_refresh
+  - trigger: event
+    event_type: event_template_reloaded
+  - trigger: state
+    entity_id:
+    - media_player.living_room_2
+    - media_player.bedroom_2
+    - media_player.basement_2
+    - media_player.record_player
+    to:
+    - paused
+    - idle
+    for:
+      seconds: 3
+  actions:
+  - variables:
+      music_audiobooks_result: {}
+      music_played_audiobooks_result: {}
+  - action: music_assistant.get_library
+    continue_on_error: true
+    data:
+      config_entry_id: 01M6HDCTCX7DZ1YYB2NCX1A6FH
+      media_type: audiobook
+      limit: 500
+      order_by: timestamp_added_desc
+    response_variable: music_audiobooks_result
+  # Use playback history, including unfinished books, rather than library play counts.
+  - if:
+    - condition: template
+      value_template: "{{ config_entry_attr('01M6HQY4RZEH5QJ44NT8E5CW5D', 'state') == 'loaded' }}"
+    then:
+    - action: mass_queue.send_command
+      continue_on_error: true
+      data:
+        config_entry_id: 01M6HQY4RZEH5QJ44NT8E5CW5D
+        command: music/recently_played_items
+        data:
+          media_types:
+          - audiobook
+          fully_played_only: false
+          limit: 500
+      response_variable: music_played_audiobooks_result
+  sensor:
+  - name: Music Audiobooks
+    unique_id: dashboard_music_audiobooks
+    state: '{{ ''ready'' if ''items'' in music_audiobooks_result else ''unavailable'' }}'
+    attributes:
+      items: >-
+        {% set books = music_audiobooks_result.get('items', []) %}
+        {% set ns = namespace(items=[], seen=[]) %}
+        {% for played in music_played_audiobooks_result.get('response', []) or [] %}
+          {% for book in books if book.get('uri') == played.get('uri') and book.get('uri') not in ns.seen %}
+            {% set ns.items = ns.items + [book] %}
+            {% set ns.seen = ns.seen + [book.uri] %}
+          {% endfor %}
+        {% endfor %}
+        {% for book in books if book.get('uri') not in ns.seen %}
+          {% set ns.items = ns.items + [book] %}
+        {% endfor %}
+        {{ ns.items }}
+      updated_at: '{{ now().isoformat() }}'
 - triggers: *id001
   actions:
   - variables:
@@ -196,6 +263,7 @@
               - artist
               - playlist
               - podcast
+              - audiobook
             limit: 6
             library_only: false
           response_variable: music_search_result
@@ -214,7 +282,7 @@
         query: "{{ music_query }}"
         items: >-
           {% set ns = namespace(items=[]) %}
-          {% for key in ['tracks', 'albums', 'artists', 'playlists', 'podcasts'] %}
+          {% for key in ['tracks', 'albums', 'artists', 'playlists', 'podcasts', 'audiobooks'] %}
             {% for item in music_search_result.get(key, []) %}
               {% set artists = item.get('artists', []) | map(attribute='name') | join(', ') %}
               {% set name = item.get('name', 'Untitled') ~ ' · ' ~ item.get('media_type', key) %}

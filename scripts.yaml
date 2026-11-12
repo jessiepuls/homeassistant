@@ -227,6 +227,7 @@ music_play_collection:
             - track
             - artist
             - podcast_episode
+            - audiobook
     radio_mode:
       name: Start a station
       default: false
@@ -258,7 +259,7 @@ music_play_collection:
         destination: "{{ states('input_select.music_destination') }}"
     - if:
         - condition: template
-          value_template: "{{ destination not in destinations or media_type not in ['playlist', 'album', 'radio', 'track', 'artist', 'podcast_episode'] or not uri }}"
+          value_template: "{{ destination not in destinations or media_type not in ['playlist', 'album', 'radio', 'track', 'artist', 'podcast_episode', 'audiobook'] or not uri }}"
       then:
         - stop: Invalid music destination or collection
           error: true
@@ -272,12 +273,11 @@ music_play_collection:
         - action: script.music_switch_destination
           data:
             destination: "{{ destination }}"
-    # Music Assistant saves episode progress only when playback is replaced, so
-    # replaying the loaded episode would resume from a stale position.
+    # Resume loaded spoken audio directly instead of replacing its queue item.
     - if:
         - condition: template
           value_template: >-
-            {{ media_type == 'podcast_episode' and state_attr(desired[0], 'media_content_id') == uri }}
+            {{ media_type in ['podcast_episode', 'audiobook'] and state_attr(desired[0], 'media_content_id') == uri }}
       then:
         - if:
             - condition: template
@@ -286,7 +286,7 @@ music_play_collection:
             - action: media_player.media_play
               target:
                 entity_id: "{{ desired[0] }}"
-        - stop: Episode is already loaded
+        - stop: Spoken audio is already loaded
     - action: music_assistant.play_media
       target:
         entity_id: "{{ desired[0] }}"
@@ -294,7 +294,7 @@ music_play_collection:
         media_id: "{{ uri }}"
         media_type: "{{ media_type }}"
         enqueue: replace
-        radio_mode: "{{ radio_mode | default(false) | bool }}"
+        radio_mode: "{{ media_type not in ['audiobook', 'podcast_episode'] and radio_mode | default(false) | bool }}"
 
 music_open_podcast:
   alias: Music - show podcast episodes
@@ -362,15 +362,16 @@ wake_up:
 
 bedroom_temperature_apply:
   alias: Bedroom temperature - apply schedule
-  description: Select Bedroom overnight, respecting temporary bedtime and wake-up overrides.
+  description: Select Bedroom overnight only while someone is home, respecting temporary bedtime and wake-up overrides.
   mode: queued
   max: 3
   sequence:
   - variables:
       bedroom_requested: >-
         {% set expires = as_timestamp(states('input_datetime.bedroom_temperature_override_until'), 0) %}
-        {{ is_state('input_select.bedroom_temperature_override', 'Bedroom')
-           if as_timestamp(now()) < expires else (now().hour >= 22 or now().hour < 8) }}
+        {{ states('zone.home') | int(0) > 0 and
+           (is_state('input_select.bedroom_temperature_override', 'Bedroom')
+            if as_timestamp(now()) < expires else (now().hour >= 22 or now().hour < 8)) }}
   # Retry automatically on recovery; never send a command to an unavailable sensor.
   - condition: template
     value_template: "{{ states('switch.bedroom_bedroom_sensor_control_thermostat') in ['on', 'off'] }}"

@@ -12,7 +12,7 @@ Open **Main Panel** in Home Assistant. All screens share these four tabs:
 |---|---|---|
 | Home | Room controls, weather, and music playback | `/lovelace-main-panel/home` |
 | Porch | Porch lights, fan, heater, weather, and music | `/lovelace-main-panel/porch` |
-| Music | Speaker selection, search, podcasts, recommendations, playlists, and albums | `/lovelace-main-panel/music` |
+| Listen | Speaker selection, search, audiobooks, podcasts, recommendations, playlists, and albums | `/lovelace-main-panel/music` |
 | Chickens | Doors, feeders, run light, water heaters, and device status | `/lovelace-main-panel/chicken-coop` |
 
 Use a startup path to choose which tab a tablet opens. Home automatically uses
@@ -24,19 +24,24 @@ open Chickens; the badge is hidden when there are no alerts.
 
 ### Playing music
 
-1. Open Music and choose where to listen.
+1. Open Listen and choose where to listen.
 2. Tap a cover in **For you**, **Playlists**, or **Albums** to start that collection.
    Albums are ordered with recently played items first.
 3. To find something specific, enter a search and press Enter or tap Search.
-   Tapping a result starts a similar-music station; it does not save a station to
+   Tapping a music result starts a similar-music station; it does not save a station to
    Apple Music. Clear hides the results.
 4. Tap a cover in **Podcasts**, or a podcast in search results, to list its 30
    newest episodes. Tap an episode to play it; partly played episodes resume.
    Episodes show their date and length, time left, or Played. Close hides the list.
-5. While an episode with embedded chapters plays, **Chapters** appears under the
+5. Tap a cover in **Audiobooks**, or an audiobook search result, to play it on
+   your selected speakers. Books use Music Assistant’s saved/Audible resume
+   position; tapping the already-loaded book resumes without restarting it.
+   The row shows up to 500 books: recently played in Music Assistant first, then
+   unplayed books newest-added to Music Assistant first. Use search for a title.
+6. While an episode with embedded chapters plays, **Chapters** appears under the
    player. The current chapter is highlighted; tap one to jump to it.
 
-The Music player shows elapsed and remaining time and 15-second skip buttons.
+The Listen player shows elapsed and remaining time and 15-second skip buttons.
 Drag or tap the progress bar to seek.
 
 Destinations can be individual speakers or groups. Changing destinations moves
@@ -44,7 +49,7 @@ the current queue and replaces the speaker group. Group playback controls adjust
 the active group. Some group presets reset the starting volume; configure those
 levels when setting up your speakers.
 
-Tapping the player’s artwork or name on Home or Porch opens Music.
+Tapping the player’s artwork or name on Home or Porch opens Listen.
 
 Rows refresh every ten minutes; **Refresh music** requests an update immediately.
 If recommendations are unavailable, check [Queue Actions setup](docs/setup.md#music-assistant).
@@ -57,11 +62,11 @@ Shortcuts work while the dashboard has keyboard focus and ignore text entry.
 |---|---|---|
 | Any Main Panel tab | Alt+1 / Option+1 on Mac | Home |
 | Any Main Panel tab | Alt+2 / Option+2 on Mac | Porch |
-| Any Main Panel tab | Alt+3 / Option+3 on Mac | Music |
+| Any Main Panel tab | Alt+3 / Option+3 on Mac | Listen |
 | Any Main Panel tab | Alt+4 / Option+4 on Mac | Chickens |
-| Music | Space | Play/pause |
-| Music | Left / Right arrow | Previous/next track |
-| Music | Up / Down arrow | Active group volume up/down by 3 percentage points |
+| Listen | Space | Play/pause |
+| Listen | Left / Right arrow | Previous/next track |
+| Listen | Up / Down arrow | Active group volume up/down by 3 percentage points |
 
 ## Setup and restore
 

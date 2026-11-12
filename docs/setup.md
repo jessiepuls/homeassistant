@@ -10,7 +10,7 @@ integration credentials, device registrations, downloaded integrations/cards,
 or most photos and styles. Keep backing up the full volume after setup.
 
 Also restore the Music Assistant data volume (`music-assistant/data`). It holds
-provider logins (Apple Music, Overcast), player configuration, the library, and
+provider logins (Apple Music, Overcast, Audible), player configuration, the library, and
 podcast progress. Without it, every provider has to be set up again.
 
 ## Starting a new installation
@@ -32,15 +32,29 @@ YAML does not connect devices or make its entity IDs match your installation.
 4. For the Apple Music recommendation row and podcast episode lists, install
    [Music Assistant Queue Actions](https://github.com/droans/mass_queue), then add
    it in **Settings → Devices & services** using the same server address. Installing
-   its files alone does not configure it. Search, playlists, albums, and the
+   its files alone does not configure it. Search, playlists, albums, audiobooks, and the
    podcast row use the official integration; the recommendation row specifically
    requests Apple Music, and episode lists use Queue Actions because the official
    integration does not report played or resume state.
 5. Map your players and integration IDs using the checklist below. Then open
-   Music and use **Refresh music** to populate the rows.
+   Listen and use **Refresh music** to populate the rows.
 
 The native HA Sonos integration is not required for these music controls when
 Sonos players are provided through Music Assistant.
+
+#### Audiobooks (Audible)
+
+Connect Audible in Music Assistant’s Music Sources settings. The dashboard’s
+**Audiobooks** row uses the official HA integration and refreshes with the other
+library rows. Books also appear in search. Selecting one calls the existing
+speaker destination script with `media_type: audiobook` and radio mode disabled.
+
+After changing this dashboard configuration, reload Scripts and Template entities
+in HA, refresh the dashboard, and use **Refresh music**. Verify a book from the
+Home Assistant dashboard on the selected speakers: play, pause, tap its cover to
+resume, and check the position in the Audible app after stopping. Provider support
+alone does not verify this end-to-end path. The chapter list currently applies to
+podcasts only; audiobook seeking uses the player’s progress bar and skip buttons.
 
 #### Podcasts (Overcast)
 
