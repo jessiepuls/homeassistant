@@ -15,6 +15,8 @@ bedtime:
   icon: mdi:sleep
   mode: single
   sequence:
+  - action: script.bedroom_temperature_early_bedtime
+    continue_on_error: true
   # Keep device failures from interrupting the rest of the routine.
   - if:
     - condition: template
@@ -98,6 +100,7 @@ music_switch_destination:
         - media_player.office_2
         - media_player.dining_room_2
         - media_player.three_season_porch
+        - media_player.bedroom_2
         Everywhere:
         - media_player.living_room_2
         - media_player.office_2
@@ -131,7 +134,7 @@ music_switch_destination:
       previous: '{{ destinations.get(states(''input_select.music_destination''), destinations[''Main Floor''])[0] }}'
       playing: '{{ expand(destinations.values() | sum(start=[])) | selectattr(''state'', ''eq'', ''playing'') | map(attribute=''entity_id'') | list }}'
       paused: '{{ expand(destinations.values() | sum(start=[])) | selectattr(''state'', ''eq'', ''paused'') | map(attribute=''entity_id'') | list }}'
-      main_floor_volume: 0.20
+      starting_volume: "{{ 0.30 if destination == 'Main Floor' else 0.20 }}"
   - variables:
       source_candidate: '{{ previous if previous in playing else (playing | first | default(previous if previous in paused else (paused | first | default('''')))) }}'
       target_player: '{{ desired[0] }}'
@@ -180,7 +183,7 @@ music_switch_destination:
         group_members: '{{ desired[1:] }}'
   - if:
     - condition: template
-      value_template: '{{ destination in [''Main Floor'', ''Everywhere''] and is_number(main_floor_volume) and 0 <= main_floor_volume | float <= 1 }}'
+      value_template: '{{ destination in [''Main Floor'', ''Everywhere''] and is_number(starting_volume) and 0 <= starting_volume | float <= 1 }}'
     then:
     - repeat:
         for_each: '{{ desired }}'
@@ -189,7 +192,7 @@ music_switch_destination:
           target:
             entity_id: '{{ repeat.item }}'
           data:
-            volume_level: '{{ main_floor_volume | float }}'
+            volume_level: '{{ starting_volume | float }}'
   - action: input_select.select_option
     target:
       entity_id: input_select.music_destination
@@ -237,6 +240,7 @@ music_play_collection:
             - media_player.office_2
             - media_player.dining_room_2
             - media_player.three_season_porch
+            - media_player.bedroom_2
           Everywhere:
             - media_player.living_room_2
             - media_player.office_2
@@ -317,3 +321,71 @@ music_search:
   mode: restart
   sequence:
     - event: music_search_requested
+
+bedroom_temperature_early_bedtime:
+  alias: Bedroom temperature - early bedtime
+  mode: single
+  sequence:
+  - action: input_select.select_option
+    target:
+      entity_id: input_select.bedroom_temperature_override
+    data:
+      option: Bedroom
+  - action: input_datetime.set_datetime
+    target:
+      entity_id: input_datetime.bedroom_temperature_override_until
+    data:
+      datetime: >-
+        {{ (today_at('08:00') + timedelta(days=1) if now() >= today_at('08:00')
+            else today_at('08:00')).strftime('%Y-%m-%d %H:%M:%S') }}
+  - action: script.bedroom_temperature_apply
+
+wake_up:
+  alias: Wake up
+  description: Return temperature control to Hallway until the next 10 pm schedule or Bedtime run.
+  icon: mdi:weather-sunset-up
+  mode: single
+  sequence:
+  - action: input_select.select_option
+    target:
+      entity_id: input_select.bedroom_temperature_override
+    data:
+      option: Hallway
+  - action: input_datetime.set_datetime
+    target:
+      entity_id: input_datetime.bedroom_temperature_override_until
+    data:
+      datetime: >-
+        {{ (today_at('22:00') + timedelta(days=1) if now() >= today_at('22:00')
+            else today_at('22:00')).strftime('%Y-%m-%d %H:%M:%S') }}
+  - action: script.bedroom_temperature_apply
+
+bedroom_temperature_apply:
+  alias: Bedroom temperature - apply schedule
+  description: Select Bedroom overnight, respecting temporary bedtime and wake-up overrides.
+  mode: queued
+  max: 3
+  sequence:
+  - variables:
+      bedroom_requested: >-
+        {% set expires = as_timestamp(states('input_datetime.bedroom_temperature_override_until'), 0) %}
+        {{ is_state('input_select.bedroom_temperature_override', 'Bedroom')
+           if as_timestamp(now()) < expires else (now().hour >= 22 or now().hour < 8) }}
+  # Retry automatically on recovery; never send a command to an unavailable sensor.
+  - condition: template
+    value_template: "{{ states('switch.bedroom_bedroom_sensor_control_thermostat') in ['on', 'off'] }}"
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: "{{ bedroom_requested and not is_state('switch.bedroom_bedroom_sensor_control_thermostat', 'on') }}"
+      sequence:
+      - action: switch.turn_on
+        target:
+          entity_id: switch.bedroom_bedroom_sensor_control_thermostat
+    - conditions:
+      - condition: template
+        value_template: "{{ not bedroom_requested and is_state('switch.bedroom_bedroom_sensor_control_thermostat', 'on') }}"
+      sequence:
+      - action: switch.turn_off
+        target:
+          entity_id: switch.bedroom_bedroom_sensor_control_thermostat

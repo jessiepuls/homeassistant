@@ -18,6 +18,11 @@ sensor:
 
 # Remember the selected listening destination across both dashboards.
 input_select:
+  bedroom_temperature_override:
+    name: Bedroom temperature override
+    options:
+      - Bedroom
+      - Hallway
   music_destination:
     name: Music destination
     icon: mdi:speaker-multiple
@@ -40,6 +45,10 @@ input_boolean:
     icon: mdi:alert-circle-outline
 
 input_datetime:
+  bedroom_temperature_override_until:
+    name: Bedroom temperature override until
+    has_date: true
+    has_time: true
   nightly_light_cutoff:
     name: Nightly light cutoff
     has_date: false

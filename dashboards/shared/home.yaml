@@ -194,6 +194,19 @@ sections:
   - type: picture-elements
     image: /local/photos/living.jpg?v=5
     elements:
+    - type: state-label
+      entity: sensor.living_room_living_room_sensor_temperature
+      tap_action:
+        action: more-info
+      style:
+        top: 30%
+        left: 5%
+        transform: none
+        color: white
+        background: rgba(0, 0, 0, 0.65)
+        border-radius: 6px
+        padding: 2px 10px
+        font-size: 15px
     - type: image
       image: /local/scrim.svg?v=5
       style:
@@ -484,6 +497,19 @@ sections:
   - type: picture-elements
     image: /local/photos/outdoors.jpg?v=5
     elements:
+    - type: state-label
+      entity: sensor.openweathermap_temperature
+      tap_action:
+        action: more-info
+      style:
+        top: 30%
+        left: 5%
+        transform: none
+        color: white
+        background: rgba(0, 0, 0, 0.65)
+        border-radius: 6px
+        padding: 2px 10px
+        font-size: 15px
     - type: image
       image: /local/scrim.svg?v=5
       style:
@@ -750,6 +776,19 @@ sections:
   - type: picture-elements
     image: /local/photos/bedroom.jpg?v=5
     elements:
+    - type: state-label
+      entity: sensor.bedroom_bedroom_sensor_temperature
+      tap_action:
+        action: more-info
+      style:
+        top: 30%
+        left: 5%
+        transform: none
+        color: white
+        background: rgba(0, 0, 0, 0.65)
+        border-radius: 6px
+        padding: 2px 10px
+        font-size: 15px
     - type: image
       image: /local/scrim.svg?v=5
       style:
@@ -960,6 +999,7 @@ sections:
         transform: translateX(-50%)
     - type: custom:button-card
       entity: script.bedtime
+      name: Bedtime
       icon: mdi:sleep
       show_name: false
       show_state: false
@@ -982,12 +1022,50 @@ sections:
         bottom: 5%
         left: 80%
         transform: translateX(-50%)
+    - type: custom:button-card
+      entity: script.wake_up
+      name: Wake up
+      icon: mdi:weather-sunset-up
+      show_name: false
+      show_state: false
+      color_type: icon
+      size: 22px
+      tap_action:
+        action: perform-action
+        perform_action: script.turn_on
+        target:
+          entity_id: script.wake_up
+      styles:
+        card:
+        - background: none
+        - box-shadow: none
+        - border: none
+        - width: 34px
+        - height: 34px
+        - padding: 0
+      style:
+        bottom: 5%
+        left: 92%
+        transform: translateX(-50%)
     grid_options:
       columns: full
       rows: auto
   - type: picture-elements
     image: /local/photos/hallway.jpg?v=5
     elements:
+    - type: state-label
+      entity: sensor.hallway_hallway_thermostat_temperature
+      tap_action:
+        action: more-info
+      style:
+        top: 30%
+        left: 5%
+        transform: none
+        color: white
+        background: rgba(0, 0, 0, 0.65)
+        border-radius: 6px
+        padding: 2px 10px
+        font-size: 15px
     - type: image
       image: /local/scrim.svg?v=5
       style:

@@ -489,3 +489,25 @@
   mode: single
   trace:
     stored_traces: 5
+
+- id: bedroom_temperature_schedule
+  alias: Bedroom temperature schedule
+  description: Bedroom from 10 pm to 8 am, with early bedtime and wake-up overrides; reconcile after restarts and reconnects.
+  triggers:
+  - trigger: time
+    at: '22:00:00'
+  - trigger: time
+    at: '08:00:00'
+  - trigger: homeassistant
+    event: start
+  - trigger: time_pattern
+    minutes: /5
+  - trigger: state
+    entity_id: switch.bedroom_bedroom_sensor_control_thermostat
+    from: unavailable
+  - trigger: state
+    entity_id: switch.bedroom_bedroom_sensor_control_thermostat
+    from: unknown
+  actions:
+  - action: script.bedroom_temperature_apply
+  mode: single

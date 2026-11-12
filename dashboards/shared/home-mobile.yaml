@@ -86,6 +86,9 @@ cards:
     rows: auto
 - type: heading
   heading: Living Room
+  badges:
+  - type: entity
+    entity: sensor.living_room_living_room_sensor_temperature
   grid_options:
     columns: full
     rows: auto
@@ -161,6 +164,9 @@ cards:
     action: toggle
 - type: heading
   heading: Bedroom
+  badges:
+  - type: entity
+    entity: sensor.bedroom_bedroom_sensor_temperature
   grid_options:
     columns: full
     rows: auto
@@ -196,6 +202,9 @@ cards:
     action: toggle
 - type: heading
   heading: Porch
+  badges:
+  - type: entity
+    entity: sensor.three_season_porch_three_season_porch_sensor_temperature
   grid_options:
     columns: full
     rows: auto
@@ -261,6 +270,9 @@ cards:
     action: toggle
 - type: heading
   heading: Outdoors
+  badges:
+  - type: entity
+    entity: sensor.openweathermap_temperature
   grid_options:
     columns: full
     rows: auto
@@ -306,6 +318,9 @@ cards:
     action: toggle
 - type: heading
   heading: Hallway & Stairs
+  badges:
+  - type: entity
+    entity: sensor.hallway_hallway_thermostat_temperature
   grid_options:
     columns: full
     rows: auto
@@ -330,19 +345,30 @@ cards:
   icon_tap_action:
     action: toggle
 - type: heading
-  heading: Bedtime
+  heading: Bedtime & Wake up
   grid_options:
     columns: full
     rows: auto
 - type: button
   entity: script.bedtime
-  name: Run bedtime
+  name: Bedtime
   icon: mdi:power-sleep
   grid_options:
-    columns: full
+    columns: 6
     rows: 2
   tap_action:
     action: perform-action
     perform_action: script.bedtime
     confirmation:
       text: Run the bedtime routine?
+
+- type: button
+  entity: script.wake_up
+  name: Wake up
+  icon: mdi:weather-sunset-up
+  grid_options:
+    columns: 6
+    rows: 2
+  tap_action:
+    action: perform-action
+    perform_action: script.wake_up
