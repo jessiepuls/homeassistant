@@ -167,7 +167,7 @@ class DashboardMediaPlayer extends HTMLElement {
   error(error) {
     const el = this.shadowRoot.querySelector('.error');
     el.textContent = 'Control failed. Check speaker availability and try again.'; el.hidden = false;
-    console.error('Porch player:', error);
+    console.error('Dashboard media player:', error);
   }
   seek(seconds) {
     const duration = Number(this.player?.attributes.media_duration) || 0;
